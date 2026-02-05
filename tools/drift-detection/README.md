@@ -6,6 +6,9 @@ This tool connects to remote Docker hosts via SSH and extracts container configu
 
 - **SSH Connection Management**: Secure connections to target hosts using SSH keys
 - **Docker Inspection**: Extract detailed container configurations via Docker SDK
+- **Git Baseline Loading**: Load baseline configurations from git repositories for drift comparison
+- **Docker Compose Parsing**: Parse and merge Docker Compose files with endpoint-specific overrides
+- **Environment Variable Substitution**: Handle .env files and variable substitution in compose files
 - **Structured Data Extraction**: Captures labels, networks, volumes, environment variables, and more
 - **Multi-Host Support**: Inspect containers across multiple hosts in a single run
 - **Error Handling**: Graceful handling of connection and inspection failures
@@ -171,6 +174,127 @@ python example_usage.py
 
 Edit `example_usage.py` and uncomment the examples you want to run.
 
+## Git Baseline Loading
+
+The git baseline loader reads Docker Compose configurations from your git repositories (homelab-apps and homelab-infra) to establish the desired state for comparison against running containers.
+
+### Basic Baseline Loading
+
+Load all baseline configurations from homelab-apps:
+
+```python
+from git_config_loader import GitConfigLoader
+
+loader = GitConfigLoader(
+    homelab_apps_path="../../../homelab-apps"
+)
+
+baselines = loader.load_all_baselines()
+
+for baseline in baselines:
+    print(f"{baseline.stack_name}/{baseline.name}: {baseline.image}")
+```
+
+### Loading with Endpoint-Specific Overrides
+
+If you have endpoint-specific compose files (e.g., `docker-compose.ct-docker-01.yml`):
+
+```python
+loader = GitConfigLoader(
+    homelab_apps_path="../../../homelab-apps",
+    homelab_infra_path="../../../homelab-infra",
+    endpoint="ct-docker-01"  # Load ct-docker-01 overrides
+)
+
+baselines = loader.load_all_baselines()
+```
+
+The loader will:
+1. Load base `docker-compose.yml`
+2. Find and merge `docker-compose.ct-docker-01.yml` if it exists
+3. Load `.env` or `.env.sample` for variable substitution
+4. Substitute all `${VAR}` references in the compose file
+
+### Finding Specific Services
+
+```python
+# Find baseline for a specific service
+pihole_baseline = loader.get_baseline_by_name("pihole")
+
+if pihole_baseline:
+    print(f"Image: {pihole_baseline.image}")
+    print(f"Labels: {pihole_baseline.labels}")
+    print(f"Networks: {pihole_baseline.networks}")
+```
+
+### Using the Convenience Function
+
+For simple use cases:
+
+```python
+from git_config_loader import load_git_baselines
+
+result = load_git_baselines(
+    homelab_apps_path="../../../homelab-apps",
+    endpoint="ct-docker-01"
+)
+
+print(f"Loaded {result['count']} baselines")
+print(f"Services: {[b['name'] for b in result['baselines']]}")
+```
+
+### Stack Discovery
+
+Discover all available stacks:
+
+```python
+loader = GitConfigLoader(
+    homelab_apps_path="../../../homelab-apps",
+    homelab_infra_path="../../../homelab-infra"
+)
+
+stacks = loader.discover_stacks()
+print(f"Found {len(stacks)} stacks: {[s.name for s in stacks]}")
+```
+
+### Running Examples
+
+Try the git loader examples:
+
+```bash
+python example_git_loader.py
+```
+
+### Baseline Data Structure
+
+Git baselines use a structure similar to `ContainerInfo` for easy comparison:
+
+```json
+{
+  "name": "pihole",
+  "image": "pihole/pihole:2024.01.0",
+  "labels": {
+    "traefik.enable": "true",
+    "traefik.http.routers.pihole-secure.rule": "Host(`pihole.example.com`)"
+  },
+  "networks": ["proxy", "dns"],
+  "volumes": [
+    "/opt/pihole/config:/etc/pihole:rw",
+    "./config/custom.list:/etc/pihole/custom.list:ro"
+  ],
+  "environment": {
+    "TZ": "America/New_York",
+    "WEBPASSWORD": "admin123"
+  },
+  "ports": [
+    "192.168.50.19:53:53/tcp",
+    "8053:80/tcp"
+  ],
+  "stack_name": "dns-pihole",
+  "compose_file": "/path/to/dns-pihole/docker-compose.yml"
+}
+```
+
 ## Data Structure
 
 The tool extracts the following container information:
@@ -307,19 +431,24 @@ drift-detection/
 ├── requirements.txt          # Python dependencies
 ├── .env.sample              # Environment configuration template
 ├── .env                     # Your configuration (git-ignored)
+├── __init__.py              # Package initialization
 ├── config.py                # Configuration management
-├── docker_inspector.py      # Main inspection module
-├── example_usage.py         # Usage examples
+├── docker_inspector.py      # Docker inspection module (Story 1.1)
+├── git_config_loader.py     # Git baseline loader (Story 1.2)
+├── example_usage.py         # Docker inspection examples
+├── example_git_loader.py    # Git loader examples
 └── output/                  # Output directory (created automatically)
-    └── container_inspection.json
+    ├── container_inspection.json
+    └── git_baselines.json
 ```
 
 ## Roadmap
 
-- **Story 1.1** (Current): SSH Connection & Docker Inspection ✅
-- **Story 1.2** (Next): Comparison Engine (compare runtime vs git)
-- **Story 1.3**: Reporting & Notifications
-- **Story 1.4**: CI/CD Integration
+- **Story 1.1**: SSH Connection & Docker Inspection ✅
+- **Story 1.2**: Git Repository Baseline Loader ✅
+- **Story 1.3** (Next): Drift Comparison Engine (compare runtime vs git baselines)
+- **Story 1.4**: Reporting & Notifications
+- **Story 1.5**: CI/CD Integration
 
 ## Contributing
 
@@ -336,7 +465,7 @@ Part of the homelab-playbook project.
 
 ## Story Context
 
-**Story 1.1: SSH Connection & Docker Inspection Setup**
+### Story 1.1: SSH Connection & Docker Inspection Setup ✅
 
 **Acceptance Criteria:**
 - ✅ Dev-vm has SSH access to ct-docker-01 (192.168.50.19) and ct-media-01 (192.168.50.161)
@@ -346,4 +475,24 @@ Part of the homelab-playbook project.
 - ✅ Extracts container inspect data (labels, networks, volumes, environment)
 - ✅ Handles connection failures gracefully with clear error messages
 
-All acceptance criteria are met by this implementation.
+All acceptance criteria met.
+
+### Story 1.2: Git Repository Baseline Loader ✅
+
+**Acceptance Criteria:**
+- ✅ homelab-apps and homelab-infra repos are cloned locally
+- ✅ Drift detector loads git baselines successfully
+- ✅ Parses all Docker Compose files in `homelab-apps/stacks/*/`
+- ✅ Handles endpoint-specific overrides (`docker-compose.<endpoint>.yml`)
+- ✅ Extracts compose configurations (services, labels, networks, volumes)
+- ✅ Stores normalized config data for comparison
+
+**Implementation:**
+- `git_config_loader.py` with GitConfigLoader class
+- Parses Docker Compose YAML files
+- Merges base + endpoint-specific compose files
+- Handles `.env` variable substitution
+- Returns structured data matching docker_inspector.py format
+- Comprehensive error handling and logging
+
+All acceptance criteria met.

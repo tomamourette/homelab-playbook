@@ -22,6 +22,9 @@ class Config:
         output_format: Format for output data (json, yaml)
         output_dir: Directory for output files
         log_level: Logging level
+        homelab_apps_path: Path to homelab-apps repository
+        homelab_infra_path: Path to homelab-infra repository
+        endpoint: Endpoint name for compose overrides
     """
     
     def __init__(self, env_file: Optional[str] = None) -> None:
@@ -61,6 +64,20 @@ class Config:
         
         # Logging
         self.log_level: str = os.getenv('LOG_LEVEL', 'INFO')
+        
+        # Git repository paths
+        self.homelab_apps_path: str = os.getenv(
+            'HOMELAB_APPS_PATH',
+            '../../../homelab-apps'
+        )
+        self.homelab_apps_path = os.path.expanduser(self.homelab_apps_path)
+        
+        self.homelab_infra_path: Optional[str] = os.getenv('HOMELAB_INFRA_PATH')
+        if self.homelab_infra_path:
+            self.homelab_infra_path = os.path.expanduser(self.homelab_infra_path)
+        
+        # Endpoint for compose overrides (e.g., 'ct-docker-01')
+        self.endpoint: Optional[str] = os.getenv('ENDPOINT')
     
     def validate(self) -> None:
         """Validate configuration settings.

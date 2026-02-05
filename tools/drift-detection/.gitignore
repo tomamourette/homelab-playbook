@@ -1,37 +1,27 @@
 # Environment configuration
 .env
 
-# Virtual environment
-venv/
-env/
-ENV/
-
-# Output directory
+# Output files
 output/
+*.json
 
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
+.Python
+venv/
+env/
+ENV/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Type checking
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# OS
+.DS_Store
+Thumbs.db
