@@ -1,0 +1,12 @@
+# SSH Connection
+paramiko>=3.4.0
+
+# Docker SDK
+docker>=7.0.0
+
+# Configuration Management
+python-dotenv>=1.0.0
+
+# Type Checking (optional, for development)
+mypy>=1.8.0
+types-paramiko>=3.4.0
