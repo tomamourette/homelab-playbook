@@ -5,9 +5,13 @@
 **Supervisor:** Claude (OpenClaw)  
 **Executor:** Claude Code CLI  
 
+> **📖 New here?** Read [ARCHITECTURE.md](../ARCHITECTURE.md) to understand the three-repo model and how homelab-playbook coordinates code generation.
+
 ## Overview
 
 This folder contains project management artifacts using BMAD Method to organize homelab development, planning, and execution.
+
+**Important:** homelab-playbook is an **orchestration layer**, not infrastructure code. Generated IaC lives in `homelab-infra` (Terraform/Ansible) and `homelab-apps` (Docker Compose).
 
 ### Structure
 
