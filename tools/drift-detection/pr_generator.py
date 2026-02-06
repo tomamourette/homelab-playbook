@@ -49,6 +49,15 @@ class PRGenerator:
     5. Create Pull Request via GitHub API
     """
     
+    # Patterns for sensitive data detection
+    SENSITIVE_PATTERNS = [
+        'password', 'passwd', 'pwd',
+        'secret', 'token', 'key',
+        'api_key', 'apikey',
+        'auth', 'credential',
+        'private', 'certificate'
+    ]
+    
     def __init__(
         self,
         github_token: Optional[str] = None,
@@ -75,6 +84,21 @@ class PRGenerator:
                 logger.warning(f"Failed to initialize GitHub client: {e}")
         
         logger.info("Initialized PRGenerator")
+    
+    def sanitize_value(self, key: str, value: Any) -> str:
+        """Sanitize potentially sensitive values.
+        
+        Args:
+            key: Field name/key
+            value: Value to sanitize
+        
+        Returns:
+            Original value or [REDACTED] if sensitive
+        """
+        key_lower = str(key).lower()
+        if any(pattern in key_lower for pattern in self.SENSITIVE_PATTERNS):
+            return "[REDACTED]"
+        return str(value)
     
     def create_branch(
         self,
@@ -290,10 +314,14 @@ class PRGenerator:
             running_value = item.get('running_value', 'N/A')
             severity = item.get('severity', 'unknown')
             
+            # Sanitize potentially sensitive values
+            baseline_sanitized = self.sanitize_value(field_path, baseline_value)
+            running_sanitized = self.sanitize_value(field_path, running_value)
+            
             description_parts.append(f"### {field_path}\n\n")
             description_parts.append(f"- **Severity**: {severity}\n")
-            description_parts.append(f"- **Baseline**: `{baseline_value}`\n")
-            description_parts.append(f"- **Running**: `{running_value}`\n\n")
+            description_parts.append(f"- **Baseline**: `{baseline_sanitized}`\n")
+            description_parts.append(f"- **Running**: `{running_sanitized}`\n\n")
         
         # Drift report link
         if drift_report_path:
