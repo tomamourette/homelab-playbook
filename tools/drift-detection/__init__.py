@@ -25,6 +25,15 @@ from git_config_loader import (
     load_git_baselines,
 )
 
+from drift_comparator import (
+    DriftComparator,
+    DriftReport,
+    ServiceDrift,
+    DriftItem,
+    DriftSeverity,
+    compare_drift,
+)
+
 __version__ = "0.1.0"
 __all__ = [
     "DockerInspector",
@@ -42,4 +51,10 @@ __all__ = [
     "ComposeFileNotFoundError",
     "ComposeParseError",
     "load_git_baselines",
+    "DriftComparator",
+    "DriftReport",
+    "ServiceDrift",
+    "DriftItem",
+    "DriftSeverity",
+    "compare_drift",
 ]
