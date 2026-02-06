@@ -269,12 +269,16 @@ class GitConfigLoader:
         
         Performs deep merge of compose files, with override taking precedence.
         
+        Note: Lists are completely replaced by override values, not merged.
+        For example, if base has volumes=[A, B] and override has volumes=[C],
+        the result will be volumes=[C], not [A, B, C].
+        
         Args:
             base_config: Base docker-compose.yml config
             override_config: Override config (e.g., docker-compose.ct-docker-01.yml)
         
         Returns:
-            Merged configuration
+            Merged configuration with overrides applied
         """
         def deep_merge(base: Any, override: Any) -> Any:
             """Recursively merge two data structures."""
