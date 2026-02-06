@@ -44,7 +44,7 @@ from pr_generator import (
     PRGenerator,
     PRGenerationError,
     GitOperationError,
-    generate_pr,
+    generate_prs_from_drift_report,
 )
 
 __version__ = "0.1.0"
@@ -76,5 +76,5 @@ __all__ = [
     "PRGenerator",
     "PRGenerationError",
     "GitOperationError",
-    "generate_pr",
+    "generate_prs_from_drift_report",
 ]

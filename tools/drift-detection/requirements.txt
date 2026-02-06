@@ -12,6 +12,7 @@ pyyaml>=6.0.0
 
 # GitHub API Integration
 PyGithub>=2.1.1
+requests>=2.31.0
 
 # Type Checking (optional, for development)
 mypy>=1.8.0

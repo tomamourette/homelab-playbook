@@ -1,506 +1,546 @@
-"""Pull Request generation for drift remediation.
+#!/usr/bin/env python3
+"""
+PR Generator for Drift Remediation
 
-This module automates the creation of Pull Requests to sync git repositories
-with running container configurations, enabling review-based drift remediation.
+Automatically generates Pull Requests to backport running configurations
+to git repositories when drift is detected.
+
+Handles:
+- Branch creation
+- Compose file updates
+- Conventional commits
+- PR creation via GitHub API
 """
 
-import logging
 import os
+import json
 import subprocess
-from typing import Dict, Any, Optional, List
+import re
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 from datetime import datetime
-import yaml
-
-try:
-    from github import Github, GithubException
-    GITHUB_AVAILABLE = True
-except ImportError:
-    GITHUB_AVAILABLE = False
-    logging.warning("PyGithub not installed - GitHub PR creation disabled")
+import requests
+from dataclasses import dataclass
 
 
-# Configure logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
-
-
-class PRGenerationError(Exception):
-    """Raised when PR generation fails."""
-    pass
+@dataclass
+class DriftItem:
+    """Represents a single configuration drift item"""
+    service_name: str
+    stack_name: str
+    field_path: str
+    running_value: any
+    git_value: any
+    severity: str
+    
+    
+@dataclass
+class PRMetadata:
+    """Metadata for a Pull Request"""
+    branch_name: str
+    title: str
+    body: str
+    labels: List[str]
+    base_branch: str = "main"
 
 
 class GitOperationError(Exception):
-    """Raised when git operations fail."""
+    """Raised when git operations fail"""
+    pass
+
+
+class PRGenerationError(Exception):
+    """Raised when PR creation fails"""
     pass
 
 
 class PRGenerator:
-    """Generate Pull Requests for drift remediation.
-    
-    This class handles the complete PR workflow:
-    1. Create git branch for drift fix
-    2. Update compose file with running configuration
-    3. Commit changes with conventional commit message
-    4. Push branch to remote
-    5. Create Pull Request via GitHub API
-    """
-    
-    # Patterns for sensitive data detection
-    SENSITIVE_PATTERNS = [
-        'password', 'passwd', 'pwd',
-        'secret', 'token', 'key',
-        'api_key', 'apikey',
-        'auth', 'credential',
-        'private', 'certificate'
-    ]
+    """Generates Pull Requests for drift remediation"""
     
     def __init__(
         self,
+        repo_path: Path,
         github_token: Optional[str] = None,
-        repo_owner: Optional[str] = None,
-        repo_name: Optional[str] = None
+        github_repo: Optional[str] = None,
+        dry_run: bool = False
     ):
-        """Initialize PR generator.
+        """
+        Initialize PR Generator
         
         Args:
-            github_token: GitHub personal access token
-            repo_owner: GitHub repository owner/organization
-            repo_name: GitHub repository name
+            repo_path: Path to local git repository
+            github_token: GitHub API token (optional, from env if not provided)
+            github_repo: GitHub repository (e.g., "user/repo")
+            dry_run: If True, don't actually create PRs or push branches
         """
-        self.github_token = github_token or os.getenv('GITHUB_TOKEN')
-        self.repo_owner = repo_owner or os.getenv('GITHUB_REPO_OWNER')
-        self.repo_name = repo_name or os.getenv('GITHUB_REPO_NAME')
+        self.repo_path = Path(repo_path)
+        self.dry_run = dry_run
         
-        self.github_client = None
-        if GITHUB_AVAILABLE and self.github_token:
-            try:
-                self.github_client = Github(self.github_token)
-                logger.info(f"Initialized GitHub client for {self.repo_owner}/{self.repo_name}")
-            except Exception as e:
-                logger.warning(f"Failed to initialize GitHub client: {e}")
+        # GitHub configuration
+        self.github_token = github_token or os.getenv("GITHUB_TOKEN")
+        self.github_repo = github_repo or os.getenv("GITHUB_REPO")
         
-        logger.info("Initialized PRGenerator")
-    
-    def sanitize_value(self, key: str, value: Any) -> str:
-        """Sanitize potentially sensitive values.
-        
-        Args:
-            key: Field name/key
-            value: Value to sanitize
-        
-        Returns:
-            Original value or [REDACTED] if sensitive
-        """
-        key_lower = str(key).lower()
-        if any(pattern in key_lower for pattern in self.SENSITIVE_PATTERNS):
-            return "[REDACTED]"
-        return str(value)
-    
-    def create_branch(
-        self,
-        repo_path: Path,
-        branch_name: str,
-        base_branch: str = "main"
-    ) -> None:
-        """Create a new git branch.
-        
-        Args:
-            repo_path: Path to git repository
-            branch_name: Name for the new branch
-            base_branch: Base branch to branch from
-        
-        Raises:
-            GitOperationError: If branch creation fails
-        """
-        try:
-            # Ensure we're on base branch
-            subprocess.run(
-                ["git", "checkout", base_branch],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
+        if not self.repo_path.exists():
+            raise ValueError(f"Repository path does not exist: {repo_path}")
             
-            # Pull latest changes
-            subprocess.run(
-                ["git", "pull"],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
-            
-            # Create new branch
-            subprocess.run(
-                ["git", "checkout", "-b", branch_name],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
-            
-            logger.info(f"Created branch: {branch_name}")
-            
-        except subprocess.CalledProcessError as e:
-            raise GitOperationError(f"Failed to create branch {branch_name}: {e.stderr.decode()}")
-    
-    def update_compose_file(
-        self,
-        compose_path: Path,
-        service_name: str,
-        running_config: Dict[str, Any]
-    ) -> None:
-        """Update Docker Compose file with running configuration.
-        
-        Args:
-            compose_path: Path to docker-compose.yml file
-            service_name: Name of the service to update
-            running_config: Running configuration from container
-        
-        Raises:
-            PRGenerationError: If compose file update fails
-        """
-        try:
-            # Load compose file
-            with open(compose_path, 'r') as f:
-                compose_data = yaml.safe_load(f)
-            
-            if 'services' not in compose_data:
-                raise PRGenerationError(f"No services section in {compose_path}")
-            
-            if service_name not in compose_data['services']:
-                raise PRGenerationError(f"Service {service_name} not found in compose file")
-            
-            # Update service configuration
-            service_config = compose_data['services'][service_name]
-            
-            # Update key fields from running config
-            if 'image' in running_config:
-                service_config['image'] = running_config['image']
-            
-            if 'environment' in running_config and running_config['environment']:
-                service_config['environment'] = running_config['environment']
-            
-            if 'ports' in running_config and running_config['ports']:
-                service_config['ports'] = running_config['ports']
-            
-            if 'volumes' in running_config and running_config['volumes']:
-                service_config['volumes'] = running_config['volumes']
-            
-            if 'networks' in running_config and running_config['networks']:
-                service_config['networks'] = running_config['networks']
-            
-            if 'labels' in running_config and running_config['labels']:
-                service_config['labels'] = running_config['labels']
-            
-            # Write updated compose file
-            with open(compose_path, 'w') as f:
-                yaml.dump(compose_data, f, default_flow_style=False, sort_keys=False)
-            
-            logger.info(f"Updated {compose_path} for service {service_name}")
-            
-        except Exception as e:
-            raise PRGenerationError(f"Failed to update compose file: {e}")
-    
-    def commit_changes(
-        self,
-        repo_path: Path,
-        service_name: str,
-        message_suffix: str = "sync config with running state"
-    ) -> None:
-        """Commit changes with conventional commit message.
-        
-        Args:
-            repo_path: Path to git repository
-            service_name: Name of the service
-            message_suffix: Commit message suffix
-        
-        Raises:
-            GitOperationError: If commit fails
-        """
-        try:
-            # Stage changes
-            subprocess.run(
-                ["git", "add", "-A"],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
-            
-            # Create conventional commit message
-            commit_message = f"fix({service_name}): {message_suffix}"
-            
-            # Commit
-            subprocess.run(
-                ["git", "commit", "-m", commit_message],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
-            
-            logger.info(f"Committed changes: {commit_message}")
-            
-        except subprocess.CalledProcessError as e:
-            raise GitOperationError(f"Failed to commit changes: {e.stderr.decode()}")
-    
-    def push_branch(
-        self,
-        repo_path: Path,
-        branch_name: str
-    ) -> None:
-        """Push branch to remote.
-        
-        Args:
-            repo_path: Path to git repository
-            branch_name: Name of the branch to push
-        
-        Raises:
-            GitOperationError: If push fails
-        """
-        try:
-            subprocess.run(
-                ["git", "push", "-u", "origin", branch_name],
-                cwd=repo_path,
-                check=True,
-                capture_output=True
-            )
-            
-            logger.info(f"Pushed branch: {branch_name}")
-            
-        except subprocess.CalledProcessError as e:
-            raise GitOperationError(f"Failed to push branch: {e.stderr.decode()}")
-    
-    def create_pr_description(
-        self,
-        service_name: str,
-        stack_name: str,
-        drift_items: List[Dict[str, Any]],
-        drift_report_path: Optional[str] = None
-    ) -> str:
-        """Create Pull Request description.
-        
-        Args:
-            service_name: Name of the service
-            stack_name: Name of the stack
-            drift_items: List of drift items
-            drift_report_path: Path to drift report file
-        
-        Returns:
-            Formatted PR description
-        """
-        description_parts = []
-        
-        # Header
-        description_parts.append(f"# Drift Remediation: {service_name}\n")
-        description_parts.append(f"**Stack**: {stack_name}\n")
-        description_parts.append(f"**Auto-generated**: {datetime.utcnow().isoformat()}\n\n")
-        
-        # Summary
-        description_parts.append("## Summary\n\n")
-        description_parts.append(
-            f"This PR updates the git baseline configuration for `{service_name}` "
-            f"to match the current running state, remediating {len(drift_items)} "
-            f"configuration drift item(s).\n\n"
-        )
-        
-        # Drift items
-        description_parts.append("## Configuration Changes\n\n")
-        
-        for item in drift_items:
-            field_path = item.get('field_path', 'unknown')
-            baseline_value = item.get('baseline_value', 'N/A')
-            running_value = item.get('running_value', 'N/A')
-            severity = item.get('severity', 'unknown')
-            
-            # Sanitize potentially sensitive values
-            baseline_sanitized = self.sanitize_value(field_path, baseline_value)
-            running_sanitized = self.sanitize_value(field_path, running_value)
-            
-            description_parts.append(f"### {field_path}\n\n")
-            description_parts.append(f"- **Severity**: {severity}\n")
-            description_parts.append(f"- **Baseline**: `{baseline_sanitized}`\n")
-            description_parts.append(f"- **Running**: `{running_sanitized}`\n\n")
-        
-        # Drift report link
-        if drift_report_path:
-            description_parts.append("## Drift Report\n\n")
-            description_parts.append(f"See full drift analysis: `{drift_report_path}`\n\n")
-        
-        # Review checklist
-        description_parts.append("## Review Checklist\n\n")
-        description_parts.append("- [ ] Running configuration is correct and intentional\n")
-        description_parts.append("- [ ] Changes align with deployment standards\n")
-        description_parts.append("- [ ] No sensitive data exposed in configuration\n")
-        description_parts.append("- [ ] Documentation updated if needed\n\n")
-        
-        # Labels
-        description_parts.append("---\n")
-        description_parts.append("*Auto-generated by drift detection tool*\n")
-        description_parts.append("**Labels**: `drift-remediation`, `automated`\n")
-        
-        return ''.join(description_parts)
-    
-    def create_github_pr(
-        self,
-        branch_name: str,
-        pr_title: str,
-        pr_description: str,
-        base_branch: str = "main"
-    ) -> Optional[str]:
-        """Create Pull Request via GitHub API.
-        
-        Args:
-            branch_name: Source branch name
-            pr_title: PR title
-            pr_description: PR description/body
-            base_branch: Target base branch
-        
-        Returns:
-            PR URL if successful, None otherwise
-        
-        Raises:
-            PRGenerationError: If PR creation fails
-        """
-        if not GITHUB_AVAILABLE:
-            raise PRGenerationError("PyGithub not installed - cannot create PR")
-        
-        if not self.github_client:
-            raise PRGenerationError("GitHub client not initialized - check token")
-        
-        try:
-            # Get repository
-            repo = self.github_client.get_repo(f"{self.repo_owner}/{self.repo_name}")
-            
-            # Create PR
-            pr = repo.create_pull(
-                title=pr_title,
-                body=pr_description,
-                head=branch_name,
-                base=base_branch
-            )
-            
-            # Add labels
-            try:
-                pr.add_to_labels("drift-remediation")
-                pr.add_to_labels("automated")
-            except GithubException as e:
-                logger.warning(f"Failed to add labels to PR: {e}")
-            
-            logger.info(f"Created PR: {pr.html_url}")
-            return pr.html_url
-            
-        except GithubException as e:
-            raise PRGenerationError(f"Failed to create PR: {e}")
+        # Validate we're in a git repo
+        if not (self.repo_path / ".git").exists():
+            raise ValueError(f"Not a git repository: {repo_path}")
     
     def generate_pr_for_service(
         self,
-        repo_path: Path,
         service_name: str,
         stack_name: str,
-        running_config: Dict[str, Any],
-        drift_items: List[Dict[str, Any]],
-        drift_report_path: Optional[str] = None,
-        base_branch: str = "main"
+        drift_items: List[DriftItem],
+        compose_file_path: Path
     ) -> Optional[str]:
-        """Complete PR generation workflow for a service.
+        """
+        Generate a PR to remediate drift for a single service
         
         Args:
-            repo_path: Path to target repository
-            service_name: Name of the service
-            stack_name: Name of the stack
-            running_config: Running configuration
-            drift_items: List of drift items
-            drift_report_path: Path to drift report
-            base_branch: Base branch to target
-        
+            service_name: Name of the service (e.g., "pihole")
+            stack_name: Name of the stack (e.g., "dns-pihole")
+            drift_items: List of drift items for this service
+            compose_file_path: Path to the compose file to update (relative to repo root)
+            
         Returns:
-            PR URL if successful, None otherwise
+            PR URL if created, None if dry-run or error
         """
-        timestamp = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
-        branch_name = f"fix/drift-{service_name}-{timestamp}"
+        if not drift_items:
+            print(f"No drift items for {service_name}, skipping PR generation")
+            return None
         
+        # Generate branch name
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        branch_name = f"fix/drift-{stack_name}-{timestamp}"
+        
+        # Create branch
         try:
-            # Step 1: Create branch
-            logger.info(f"Creating branch {branch_name}...")
-            self.create_branch(repo_path, branch_name, base_branch)
-            
-            # Step 2: Update compose file
-            compose_path = repo_path / "stacks" / stack_name / "docker-compose.yml"
-            if not compose_path.exists():
-                # Try alternate path
-                compose_path = repo_path / stack_name / "docker-compose.yml"
-            
-            if not compose_path.exists():
-                raise PRGenerationError(f"Compose file not found for {stack_name}")
-            
-            logger.info(f"Updating compose file {compose_path}...")
-            self.update_compose_file(compose_path, service_name, running_config)
-            
-            # Step 3: Commit changes
-            logger.info("Committing changes...")
-            self.commit_changes(repo_path, service_name)
-            
-            # Step 4: Push branch
-            logger.info("Pushing branch...")
-            self.push_branch(repo_path, branch_name)
-            
-            # Step 5: Create PR
-            logger.info("Creating Pull Request...")
-            pr_title = f"fix({service_name}): sync config with running state"
-            pr_description = self.create_pr_description(
-                service_name,
-                stack_name,
-                drift_items,
-                drift_report_path
-            )
-            
-            pr_url = self.create_github_pr(branch_name, pr_title, pr_description, base_branch)
-            
-            logger.info(f"✅ PR generated successfully: {pr_url}")
-            return pr_url
-            
+            self._create_branch(branch_name)
+        except GitOperationError as e:
+            print(f"Failed to create branch: {e}")
+            return None
+        
+        # Update compose file
+        try:
+            self._update_compose_file(compose_file_path, service_name, drift_items)
         except Exception as e:
-            logger.error(f"Failed to generate PR for {service_name}: {e}")
-            raise PRGenerationError(f"PR generation failed: {e}")
+            print(f"Failed to update compose file: {e}")
+            self._cleanup_branch(branch_name)
+            return None
+        
+        # Commit changes
+        commit_msg = self._generate_commit_message(service_name, stack_name, drift_items)
+        try:
+            self._commit_changes(compose_file_path, commit_msg)
+        except GitOperationError as e:
+            print(f"Failed to commit changes: {e}")
+            self._cleanup_branch(branch_name)
+            return None
+        
+        # Push branch
+        if not self.dry_run:
+            try:
+                self._push_branch(branch_name)
+            except GitOperationError as e:
+                print(f"Failed to push branch: {e}")
+                self._cleanup_branch(branch_name)
+                return None
+        
+        # Create PR
+        pr_metadata = self._generate_pr_metadata(
+            branch_name, service_name, stack_name, drift_items, compose_file_path
+        )
+        
+        if not self.dry_run:
+            try:
+                pr_url = self._create_github_pr(pr_metadata)
+                print(f"✅ Created PR for {service_name}: {pr_url}")
+                return pr_url
+            except PRGenerationError as e:
+                print(f"Failed to create PR: {e}")
+                return None
+        else:
+            print(f"[DRY RUN] Would create PR: {pr_metadata.title}")
+            print(f"[DRY RUN] Branch: {branch_name}")
+            print(f"[DRY RUN] Commit: {commit_msg}")
+            return None
+    
+    def _validate_branch_name(self, branch_name: str) -> None:
+        """Validate branch name to prevent injection attacks"""
+        # Git branch names must not contain: .., ~, ^, :, ?, *, [, \, space at start/end
+        # Keep it simple: allow alphanumeric, -, /, _
+        if not re.match(r'^[a-zA-Z0-9/_-]+$', branch_name):
+            raise ValueError(
+                f"Invalid branch name: {branch_name}. "
+                "Branch names must contain only alphanumeric characters, -, /, and _"
+            )
+    
+    def _create_branch(self, branch_name: str) -> None:
+        """Create a new git branch"""
+        # Validate branch name to prevent injection
+        self._validate_branch_name(branch_name)
+        
+        result = subprocess.run(
+            ["git", "checkout", "-b", branch_name],
+            cwd=self.repo_path,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            raise GitOperationError(f"Failed to create branch: {result.stderr}")
+    
+    def _cleanup_branch(self, branch_name: str) -> None:
+        """Clean up a branch after failed PR generation"""
+        # Switch back to main
+        subprocess.run(
+            ["git", "checkout", "main"],
+            cwd=self.repo_path,
+            capture_output=True
+        )
+        
+        # Delete the branch
+        subprocess.run(
+            ["git", "branch", "-D", branch_name],
+            cwd=self.repo_path,
+            capture_output=True
+        )
+    
+    def _update_compose_file(
+        self,
+        compose_file_path: Path,
+        service_name: str,
+        drift_items: List[DriftItem]
+    ) -> None:
+        """
+        Update Docker Compose file with running configuration values
+        
+        This is a simplified implementation that updates specific fields.
+        A full implementation would parse YAML, update values, and write back.
+        """
+        import yaml
+        
+        full_path = self.repo_path / compose_file_path
+        
+        # Read current compose file
+        try:
+            with open(full_path, 'r') as f:
+                compose_data = yaml.safe_load(f)
+        except yaml.YAMLError as e:
+            raise ValueError(f"Failed to parse {compose_file_path}: {e}")
+        except FileNotFoundError:
+            raise ValueError(f"Compose file not found: {compose_file_path}")
+        
+        if 'services' not in compose_data or service_name not in compose_data['services']:
+            raise ValueError(f"Service {service_name} not found in {compose_file_path}")
+        
+        service_config = compose_data['services'][service_name]
+        
+        # Apply drift fixes
+        for drift in drift_items:
+            self._apply_drift_fix(service_config, drift)
+        
+        # Write back to file
+        with open(full_path, 'w') as f:
+            yaml.dump(compose_data, f, default_flow_style=False, sort_keys=False)
+    
+    def _apply_drift_fix(self, service_config: Dict[str, Any], drift: DriftItem) -> None:
+        """Apply a single drift fix to service configuration"""
+        # Parse field path (e.g., "labels.traefik.http.routers.pihole.rule")
+        path_parts = drift.field_path.split('.')
+        
+        # Navigate to the parent object
+        current = service_config
+        for part in path_parts[:-1]:
+            if part not in current:
+                current[part] = {}
+            current = current[part]
+        
+        # Set the value
+        final_key = path_parts[-1]
+        current[final_key] = drift.running_value
+    
+    def _generate_commit_message(
+        self,
+        service_name: str,
+        stack_name: str,
+        drift_items: List[DriftItem]
+    ) -> str:
+        """Generate conventional commit message"""
+        # Count drift by severity
+        severity_counts = {}
+        for item in drift_items:
+            severity_counts[item.severity] = severity_counts.get(item.severity, 0) + 1
+        
+        # Determine commit type based on most severe drift
+        if "BREAKING" in severity_counts:
+            commit_type = "fix"  # Breaking config drift is a fix
+        elif "FUNCTIONAL" in severity_counts:
+            commit_type = "fix"
+        else:
+            commit_type = "chore"  # Cosmetic/informational
+        
+        # Generate summary
+        drift_count = len(drift_items)
+        scope = stack_name
+        
+        subject = f"sync {service_name} config with running state"
+        
+        # Body with details
+        body_lines = [
+            "",
+            f"Detected {drift_count} configuration drift(s) in {service_name}:",
+            ""
+        ]
+        
+        for item in drift_items:
+            body_lines.append(f"- {item.field_path}: {item.severity}")
+            body_lines.append(f"  Git: {item.git_value}")
+            body_lines.append(f"  Running: {item.running_value}")
+        
+        body_lines.extend([
+            "",
+            "This PR backports the running configuration to git to eliminate drift.",
+            ""
+        ])
+        
+        commit_msg = f"{commit_type}({scope}): {subject}\n" + "\n".join(body_lines)
+        return commit_msg
+    
+    def _commit_changes(self, compose_file_path: Path, commit_msg: str) -> None:
+        """Commit changes to git"""
+        # Add file
+        result = subprocess.run(
+            ["git", "add", str(compose_file_path)],
+            cwd=self.repo_path,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            raise GitOperationError(f"Failed to add file: {result.stderr}")
+        
+        # Commit
+        result = subprocess.run(
+            ["git", "commit", "-m", commit_msg],
+            cwd=self.repo_path,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            raise GitOperationError(f"Failed to commit: {result.stderr}")
+    
+    def _push_branch(self, branch_name: str) -> None:
+        """Push branch to remote"""
+        result = subprocess.run(
+            ["git", "push", "-u", "origin", branch_name],
+            cwd=self.repo_path,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            raise GitOperationError(f"Failed to push branch: {result.stderr}")
+    
+    def _generate_pr_metadata(
+        self,
+        branch_name: str,
+        service_name: str,
+        stack_name: str,
+        drift_items: List[DriftItem],
+        compose_file_path: Path
+    ) -> PRMetadata:
+        """Generate PR metadata (title, body, labels)"""
+        title = f"fix({stack_name}): Sync {service_name} config with running state"
+        
+        # Build PR body
+        body_lines = [
+            "## Drift Remediation",
+            "",
+            f"This PR backports the running configuration of `{service_name}` to git.",
+            "",
+            f"**Stack:** `{stack_name}`",
+            f"**File:** `{compose_file_path}`",
+            f"**Drift Items:** {len(drift_items)}",
+            "",
+            "### Changes",
+            ""
+        ]
+        
+        # Group by severity
+        by_severity = {}
+        for item in drift_items:
+            by_severity.setdefault(item.severity, []).append(item)
+        
+        for severity in ["BREAKING", "FUNCTIONAL", "COSMETIC", "INFORMATIONAL"]:
+            if severity in by_severity:
+                items = by_severity[severity]
+                emoji = {
+                    "BREAKING": "🔴",
+                    "FUNCTIONAL": "🟡",
+                    "COSMETIC": "🔵",
+                    "INFORMATIONAL": "⚪"
+                }.get(severity, "")
+                
+                body_lines.append(f"#### {emoji} {severity} ({len(items)} items)")
+                body_lines.append("")
+                
+                for item in items:
+                    body_lines.append(f"**{item.field_path}**")
+                    body_lines.append(f"- Git: `{item.git_value}`")
+                    body_lines.append(f"- Running: `{item.running_value}`")
+                    body_lines.append("")
+        
+        body_lines.extend([
+            "### Review Notes",
+            "",
+            "- This PR was automatically generated by drift detection tool",
+            "- Changes reflect the **current running state** of the service",
+            "- Review carefully to ensure running config is correct",
+            "- Once approved, git will match deployed infrastructure",
+            ""
+        ])
+        
+        body = "\n".join(body_lines)
+        
+        return PRMetadata(
+            branch_name=branch_name,
+            title=title,
+            body=body,
+            labels=["drift-remediation", "automated"],
+            base_branch="main"
+        )
+    
+    def _create_github_pr(self, metadata: PRMetadata) -> str:
+        """Create PR via GitHub API"""
+        if not self.github_token or not self.github_repo:
+            raise PRGenerationError(
+                "GitHub token and repo required. Set GITHUB_TOKEN and GITHUB_REPO environment variables."
+            )
+        
+        api_url = f"https://api.github.com/repos/{self.github_repo}/pulls"
+        
+        headers = {
+            "Authorization": f"token {self.github_token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        
+        data = {
+            "title": metadata.title,
+            "body": metadata.body,
+            "head": metadata.branch_name,
+            "base": metadata.base_branch
+        }
+        
+        response = requests.post(api_url, headers=headers, json=data)
+        
+        if response.status_code != 201:
+            raise PRGenerationError(
+                f"GitHub API returned {response.status_code}: {response.text}"
+            )
+        
+        pr_data = response.json()
+        pr_url = pr_data["html_url"]
+        pr_number = pr_data["number"]
+        
+        # Add labels
+        if metadata.labels:
+            self._add_labels_to_pr(pr_number, metadata.labels)
+        
+        return pr_url
+    
+    def _add_labels_to_pr(self, pr_number: int, labels: List[str]) -> None:
+        """Add labels to a PR"""
+        if not self.github_token or not self.github_repo:
+            return
+        
+        api_url = f"https://api.github.com/repos/{self.github_repo}/issues/{pr_number}/labels"
+        
+        headers = {
+            "Authorization": f"token {self.github_token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        
+        data = {"labels": labels}
+        
+        response = requests.post(api_url, headers=headers, json=data)
+        
+        if response.status_code != 200:
+            print(f"Warning: Failed to add labels: {response.text}")
 
 
-def generate_pr(
-    service_drift: Dict[str, Any],
+def generate_prs_from_drift_report(
+    drift_report_path: Path,
     repo_path: Path,
-    github_token: Optional[str] = None,
-    repo_owner: Optional[str] = None,
-    repo_name: Optional[str] = None
-) -> Optional[str]:
-    """Convenience function to generate PR for a service drift.
+    dry_run: bool = False
+) -> Dict[str, Optional[str]]:
+    """
+    Generate PRs for all drifted services in a drift report
     
     Args:
-        service_drift: ServiceDrift dictionary
+        drift_report_path: Path to drift report JSON file
         repo_path: Path to target repository
-        github_token: GitHub API token
-        repo_owner: Repository owner
-        repo_name: Repository name
-    
+        dry_run: If True, don't actually create PRs
+        
     Returns:
-        PR URL if successful, None otherwise
+        Dict mapping service names to PR URLs (or None if failed/dry-run)
     """
-    generator = PRGenerator(github_token, repo_owner, repo_name)
+    with open(drift_report_path, 'r') as f:
+        drift_data = json.load(f)
     
-    service_name = service_drift['service_name']
-    stack_name = service_drift['stack_name']
-    drift_items = service_drift['drift_items']
+    generator = PRGenerator(repo_path=repo_path, dry_run=dry_run)
     
-    # Convert drift items to running config
-    running_config = {}
-    for item in drift_items:
-        # Simplified - in production would reconstruct full config
-        running_config[item['field_path']] = item['running_value']
+    pr_results = {}
     
-    return generator.generate_pr_for_service(
-        repo_path=repo_path,
-        service_name=service_name,
-        stack_name=stack_name,
-        running_config=running_config,
-        drift_items=drift_items
-    )
+    for service_drift in drift_data.get("services", []):
+        service_name = service_drift["service_name"]
+        stack_name = service_drift["stack_name"]
+        compose_file = Path(service_drift["compose_file"])
+        
+        # Convert drift items to DriftItem objects
+        drift_items = [
+            DriftItem(
+                service_name=service_name,
+                stack_name=stack_name,
+                field_path=item["field_path"],
+                running_value=item["running_value"],
+                git_value=item["git_value"],
+                severity=item["severity"]
+            )
+            for item in service_drift.get("drift_items", [])
+        ]
+        
+        pr_url = generator.generate_pr_for_service(
+            service_name=service_name,
+            stack_name=stack_name,
+            drift_items=drift_items,
+            compose_file_path=compose_file
+        )
+        
+        pr_results[service_name] = pr_url
+    
+    return pr_results
+
+
+if __name__ == "__main__":
+    # Example usage
+    import sys
+    
+    if len(sys.argv) < 3:
+        print("Usage: pr_generator.py <drift_report.json> <repo_path> [--dry-run]")
+        sys.exit(1)
+    
+    drift_report = Path(sys.argv[1])
+    repo_path = Path(sys.argv[2])
+    dry_run = "--dry-run" in sys.argv
+    
+    results = generate_prs_from_drift_report(drift_report, repo_path, dry_run=dry_run)
+    
+    print("\n=== PR Generation Results ===")
+    for service, pr_url in results.items():
+        if pr_url:
+            print(f"✅ {service}: {pr_url}")
+        else:
+            print(f"❌ {service}: Failed or skipped")

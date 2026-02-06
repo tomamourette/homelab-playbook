@@ -1,292 +1,538 @@
-"""Unit tests for pr_generator.py module."""
+#!/usr/bin/env python3
+"""
+Unit tests for PR Generator
+
+Tests cover:
+- Branch creation and cleanup
+- Compose file updates
+- Commit message generation
+- PR metadata generation
+- GitHub API integration (mocked)
+"""
 
 import pytest
+import json
 from pathlib import Path
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import Mock, patch, MagicMock, call
 import tempfile
+import shutil
+import yaml
 
 from pr_generator import (
     PRGenerator,
-    PRGenerationError,
+    DriftItem,
+    PRMetadata,
     GitOperationError,
-    generate_pr
+    PRGenerationError,
+    generate_prs_from_drift_report
 )
 
 
-class TestPRGeneratorInit:
-    """Test suite for PRGenerator initialization."""
+@pytest.fixture
+def temp_git_repo():
+    """Create a temporary git repository for testing"""
+    temp_dir = tempfile.mkdtemp()
+    repo_path = Path(temp_dir)
     
-    def test_init_with_parameters(self):
-        """Test initialization with explicit parameters."""
-        generator = PRGenerator(
-            github_token="test_token",
-            repo_owner="owner",
-            repo_name="repo"
-        )
-        
-        assert generator.github_token == "test_token"
-        assert generator.repo_owner == "owner"
-        assert generator.repo_name == "repo"
+    # Initialize git repo
+    import subprocess
+    subprocess.run(["git", "init"], cwd=repo_path, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo_path, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo_path, capture_output=True)
     
-    @patch.dict('os.environ', {'GITHUB_TOKEN': 'env_token', 'GITHUB_REPO_OWNER': 'env_owner', 'GITHUB_REPO_NAME': 'env_repo'})
-    def test_init_from_environment(self):
-        """Test initialization from environment variables."""
-        generator = PRGenerator()
-        
-        assert generator.github_token == "env_token"
-        assert generator.repo_owner == "env_owner"
-        assert generator.repo_name == "env_repo"
+    # Create initial commit
+    (repo_path / "README.md").write_text("# Test Repo\n")
+    subprocess.run(["git", "add", "README.md"], cwd=repo_path, capture_output=True)
+    subprocess.run(["git", "commit", "-m", "Initial commit"], cwd=repo_path, capture_output=True)
+    
+    yield repo_path
+    
+    # Cleanup
+    shutil.rmtree(temp_dir)
 
 
-class TestSanitizeValue:
-    """Test suite for sanitize_value method."""
-    
-    def test_sanitize_password_field(self):
-        """Test that password fields are redacted."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("DATABASE_PASSWORD", "secret123")
-        assert result == "[REDACTED]"
-    
-    def test_sanitize_api_key_field(self):
-        """Test that API key fields are redacted."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("environment.API_KEY", "key_12345")
-        assert result == "[REDACTED]"
-    
-    def test_sanitize_token_field(self):
-        """Test that token fields are redacted."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("AUTH_TOKEN", "token_abc")
-        assert result == "[REDACTED]"
-    
-    def test_sanitize_secret_field(self):
-        """Test that secret fields are redacted."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("SECRET_KEY", "my_secret")
-        assert result == "[REDACTED]"
-    
-    def test_non_sensitive_field_not_redacted(self):
-        """Test that non-sensitive fields are not redacted."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("IMAGE", "nginx:latest")
-        assert result == "nginx:latest"
-    
-    def test_case_insensitive_detection(self):
-        """Test that sensitive pattern detection is case-insensitive."""
-        generator = PRGenerator()
-        result = generator.sanitize_value("Database_Password", "value")
-        assert result == "[REDACTED]"
-
-
-class TestCreatePRDescription:
-    """Test suite for create_pr_description method."""
-    
-    def test_pr_description_structure(self):
-        """Test PR description contains all required sections."""
-        generator = PRGenerator()
-        
-        drift_items = [{
-            'field_path': 'image',
-            'baseline_value': 'nginx:1.0',
-            'running_value': 'nginx:2.0',
-            'severity': 'breaking'
-        }]
-        
-        result = generator.create_pr_description(
-            service_name="test-service",
-            stack_name="test-stack",
-            drift_items=drift_items
-        )
-        
-        assert "# Drift Remediation: test-service" in result
-        assert "**Stack**: test-stack" in result
-        assert "## Summary" in result
-        assert "## Configuration Changes" in result
-        assert "## Review Checklist" in result
-    
-    def test_pr_description_sanitizes_sensitive_values(self):
-        """Test that PR description sanitizes sensitive data."""
-        generator = PRGenerator()
-        
-        drift_items = [{
-            'field_path': 'environment.API_KEY',
-            'baseline_value': 'old_key_123',
-            'running_value': 'new_key_456',
-            'severity': 'breaking'
-        }]
-        
-        result = generator.create_pr_description(
-            service_name="test",
-            stack_name="test",
-            drift_items=drift_items
-        )
-        
-        assert "[REDACTED]" in result
-        assert "old_key_123" not in result
-        assert "new_key_456" not in result
-    
-    def test_pr_description_with_drift_report_link(self):
-        """Test PR description includes drift report link."""
-        generator = PRGenerator()
-        
-        result = generator.create_pr_description(
-            service_name="test",
-            stack_name="test",
-            drift_items=[],
-            drift_report_path="reports/drift-2026.md"
-        )
-        
-        assert "## Drift Report" in result
-        assert "reports/drift-2026.md" in result
-    
-    def test_pr_description_multiple_drift_items(self):
-        """Test PR description with multiple drift items."""
-        generator = PRGenerator()
-        
-        drift_items = [
-            {
-                'field_path': 'image',
-                'baseline_value': 'nginx:1.0',
-                'running_value': 'nginx:2.0',
-                'severity': 'breaking'
-            },
-            {
-                'field_path': 'labels.version',
-                'baseline_value': '1.0',
-                'running_value': '2.0',
-                'severity': 'cosmetic'
-            }
-        ]
-        
-        result = generator.create_pr_description(
-            service_name="test",
-            stack_name="test",
-            drift_items=drift_items
-        )
-        
-        assert "### image" in result
-        assert "### labels.version" in result
-        assert "2 configuration drift item(s)" in result
-
-
-class TestGitOperations:
-    """Test suite for git operation methods."""
-    
-    @patch('pr_generator.subprocess.run')
-    def test_create_branch_success(self, mock_run):
-        """Test successful branch creation."""
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo_path = Path(tmpdir)
-            
-            generator.create_branch(repo_path, "test-branch", "main")
-            
-            assert mock_run.call_count == 3  # checkout, pull, checkout -b
-    
-    @patch('pr_generator.subprocess.run')
-    def test_create_branch_failure(self, mock_run):
-        """Test branch creation failure handling."""
-        mock_run.side_effect = subprocess.CalledProcessError(1, 'git', stderr=b'error')
-        
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo_path = Path(tmpdir)
-            
-            with pytest.raises(GitOperationError):
-                generator.create_branch(repo_path, "test-branch")
-    
-    @patch('pr_generator.subprocess.run')
-    def test_commit_changes_conventional_format(self, mock_run):
-        """Test commit uses conventional commit format."""
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo_path = Path(tmpdir)
-            
-            generator.commit_changes(repo_path, "my-service")
-            
-            # Check commit message format
-            commit_call = [call for call in mock_run.call_args_list if 'commit' in str(call)]
-            assert len(commit_call) > 0
-    
-    @patch('pr_generator.subprocess.run')
-    def test_push_branch(self, mock_run):
-        """Test branch push."""
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            repo_path = Path(tmpdir)
-            
-            generator.push_branch(repo_path, "test-branch")
-            
-            # Verify push command called
-            assert mock_run.called
-
-
-class TestUpdateComposeFile:
-    """Test suite for update_compose_file method."""
-    
-    def test_update_compose_file_image(self):
-        """Test updating image in compose file."""
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            compose_path = Path(tmpdir) / "docker-compose.yml"
-            
-            # Create test compose file
-            compose_data = {
-                'services': {
-                    'test-service': {
-                        'image': 'nginx:1.0'
-                    }
+@pytest.fixture
+def sample_compose_file(temp_git_repo):
+    """Create a sample Docker Compose file"""
+    compose_path = temp_git_repo / "docker-compose.yml"
+    compose_data = {
+        "services": {
+            "pihole": {
+                "image": "pihole/pihole:2024.01.0",
+                "labels": {
+                    "traefik.enable": "true",
+                    "traefik.http.routers.pihole.rule": "Host(`pihole.local`)"
+                },
+                "environment": {
+                    "TZ": "UTC"
                 }
             }
-            
-            import yaml
-            with open(compose_path, 'w') as f:
-                yaml.dump(compose_data, f)
-            
-            # Update
-            running_config = {'image': 'nginx:2.0'}
-            generator.update_compose_file(compose_path, 'test-service', running_config)
-            
-            # Verify update
-            with open(compose_path, 'r') as f:
-                updated = yaml.safe_load(f)
-            
-            assert updated['services']['test-service']['image'] == 'nginx:2.0'
+        }
+    }
     
-    def test_update_compose_file_service_not_found(self):
-        """Test error when service not found in compose file."""
-        generator = PRGenerator()
-        
-        with tempfile.TemporaryDirectory() as tmpdir:
-            compose_path = Path(tmpdir) / "docker-compose.yml"
-            
-            compose_data = {'services': {'other-service': {}}}
-            
-            import yaml
-            with open(compose_path, 'w') as f:
-                yaml.dump(compose_data, f)
-            
-            with pytest.raises(PRGenerationError, match="not found"):
-                generator.update_compose_file(compose_path, 'test-service', {})
-
-
-class TestGitHubIntegration:
-    """Test suite for GitHub API methods."""
+    with open(compose_path, 'w') as f:
+        yaml.dump(compose_data, f)
     
-    def test_create_github_pr_without_client(self):
-        """Test PR creation fails without GitHub client."""
-        generator = PRGenerator()
-        generator.github_client = None
+    return Path("docker-compose.yml")
+
+
+@pytest.fixture
+def sample_drift_items():
+    """Create sample drift items for testing"""
+    return [
+        DriftItem(
+            service_name="pihole",
+            stack_name="dns-pihole",
+            field_path="labels.traefik.http.routers.pihole.rule",
+            running_value="Host(`pihole.home.lan`)",
+            git_value="Host(`pihole.local`)",
+            severity="FUNCTIONAL"
+        ),
+        DriftItem(
+            service_name="pihole",
+            stack_name="dns-pihole",
+            field_path="environment.TZ",
+            running_value="Europe/Brussels",
+            git_value="UTC",
+            severity="COSMETIC"
+        )
+    ]
+
+
+class TestPRGenerator:
+    """Tests for PRGenerator class"""
+    
+    def test_init_valid_repo(self, temp_git_repo):
+        """Test initialization with valid git repository"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
         
-        with pytest.raises(PRGenerationError):
-            generator.create_github_pr("branch", "title", "description")
+        assert generator.repo_path == temp_git_repo
+        assert generator.dry_run is True
+    
+    def test_init_invalid_path(self):
+        """Test initialization with non-existent path"""
+        with pytest.raises(ValueError, match="does not exist"):
+            PRGenerator(repo_path="/nonexistent/path")
+    
+    def test_init_not_git_repo(self, tmp_path):
+        """Test initialization with non-git directory"""
+        with pytest.raises(ValueError, match="Not a git repository"):
+            PRGenerator(repo_path=tmp_path)
+    
+    def test_validate_branch_name_valid(self, temp_git_repo):
+        """Test valid branch names pass validation"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        valid_names = [
+            "fix/drift-pihole-20260206",
+            "feature/test-branch",
+            "hotfix/urgent_fix",
+            "fix/drift-dns-pihole-20260206-123456"
+        ]
+        
+        for name in valid_names:
+            generator._validate_branch_name(name)  # Should not raise
+    
+    def test_validate_branch_name_invalid(self, temp_git_repo):
+        """Test invalid branch names fail validation"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        invalid_names = [
+            "branch with spaces",
+            "branch..double-dot",
+            "branch~tilde",
+            "branch:colon",
+            "branch?question",
+            "branch*asterisk",
+            "branch[bracket"
+        ]
+        
+        for name in invalid_names:
+            with pytest.raises(ValueError, match="Invalid branch name"):
+                generator._validate_branch_name(name)
+    
+    def test_create_branch_success(self, temp_git_repo):
+        """Test successful branch creation"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        branch_name = "test-branch"
+        generator._create_branch(branch_name)
+        
+        # Verify branch was created
+        import subprocess
+        result = subprocess.run(
+            ["git", "branch", "--list", branch_name],
+            cwd=temp_git_repo,
+            capture_output=True,
+            text=True
+        )
+        assert branch_name in result.stdout
+    
+    def test_cleanup_branch(self, temp_git_repo):
+        """Test branch cleanup after failure"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        # Create a branch
+        branch_name = "test-cleanup"
+        generator._create_branch(branch_name)
+        
+        # Clean it up
+        generator._cleanup_branch(branch_name)
+        
+        # Verify branch was deleted
+        import subprocess
+        result = subprocess.run(
+            ["git", "branch", "--list", branch_name],
+            cwd=temp_git_repo,
+            capture_output=True,
+            text=True
+        )
+        assert branch_name not in result.stdout
+    
+    def test_update_compose_file_yaml_error(self, temp_git_repo):
+        """Test handling of malformed YAML files"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        # Create malformed YAML file
+        bad_yaml = temp_git_repo / "bad.yml"
+        bad_yaml.write_text("services:\n  test: {\n    invalid yaml")
+        
+        drift_items = [
+            DriftItem(
+                service_name="test",
+                stack_name="test-stack",
+                field_path="image",
+                running_value="nginx:latest",
+                git_value="nginx:1.0",
+                severity="BREAKING"
+            )
+        ]
+        
+        with pytest.raises(ValueError, match="Failed to parse"):
+            generator._update_compose_file(Path("bad.yml"), "test", drift_items)
+    
+    def test_update_compose_file_missing(self, temp_git_repo):
+        """Test handling of missing compose file"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        drift_items = []
+        
+        with pytest.raises(ValueError, match="not found"):
+            generator._update_compose_file(Path("nonexistent.yml"), "test", drift_items)
+    
+    def test_apply_drift_fix_simple(self, temp_git_repo, sample_compose_file, sample_drift_items):
+        """Test applying drift fix to compose file"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        # Load compose data
+        with open(temp_git_repo / sample_compose_file, 'r') as f:
+            compose_data = yaml.safe_load(f)
+        
+        service_config = compose_data['services']['pihole']
+        
+        # Apply one drift fix
+        drift = sample_drift_items[1]  # TZ change
+        generator._apply_drift_fix(service_config, drift)
+        
+        # Verify fix was applied
+        assert service_config['environment']['TZ'] == "Europe/Brussels"
+    
+    def test_apply_drift_fix_nested(self, temp_git_repo):
+        """Test applying drift fix to nested fields"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=True)
+        
+        service_config = {
+            "labels": {
+                "traefik.http.routers.test.rule": "Host(`old.local`)"
+            }
+        }
+        
+        drift = DriftItem(
+            service_name="test",
+            stack_name="test-stack",
+            field_path="labels.traefik.http.routers.test.rule",
+            running_value="Host(`new.local`)",
+            git_value="Host(`old.local`)",
+            severity="FUNCTIONAL"
+        )
+        
+        generator._apply_drift_fix(service_config, drift)
+        
+        assert service_config['labels']['traefik.http.routers.test.rule'] == "Host(`new.local`)"
+    
+    def test_generate_commit_message_breaking(self, sample_drift_items):
+        """Test commit message generation with breaking changes"""
+        generator = PRGenerator(repo_path="/tmp", dry_run=True)  # Path not used in this test
+        
+        breaking_drift = DriftItem(
+            service_name="pihole",
+            stack_name="dns-pihole",
+            field_path="image",
+            running_value="pihole/pihole:2024.02.0",
+            git_value="pihole/pihole:2024.01.0",
+            severity="BREAKING"
+        )
+        
+        msg = generator._generate_commit_message(
+            "pihole",
+            "dns-pihole",
+            [breaking_drift]
+        )
+        
+        assert msg.startswith("fix(dns-pihole):")
+        assert "sync pihole config with running state" in msg
+        assert "BREAKING" in msg
+        assert "image" in msg
+    
+    def test_generate_commit_message_cosmetic(self, sample_drift_items):
+        """Test commit message generation with cosmetic changes only"""
+        generator = PRGenerator(repo_path="/tmp", dry_run=True)
+        
+        cosmetic_drift = [sample_drift_items[1]]  # TZ change (COSMETIC)
+        
+        msg = generator._generate_commit_message(
+            "pihole",
+            "dns-pihole",
+            cosmetic_drift
+        )
+        
+        assert msg.startswith("chore(dns-pihole):")
+        assert "COSMETIC" in msg
+    
+    def test_generate_pr_metadata(self, sample_drift_items):
+        """Test PR metadata generation"""
+        generator = PRGenerator(repo_path="/tmp", dry_run=True)
+        
+        metadata = generator._generate_pr_metadata(
+            branch_name="fix/drift-pihole-123",
+            service_name="pihole",
+            stack_name="dns-pihole",
+            drift_items=sample_drift_items,
+            compose_file_path=Path("stacks/dns-pihole/docker-compose.yml")
+        )
+        
+        assert metadata.branch_name == "fix/drift-pihole-123"
+        assert "pihole" in metadata.title
+        assert "dns-pihole" in metadata.title
+        assert "FUNCTIONAL" in metadata.body
+        assert "COSMETIC" in metadata.body
+        assert "drift-remediation" in metadata.labels
+        assert "automated" in metadata.labels
+    
+    def test_generate_pr_metadata_severity_grouping(self, sample_drift_items):
+        """Test PR metadata groups drift by severity"""
+        generator = PRGenerator(repo_path="/tmp", dry_run=True)
+        
+        # Add multiple severities
+        all_severities = sample_drift_items + [
+            DriftItem(
+                service_name="pihole",
+                stack_name="dns-pihole",
+                field_path="image",
+                running_value="new:1.0",
+                git_value="old:1.0",
+                severity="BREAKING"
+            ),
+            DriftItem(
+                service_name="pihole",
+                stack_name="dns-pihole",
+                field_path="healthcheck",
+                running_value="test",
+                git_value="",
+                severity="INFORMATIONAL"
+            )
+        ]
+        
+        metadata = generator._generate_pr_metadata(
+            branch_name="fix/test",
+            service_name="pihole",
+            stack_name="dns-pihole",
+            drift_items=all_severities,
+            compose_file_path=Path("test.yml")
+        )
+        
+        # Check all severity sections present
+        assert "🔴 BREAKING" in metadata.body
+        assert "🟡 FUNCTIONAL" in metadata.body
+        assert "🔵 COSMETIC" in metadata.body
+        assert "⚪ INFORMATIONAL" in metadata.body
+    
+    @patch('pr_generator.requests.post')
+    def test_create_github_pr_success(self, mock_post, temp_git_repo):
+        """Test successful GitHub PR creation"""
+        generator = PRGenerator(
+            repo_path=temp_git_repo,
+            github_token="test-token",
+            github_repo="user/repo",
+            dry_run=False
+        )
+        
+        # Mock successful PR creation
+        mock_response = Mock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "html_url": "https://github.com/user/repo/pull/123",
+            "number": 123
+        }
+        mock_post.return_value = mock_response
+        
+        metadata = PRMetadata(
+            branch_name="test-branch",
+            title="Test PR",
+            body="Test body",
+            labels=["test"]
+        )
+        
+        pr_url = generator._create_github_pr(metadata)
+        
+        assert pr_url == "https://github.com/user/repo/pull/123"
+        assert mock_post.called
+    
+    @patch('pr_generator.requests.post')
+    def test_create_github_pr_failure(self, mock_post, temp_git_repo):
+        """Test GitHub PR creation failure"""
+        generator = PRGenerator(
+            repo_path=temp_git_repo,
+            github_token="test-token",
+            github_repo="user/repo",
+            dry_run=False
+        )
+        
+        # Mock failed PR creation
+        mock_response = Mock()
+        mock_response.status_code = 422
+        mock_response.text = "Validation failed"
+        mock_post.return_value = mock_response
+        
+        metadata = PRMetadata(
+            branch_name="test-branch",
+            title="Test PR",
+            body="Test body",
+            labels=[]
+        )
+        
+        with pytest.raises(PRGenerationError, match="422"):
+            generator._create_github_pr(metadata)
+    
+    def test_create_github_pr_missing_token(self, temp_git_repo):
+        """Test GitHub PR creation without token"""
+        generator = PRGenerator(repo_path=temp_git_repo, dry_run=False)
+        
+        metadata = PRMetadata(
+            branch_name="test-branch",
+            title="Test PR",
+            body="Test body",
+            labels=[]
+        )
+        
+        with pytest.raises(PRGenerationError, match="token and repo required"):
+            generator._create_github_pr(metadata)
+    
+    @patch('pr_generator.requests.post')
+    def test_add_labels_to_pr(self, mock_post, temp_git_repo):
+        """Test adding labels to PR"""
+        generator = PRGenerator(
+            repo_path=temp_git_repo,
+            github_token="test-token",
+            github_repo="user/repo",
+            dry_run=False
+        )
+        
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+        
+        generator._add_labels_to_pr(123, ["label1", "label2"])
+        
+        assert mock_post.called
+        call_args = mock_post.call_args
+        assert "labels" in call_args[1]["json"]
+        assert call_args[1]["json"]["labels"] == ["label1", "label2"]
 
 
-# Import subprocess for mocking
-import subprocess
-import yaml
+class TestGeneratePRsFromReport:
+    """Tests for generate_prs_from_drift_report function"""
+    
+    def test_generate_from_empty_report(self, temp_git_repo, tmp_path):
+        """Test PR generation from empty drift report"""
+        report_path = tmp_path / "drift-report.json"
+        report_data = {
+            "services": []
+        }
+        
+        with open(report_path, 'w') as f:
+            json.dump(report_data, f)
+        
+        results = generate_prs_from_drift_report(
+            report_path,
+            temp_git_repo,
+            dry_run=True
+        )
+        
+        assert len(results) == 0
+    
+    def test_generate_from_report_dry_run(self, temp_git_repo, tmp_path, sample_compose_file):
+        """Test PR generation in dry-run mode"""
+        # Create compose file
+        (temp_git_repo / sample_compose_file).parent.mkdir(parents=True, exist_ok=True)
+        
+        report_path = tmp_path / "drift-report.json"
+        report_data = {
+            "services": [
+                {
+                    "service_name": "pihole",
+                    "stack_name": "dns-pihole",
+                    "compose_file": str(sample_compose_file),
+                    "drift_items": [
+                        {
+                            "field_path": "environment.TZ",
+                            "running_value": "Europe/Brussels",
+                            "git_value": "UTC",
+                            "severity": "COSMETIC"
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        with open(report_path, 'w') as f:
+            json.dump(report_data, f)
+        
+        results = generate_prs_from_drift_report(
+            report_path,
+            temp_git_repo,
+            dry_run=True
+        )
+        
+        assert "pihole" in results
+        assert results["pihole"] is None  # Dry-run returns None
+
+
+def test_dataclass_drift_item():
+    """Test DriftItem dataclass"""
+    item = DriftItem(
+        service_name="test",
+        stack_name="test-stack",
+        field_path="image",
+        running_value="nginx:latest",
+        git_value="nginx:1.0",
+        severity="BREAKING"
+    )
+    
+    assert item.service_name == "test"
+    assert item.severity == "BREAKING"
+
+
+def test_dataclass_pr_metadata():
+    """Test PRMetadata dataclass"""
+    metadata = PRMetadata(
+        branch_name="test-branch",
+        title="Test PR",
+        body="Body text",
+        labels=["test"],
+        base_branch="main"
+    )
+    
+    assert metadata.branch_name == "test-branch"
+    assert metadata.base_branch == "main"
+    assert "test" in metadata.labels
