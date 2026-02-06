@@ -4,7 +4,7 @@ This package provides tools to inspect Docker containers on remote hosts
 via SSH and extract their runtime configurations for drift analysis.
 """
 
-from .docker_inspector import (
+from docker_inspector import (
     DockerInspector,
     ContainerInfo,
     SSHConnectionError,
@@ -14,7 +14,16 @@ from .docker_inspector import (
     inspect_multiple_hosts,
 )
 
-from .config import Config, load_config
+from config import Config, load_config
+
+from git_config_loader import (
+    GitConfigLoader,
+    GitBaselineConfig,
+    GitConfigError,
+    ComposeFileNotFoundError,
+    ComposeParseError,
+    load_git_baselines,
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -27,4 +36,10 @@ __all__ = [
     "inspect_multiple_hosts",
     "Config",
     "load_config",
+    "GitConfigLoader",
+    "GitBaselineConfig",
+    "GitConfigError",
+    "ComposeFileNotFoundError",
+    "ComposeParseError",
+    "load_git_baselines",
 ]
