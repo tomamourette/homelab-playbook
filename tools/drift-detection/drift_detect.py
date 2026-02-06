@@ -20,6 +20,7 @@ from config import load_config
 from docker_inspector import DockerInspector
 from git_config_loader import GitConfigLoader
 from drift_comparator import DriftComparator
+from drift_report_generator import DriftReportGenerator
 
 
 # Configure logging
@@ -118,7 +119,7 @@ def save_report(report: Dict[str, Any], output_dir: Path, format: str = 'json'):
     Args:
         report: Drift report dictionary
         output_dir: Output directory path
-        format: Output format ('json' or 'markdown')
+        format: Output format ('json', 'markdown', or 'both')
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     
@@ -131,8 +132,10 @@ def save_report(report: Dict[str, Any], output_dir: Path, format: str = 'json'):
         logger.info(f"Saved JSON report to {json_file}")
     
     if format == 'markdown' or format == 'both':
-        # TODO: Implement Markdown report generation (Story 1.4)
-        logger.warning("Markdown report generation not yet implemented")
+        markdown_file = output_dir / f"drift-{timestamp}.md"
+        generator = DriftReportGenerator()
+        generator.save_markdown_report(report, output_dir, markdown_file.name)
+        logger.info(f"Saved Markdown report to {markdown_file}")
 
 
 def main():

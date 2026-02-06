@@ -34,6 +34,12 @@ from drift_comparator import (
     compare_drift,
 )
 
+from drift_report_generator import (
+    DriftReportGenerator,
+    generate_markdown_report,
+    save_markdown_report,
+)
+
 __version__ = "0.1.0"
 __all__ = [
     "DockerInspector",
@@ -57,4 +63,7 @@ __all__ = [
     "DriftItem",
     "DriftSeverity",
     "compare_drift",
+    "DriftReportGenerator",
+    "generate_markdown_report",
+    "save_markdown_report",
 ]
