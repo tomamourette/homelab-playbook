@@ -10,6 +10,9 @@ python-dotenv>=1.0.0
 # YAML Parsing
 pyyaml>=6.0.0
 
+# GitHub API Integration
+PyGithub>=2.1.1
+
 # Type Checking (optional, for development)
 mypy>=1.8.0
 types-paramiko>=3.4.0

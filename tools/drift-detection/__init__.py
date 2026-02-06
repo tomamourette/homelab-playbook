@@ -40,6 +40,13 @@ from drift_report_generator import (
     save_markdown_report,
 )
 
+from pr_generator import (
+    PRGenerator,
+    PRGenerationError,
+    GitOperationError,
+    generate_pr,
+)
+
 __version__ = "0.1.0"
 __all__ = [
     "DockerInspector",
@@ -66,4 +73,8 @@ __all__ = [
     "DriftReportGenerator",
     "generate_markdown_report",
     "save_markdown_report",
+    "PRGenerator",
+    "PRGenerationError",
+    "GitOperationError",
+    "generate_pr",
 ]
