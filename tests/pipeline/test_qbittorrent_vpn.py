@@ -11,19 +11,21 @@ Acceptance criteria:
 
 import ipaddress
 import re
+from collections.abc import Generator
 
 import docker
 import pytest
-import requests
 
 
 @pytest.fixture(scope="module")
-def docker_client(config) -> docker.DockerClient:
+def docker_client(config) -> Generator[docker.DockerClient]:
     """Docker client connected to the media host (ct-media-01)."""
     host = config["DOCKER_HOST_MEDIA"]
     if not host:
         pytest.skip("DOCKER_HOST_MEDIA not configured")
-    return docker.DockerClient(base_url=host, timeout=30)
+    client = docker.DockerClient(base_url=host, timeout=30)
+    yield client
+    client.close()
 
 
 @pytest.fixture(scope="module")
