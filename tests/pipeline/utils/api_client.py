@@ -1,15 +1,38 @@
 """Reusable API client for homelab media services."""
 
-from urllib.parse import urljoin
-
 import requests
 
 
-class MediaClient:
+class BaseClient:
+    """Base HTTP client with shared request methods.
+
+    Subclasses must set ``base_url``, ``timeout``, and ``session``
+    before calling the HTTP helpers.
+    """
+
+    base_url: str
+    timeout: int
+    session: requests.Session
+
+    def _build_url(self, path: str) -> str:
+        return f"{self.base_url}/{path.lstrip('/')}"
+
+    def get(self, path: str, **kwargs) -> requests.Response:
+        """Send a GET request."""
+        kwargs.setdefault("timeout", self.timeout)
+        return self.session.get(self._build_url(path), **kwargs)
+
+    def post(self, path: str, **kwargs) -> requests.Response:
+        """Send a POST request."""
+        kwargs.setdefault("timeout", self.timeout)
+        return self.session.post(self._build_url(path), **kwargs)
+
+
+class MediaClient(BaseClient):
     """HTTP client pre-configured with base URL and API key header.
 
     Args:
-        base_url: Service base URL (e.g. http://192.168.50.161:7878).
+        base_url: Service base URL (e.g. http://192.168.x.x:7878).
         api_key: API key sent via X-Api-Key header.
         timeout: Request timeout in seconds.
     """
@@ -24,36 +47,22 @@ class MediaClient:
             "Accept": "application/json",
         })
 
-    def get(self, path: str, **kwargs) -> requests.Response:
-        """Send a GET request to the service API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.get(url, **kwargs)
-
-    def post(self, path: str, **kwargs) -> requests.Response:
-        """Send a POST request to the service API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.post(url, **kwargs)
-
     def put(self, path: str, **kwargs) -> requests.Response:
         """Send a PUT request to the service API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
         kwargs.setdefault("timeout", self.timeout)
-        return self.session.put(url, **kwargs)
+        return self.session.put(self._build_url(path), **kwargs)
 
     def delete(self, path: str, **kwargs) -> requests.Response:
         """Send a DELETE request to the service API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
         kwargs.setdefault("timeout", self.timeout)
-        return self.session.delete(url, **kwargs)
+        return self.session.delete(self._build_url(path), **kwargs)
 
 
-class QBittorrentClient:
+class QBittorrentClient(BaseClient):
     """HTTP client for qBittorrent Web API (cookie-based auth).
 
     Args:
-        base_url: qBittorrent Web UI URL (e.g. http://192.168.50.161:8080).
+        base_url: qBittorrent Web UI URL (e.g. http://192.168.x.x:8080).
         username: Login username.
         password: Login password.
         timeout: Request timeout in seconds.
@@ -77,24 +86,12 @@ class QBittorrentClient:
             timeout=self.timeout,
         )
 
-    def get(self, path: str, **kwargs) -> requests.Response:
-        """Send a GET request to the qBittorrent API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.get(url, **kwargs)
 
-    def post(self, path: str, **kwargs) -> requests.Response:
-        """Send a POST request to the qBittorrent API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.post(url, **kwargs)
-
-
-class PlexClient:
+class PlexClient(BaseClient):
     """HTTP client for Plex Media Server API (token-based auth).
 
     Args:
-        base_url: Plex server URL (e.g. http://192.168.50.161:32400).
+        base_url: Plex server URL (e.g. http://192.168.x.x:32400).
         token: Plex authentication token.
         timeout: Request timeout in seconds.
     """
@@ -108,15 +105,3 @@ class PlexClient:
             "X-Plex-Token": token,
             "Accept": "application/json",
         })
-
-    def get(self, path: str, **kwargs) -> requests.Response:
-        """Send a GET request to the Plex API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.get(url, **kwargs)
-
-    def post(self, path: str, **kwargs) -> requests.Response:
-        """Send a POST request to the Plex API."""
-        url = f"{self.base_url}/{path.lstrip('/')}"
-        kwargs.setdefault("timeout", self.timeout)
-        return self.session.post(url, **kwargs)

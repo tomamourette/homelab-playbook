@@ -5,6 +5,7 @@ API client fixtures for each service in the media stack.
 """
 
 import os
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -40,59 +41,79 @@ def config() -> dict[str, str]:
         # Plex
         "PLEX_URL": os.environ.get("PLEX_URL", ""),
         "PLEX_TOKEN": os.environ.get("PLEX_TOKEN", ""),
+        # Docker (ct-media-01)
+        "DOCKER_HOST_MEDIA": os.environ.get("DOCKER_HOST_MEDIA", ""),
+        "GLUETUN_CONTAINER_NAME": os.environ.get(
+            "GLUETUN_CONTAINER_NAME", "gluetun"
+        ),
+        "QBITTORRENT_CONTAINER_NAME": os.environ.get(
+            "QBITTORRENT_CONTAINER_NAME", "qbittorrent"
+        ),
     }
 
 
 @pytest.fixture(scope="session")
-def overseerr_client(config) -> MediaClient:
+def overseerr_client(config) -> Generator[MediaClient]:
     """Configured API client for Overseerr."""
-    return MediaClient(
+    client = MediaClient(
         base_url=config["OVERSEERR_URL"],
         api_key=config["OVERSEERR_API_KEY"],
     )
+    yield client
+    client.session.close()
 
 
 @pytest.fixture(scope="session")
-def radarr_client(config) -> MediaClient:
+def radarr_client(config) -> Generator[MediaClient]:
     """Configured API client for Radarr."""
-    return MediaClient(
+    client = MediaClient(
         base_url=config["RADARR_URL"],
         api_key=config["RADARR_API_KEY"],
     )
+    yield client
+    client.session.close()
 
 
 @pytest.fixture(scope="session")
-def sonarr_client(config) -> MediaClient:
+def sonarr_client(config) -> Generator[MediaClient]:
     """Configured API client for Sonarr."""
-    return MediaClient(
+    client = MediaClient(
         base_url=config["SONARR_URL"],
         api_key=config["SONARR_API_KEY"],
     )
+    yield client
+    client.session.close()
 
 
 @pytest.fixture(scope="session")
-def prowlarr_client(config) -> MediaClient:
+def prowlarr_client(config) -> Generator[MediaClient]:
     """Configured API client for Prowlarr."""
-    return MediaClient(
+    client = MediaClient(
         base_url=config["PROWLARR_URL"],
         api_key=config["PROWLARR_API_KEY"],
     )
+    yield client
+    client.session.close()
 
 
 @pytest.fixture(scope="session")
-def qbittorrent_client(config) -> QBittorrentClient:
+def qbittorrent_client(config) -> Generator[QBittorrentClient]:
     """Configured API client for qBittorrent."""
-    return QBittorrentClient(
+    client = QBittorrentClient(
         base_url=config["QBITTORRENT_URL"],
         username=config["QBITTORRENT_USERNAME"],
         password=config["QBITTORRENT_PASSWORD"],
     )
+    yield client
+    client.session.close()
 
 
 @pytest.fixture(scope="session")
-def plex_client(config) -> PlexClient:
+def plex_client(config) -> Generator[PlexClient]:
     """Configured API client for Plex."""
-    return PlexClient(
+    client = PlexClient(
         base_url=config["PLEX_URL"],
         token=config["PLEX_TOKEN"],
     )
+    yield client
+    client.session.close()
