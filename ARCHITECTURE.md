@@ -18,7 +18,9 @@ homelab-playbook/          ← Orchestration & Planning (this repo)
 │   ├── planning-artifacts/    ← Product Brief, PRD, Architecture
 │   └── implementation-artifacts/  ← Stories for Claude Code CLI
 ├── management/            ← Project tracking
-└── patterns/              ← Convention documentation
+├── openclaw/              ← OpenClaw config docs (delegation, routing, cost)
+├── patterns/              ← Convention documentation
+└── skills/                ← 33 BMAD skill definitions (SKILL.md files)
 
 homelab-infra/             ← Infrastructure Provisioning (target repo)
 ├── terraform/             ← VM/CT creation via Proxmox provider
@@ -70,36 +72,40 @@ Larry ──→ VS Code ──→ Manual IaC coding ──→ Git commit ──�
 
 ### New (BMAD-Orchestrated)
 ```
-Larry ──→ OpenClaw ──→ BMAD Planning ──→ homelab-playbook/_bmad-output/
-                        (Brief, PRD, Architecture, Stories)
-                              ↓
-                    Claude Code CLI (spawn)
-                              ↓
-          Generate IaC in target repo (homelab-infra OR homelab-apps)
-                              ↓
-                     Create branch + PR
-                              ↓
-                Larry ──→ Review PR ──→ Merge ──→ GitOps deploy
-                                                  (Portainer/Ansible unchanged)
+Larry ──→ Telegram ──→ OpenClaw (BMAD agent, Gemini Pro — free)
+                              │
+                              ├─ Phase 1-2: Local planning (Gemini Pro)
+                              │   → _bmad-output/planning-artifacts/
+                              │
+                              ├─ Phase 3-4: Delegate via exec
+                              │   → Claude CLI (Opus 4.6, Max subscription)
+                              │   → Generate IaC in target repo
+                              │   → Create branch + PR
+                              │
+                              └─ Larry ──→ Review PR ──→ Merge ──→ GitOps deploy
+                                                        (Portainer/Ansible unchanged)
 ```
 
 ## Agent Roles
 
 ### OpenClaw (Supervisor)
-- **Agent:** OpenClaw with BMAD workflows
+- **Agent:** BMAD Orchestrator (`bmad` agent on Gemini Pro — free via OAuth)
 - **Location:** Runs in `homelab-playbook/` context
+- **Skills:** 33 BMAD skills in `skills/` (27 local, 6 delegated to Claude CLI)
 - **Responsibilities:**
   - Execute BMAD planning workflows (Product Brief, PRD, Architecture, Stories)
-  - Spawn Claude Code CLI sessions with story context
+  - Delegate dev work to Claude CLI via `exec` tool
   - Coordinate workflow progression
   - Maintain topology awareness (node inventory, service registry)
 
-### Claude Code CLI (Coder)
-- **Agent:** Claude Code CLI (coding-focused agent)
+### Claude Code CLI (Worker)
+- **Agent:** Claude CLI headless mode (`-p` flag), Opus 4.6 via Max subscription
 - **Location:** Spawned in target repo (`homelab-infra/` or `homelab-apps/`)
+- **Delegated tasks:** Architecture, impl. readiness, dev story, code review, quick dev (5 of 27 skills)
 - **Responsibilities:**
-  - Receive story spec + architecture context from OpenClaw
+  - Receive story spec + architecture context from OpenClaw (via `exec`)
   - Generate IaC code (Terraform, Ansible, Docker Compose)
+  - Read CLAUDE.md for project conventions automatically
   - Follow existing patterns and conventions
   - Create git branch + commits
   - Open Pull Request with implementation
@@ -180,6 +186,13 @@ homelab-playbook MVP is validated when:
 - **Community Patterns** - Shareable BMAD-validated deployments
 - **Multi-Service Orchestration** - Deploy complex stacks (full *arr suite)
 - **AI-Driven Optimization** - Resource utilization recommendations
+
+## Related Documents
+
+- [openclaw/claude-cli-delegation.md](openclaw/claude-cli-delegation.md) — How OpenClaw delegates to Claude CLI
+- [openclaw/bmad-pipeline.md](openclaw/bmad-pipeline.md) — Full BMAD workflow map with model routing
+- [openclaw/model-routing-strategy.md](openclaw/model-routing-strategy.md) — Model inventory and task matrix
+- [openclaw/cost-optimization.md](openclaw/cost-optimization.md) — Cost optimization guide
 
 ## Key Insight
 
