@@ -247,19 +247,25 @@ class PRGenerator:
     
     def _apply_drift_fix(self, service_config: Dict[str, Any], drift: DriftItem) -> None:
         """Apply a single drift fix to service configuration"""
-        # Parse field path (e.g., "labels.traefik.http.routers.pihole.rule")
         path_parts = drift.field_path.split('.')
-        
-        # Navigate to the parent object
         current = service_config
+        
+        # If the drift is at the root level of the service (e.g. 'image', 'volumes', 'networks')
+        if len(path_parts) == 1:
+            service_config[path_parts[0]] = drift.running_value
+            return
+
+        # Navigate to parent
         for part in path_parts[:-1]:
-            if part not in current:
-                current[part] = {}
+            if not isinstance(current, dict) or part not in current:
+                # If path doesn't exist or is blocked by non-dict, abort fix for this item
+                return
             current = current[part]
         
-        # Set the value
+        # Set final key if parent is a dict
         final_key = path_parts[-1]
-        current[final_key] = drift.running_value
+        if isinstance(current, dict):
+            current[final_key] = drift.running_value
     
     def _generate_commit_message(
         self,
@@ -478,26 +484,35 @@ def generate_prs_from_drift_report(
 ) -> Dict[str, Optional[str]]:
     """
     Generate PRs for all drifted services in a drift report
-    
-    Args:
-        drift_report_path: Path to drift report JSON file
-        repo_path: Path to target repository
-        dry_run: If True, don't actually create PRs
-        
-    Returns:
-        Dict mapping service names to PR URLs (or None if failed/dry-run)
     """
     with open(drift_report_path, 'r') as f:
         drift_data = json.load(f)
     
     generator = PRGenerator(repo_path=repo_path, dry_run=dry_run)
-    
     pr_results = {}
     
-    for service_drift in drift_data.get("services", []):
+    for service_drift in drift_data.get("service_drifts", []):
+        if not service_drift.get("has_drift") or service_drift.get("baseline_missing"):
+            continue
+            
         service_name = service_drift["service_name"]
-        stack_name = service_drift["stack_name"]
-        compose_file = Path(service_drift["compose_file"])
+        stack_name = service_drift.get("stack_name", "unknown")
+        
+        # Determine compose path relative to repo root
+        full_path = service_drift.get("compose_file")
+        if not full_path:
+            # Dynamic lookup for missing paths
+            potential_path = repo_path / "stacks" / stack_name / "docker-compose.yml"
+            if potential_path.exists():
+                full_path = str(potential_path)
+            else:
+                continue
+        
+        try:
+            compose_file = Path(full_path).relative_to(repo_path)
+        except ValueError:
+            # Fallback if path is already relative or elsewhere
+            compose_file = Path(full_path)
         
         # Convert drift items to DriftItem objects
         drift_items = [
@@ -506,12 +521,14 @@ def generate_prs_from_drift_report(
                 stack_name=stack_name,
                 field_path=item["field_path"],
                 running_value=item["running_value"],
-                git_value=item["git_value"],
+                git_value=item["baseline_value"],
                 severity=item["severity"]
             )
             for item in service_drift.get("drift_items", [])
         ]
         
+        if not drift_items: continue
+
         pr_url = generator.generate_pr_for_service(
             service_name=service_name,
             stack_name=stack_name,
