@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ['step-01-validate-prerequisites', 'step-02-design-epics', 'step-03-create-stories']
+stepsCompleted: ['step-01-validate-prerequisites', 'step-02-design-epics', 'step-03-create-stories', 'story-2.1', 'story-2.2', 'story-2.3', 'story-2.4', 'story-2.5', 'story-2.6', 'story-2.7']
 inputDocuments:
   - "homelab-playbook/_bmad-output/planning-artifacts/prd-homelab-media-center.md"
   - "homelab-playbook/_bmad-output/planning-artifacts/architecture-homelab-media-center.md"

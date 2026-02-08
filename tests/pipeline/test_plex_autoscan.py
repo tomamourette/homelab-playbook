@@ -160,8 +160,8 @@ class TestPlexLibraryPaths:
     """Verify Plex library paths include expected media directories."""
 
     EXPECTED_PATHS = {
-        "movie": "/media/movies",
-        "show": "/media/tv",
+        "movie": "/data/movies",
+        "show": "/data/tv",
     }
 
     def test_library_paths_include_expected_directories(self, plex_client):

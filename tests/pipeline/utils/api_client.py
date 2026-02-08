@@ -42,6 +42,7 @@ class MediaClient(BaseClient):
         self.api_key = api_key
         self.timeout = timeout
         self.session = requests.Session()
+        self.session.verify = False
         self.session.headers.update({
             "X-Api-Key": api_key,
             "Accept": "application/json",
@@ -68,14 +69,13 @@ class QBittorrentClient(BaseClient):
         timeout: Request timeout in seconds.
     """
 
-    def __init__(
-        self, base_url: str, username: str, password: str, timeout: int = 30
-    ) -> None:
+    def __init__(self, base_url: str, username: str, password: str, timeout: int = 30) -> None:
         self.base_url = base_url.rstrip("/")
         self.username = username
         self.password = password
         self.timeout = timeout
         self.session = requests.Session()
+        self.session.verify = False
 
     def login(self) -> requests.Response:
         """Authenticate and store session cookie."""
@@ -101,6 +101,7 @@ class PlexClient(BaseClient):
         self.token = token
         self.timeout = timeout
         self.session = requests.Session()
+        self.session.verify = False
         self.session.headers.update({
             "X-Plex-Token": token,
             "Accept": "application/json",

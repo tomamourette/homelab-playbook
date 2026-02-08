@@ -595,8 +595,8 @@ class TestStage5PlexLibraryReadiness:
 
         libraries = resp.json().get("MediaContainer", {}).get("Directory", [])
         expected_paths = {
-            "movie": "/media/movies",
-            "show": "/media/tv",
+            "movie": "/data/movies",
+            "show": "/data/tv",
         }
 
         failures = []
