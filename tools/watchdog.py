@@ -1,74 +1,91 @@
-#!/usr/bin/env python3
 import subprocess
-import time
 import sys
+import time
 import os
 import signal
+import select
 
-def run_with_watchdog(command, timeout_limit=3600):
-    """
-    Runs a command (like Claude CLI) and monitors it.
-    Restarts on failure/kill, or alerts if stuck.
-    """
-    log_file = "watchdog_trips.log"
-    print(f"🚀 Starting Watchdog for: {command}")
+# Configuration
+LOG_STDOUT = "claude_stdout.log"
+LOG_STDERR = "claude_debug.log"
+TRIPS_LOG = "watchdog_trips.log"
+
+def log_trip(message):
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(TRIPS_LOG, "a") as f:
+        f.write(f"[{timestamp}] {message}\n")
+
+def run_claude_with_logging(prompt):
+    # Construct the command with verbose flags
+    cmd = [
+        "claude", 
+        prompt, 
+        "--output-format", "stream-json", 
+        "--verbose"
+    ]
     
-    while True:
-        try:
-            start_time = time.strftime('%Y-%m-%d %H:%M:%S')
-            process = subprocess.Popen(
-                command, 
-                shell=True, 
-                stdout=sys.stdout, 
-                stderr=sys.stderr,
-                preexec_fn=os.setsid
-            )
+    log_trip(f"Starting Claude with command: {' '.join(cmd)}")
+    
+    # Open log files
+    stdout_f = open(LOG_STDOUT, "a")
+    stderr_f = open(LOG_STDERR, "a")
+    
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        bufsize=1  # Line buffered
+    )
+    
+    log_trip(f"Started process PID: {process.pid}")
+    
+    try:
+        # Monitoring loop
+        while True:
+            # Check if process is still running
+            retcode = process.poll()
+            if retcode is not None:
+                log_trip(f"Process exited with code {retcode}")
+                break
             
-            pid = process.pid
-            print(f"🛡️  Watchdog active (PID: {pid})")
+            # Use select to read from pipes without blocking
+            reads = [process.stdout.fileno(), process.stderr.fileno()]
+            ret = select.select(reads, [], [], 1.0)
             
-            while True:
-                retcode = process.poll()
-                if retcode is not None:
-                    end_time = time.strftime('%Y-%m-%d %H:%M:%S')
-                    if retcode == 0:
-                        print("✅ Process finished successfully.")
-                        return 0
-                    else:
-                        reason = f"Exited with code {retcode}"
-                        if retcode == -9: reason = "SIGKILL (OOM or External Kill)"
-                        elif retcode == -15: reason = "SIGTERM (Termination Request)"
-                        
-                        log_msg = f"[{end_time}] ⚠️ Trip detected! Reason: {reason} | Command: {command}\n"
-                        with open(log_file, "a") as f:
-                            f.write(log_msg)
-                        
-                        print(f"⚠️  {reason}. Restarting in 5s...")
-                        time.sleep(5)
-                        break
-                
-                try:
-                    os.kill(pid, 0)
-                except OSError:
-                    end_time = time.strftime('%Y-%m-%d %H:%M:%S')
-                    log_msg = f"[{end_time}] 🚨 Process lost! Command: {command}\n"
-                    with open(log_file, "a") as f:
-                        f.write(log_msg)
-                    print("🚨 Process lost! Restarting...")
-                    break
-                    
-                time.sleep(10)
-                
-        except KeyboardInterrupt:
-            print("\n🛑 Watchdog stopped by user.")
-            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-            break
-        except Exception as e:
-            print(f"❌ Watchdog Error: {e}")
-            time.sleep(10)
+            for fd in ret[0]:
+                if fd == process.stdout.fileno():
+                    line = process.stdout.readline()
+                    if line:
+                        stdout_f.write(line)
+                        stdout_f.flush()
+                elif fd == process.stderr.fileno():
+                    line = process.stderr.readline()
+                    if line:
+                        stderr_f.write(line)
+                        stderr_f.flush()
+            
+            # Heartbeat/Keepalive logic could go here
+            
+    except KeyboardInterrupt:
+        log_trip("Watchdog interrupted by user")
+        process.terminate()
+    except Exception as e:
+        log_trip(f"Watchdog error: {str(e)}")
+        process.kill()
+    finally:
+        stdout_f.close()
+        stderr_f.close()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: watchdog.py '<command>'")
+        print("Usage: python3 watchdog.py <prompt>")
         sys.exit(1)
-    run_with_watchdog(sys.argv[1])
+    
+    prompt = sys.argv[1]
+    
+    # Clean previous logs for fresh run
+    open(LOG_STDOUT, 'w').close()
+    open(LOG_STDERR, 'w').close()
+    
+    run_claude_with_logging(prompt)
