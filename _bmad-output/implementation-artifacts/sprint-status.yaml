@@ -1,0 +1,139 @@
+# generated: 2026-04-03
+# last_updated: 2026-04-03
+# project: homelab - AI Dev Container
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic 0 is prerequisite tooling — complete before Epics 1-4
+# - Epics 1-3 are independent (no cross-epic dependencies)
+# - Epic 4 composes all previous epics into a single playbook
+# - Epics 5-7 are Phase 2 (Knowledge Management) — depend on Epic 3 (Hermes)
+# - Epic 5 → Epic 6 → Epic 7 (sequential dependencies)
+# - Epic 8 is independent infrastructure — can run in parallel with any epic
+# - Stories within each epic are sequential
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-04-03
+last_updated: 2026-04-15
+project: homelab - AI Dev Container
+project_key: NOKEY
+tracking_system: file-system
+story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 0: BMAD Workflow Enhancements (Prerequisite)
+  epic-0: done
+  0-1-add-eval-assertions-to-story-template: done
+  0-2-install-autoresearch-skill: done
+  0-3-build-doc-update-skill-check-mode: done
+  0-4-build-doc-update-skill-update-mode: done
+  0-5-build-doc-update-skill-full-mode-and-mapping: done
+  0-6-add-edge-cases-and-task0-to-story-template: done
+  0-7-add-two-strike-deferral-rule-to-code-review: done
+  0-8-fix-mode-detection-keyword-priority: done
+  0-9-add-source-content-guard-for-update-mode: done
+  0-10-add-deploy-verify-loop-to-code-review-ab: done
+  epic-0-retrospective: done
+
+  # Epic 1: Persistent Sessions — Never Lose Context Again
+  epic-1: done
+  1-1-install-rust-and-build-claude-tmux: done
+  1-2-configure-tmux-with-claude-tmux-integration: done
+  1-3-configure-systemd-auto-start-for-tmux-server: done
+  epic-1-retrospective: done
+
+  # Epic 2: Persistent Memory — Sessions That Remember
+  epic-2: done
+  2-1-install-omega-memory-and-configure-mcp-server: done
+  2-2-register-claude-code-hooks-for-memory-capture: done
+  2-3-configure-namespace-isolation-and-backup: done
+  2-4-verify-memory-features-and-conditional-hermes-wiring: done
+  epic-2-retrospective: done
+
+  # Epic 3: Always-On Director — AI That Works While You Sleep
+  epic-3: in-progress
+  3-1-install-hermes-agent-and-configure-basics: done
+  3-2-configure-omega-mcp-connection-and-bmad-skills: done
+  3-3-autonomous-task-execution-and-cron-scheduling: backlog
+  3-4-operational-guardrails-and-integration-verification: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: One-Command Deployment — Reproducible AI Dev Stack
+  epic-4: backlog
+  4-1-create-deployment-playbook-and-group-vars: backlog
+  4-2-idempotency-independence-and-acceptance-tests: backlog
+  epic-4-retrospective: optional
+
+  # --- Phase 2: Knowledge Management (added 2026-04-11, SCP-knowledge-mgmt) ---
+
+  # Epic 5: LLM Wiki + Obsidian Integration
+  epic-5: backlog
+  5-1-create-llm-wiki-structure-and-schema: backlog
+  5-2-build-wiki-ingest-hermes-skill: backlog
+  5-3-build-wiki-query-hermes-skill: backlog
+  5-4-build-wiki-lint-hermes-skill: backlog
+  5-5-configure-obsidian-vault-per-container: backlog
+  5-6-setup-laptop-meta-vault-with-dataview: backlog
+  5-7-build-article-ingest-skill: backlog
+  5-8-wire-hermes-cron-for-lint-and-git-push: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: MemPalace — Deep Memory
+  epic-6: backlog
+  6-1-install-mempalace-and-configure-mcp-server: backlog
+  6-2-initialize-palace-wings-per-project: backlog
+  6-3-mine-existing-conversation-history: backlog
+  6-4-wire-hermes-mempalace-skills: backlog
+  6-5-implement-query-hierarchy: backlog
+  6-6-create-mempalace-ansible-role: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Knowledge Ingestion Pipelines
+  epic-7: backlog
+  7-1-connect-hermes-to-linear-mcp: backlog
+  7-2-connect-hermes-to-granola-mcp: backlog
+  7-3-connect-hermes-to-azure-devops-mcp: backlog
+  7-4-build-classification-router: backlog
+  7-5-wire-bmad-skill-delegation-per-type: backlog
+  7-6-setup-hermes-cron-polling: backlog
+  7-7-configure-slack-gateway-for-url-ingestion: backlog
+  7-8-end-to-end-integration-test: backlog
+  epic-7-retrospective: optional
+
+  # --- Infrastructure Expansion (added 2026-04-15, SCP-pve3-local-llm) ---
+
+  # Epic 8: PVE3 Node + Local LLM — AI Inference at Home
+  epic-8: in-progress
+  8-1-install-proxmox-on-n5-pro-and-join-cluster: done
+  8-2-integrate-pve3-into-infrastructure-automation: in-progress
+  8-3-setup-gpu-via-oculink-and-lxc-with-ollama: backlog
+  8-4-deploy-gemma-4-26b-and-open-webui: backlog
+  8-5-configure-shared-storage-and-bulk-storage-pools: backlog
+  8-6-upgrade-cluster-to-proxmox-ve-9: backlog
+  epic-8-retrospective: optional

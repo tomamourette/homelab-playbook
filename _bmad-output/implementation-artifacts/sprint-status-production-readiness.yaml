@@ -1,0 +1,288 @@
+---
+# Sprint Status - Homelab Production Readiness
+# Generated: 2026-04-01
+# Last Updated: 2026-04-02
+# Project: homelab
+# User: tomamourette
+#
+# DEPENDENCY LEGEND:
+#   depends_on: list of story IDs that must be "done" before this story can start
+#   parallel_group: stories in the same group can run simultaneously
+#
+# PARALLEL EXECUTION PLAN:
+#   Phase 1: Epic 1 (sequential) — blocks everything
+#   Phase 2 (parallel after Epic 1):
+#     Pipeline A: Epic 2 (2.1 → 2.2 → 2.3 → 2.4) then Epic 3
+#     Pipeline B: Epic 4 (4.1 → 4.2 → 4.3 → 4.4)
+#     Pipeline C: Epic 5 (5.1 → 5.2 → 5.3) — 5.4 waits for 2.1
+#     Pipeline D: Epic 6 (6.1 → 6.2 → 6.3 → 6.4) — 6.5 waits for 2.1
+#   Phase 3: Cross-epic dependencies resolve (3.x, 5.4, 6.5, 6.6)
+
+project_name: homelab
+user_name: tomamourette
+generated_date: "2026-04-01"
+last_updated: "2026-04-02T12:00:00Z"
+total_epics: 6
+total_stories: 24
+
+epics:
+  - id: 1
+    title: "SMTP Relay"
+    status: done
+    frs_covered: "FR29-FR31"
+    target_repos: "homelab-apps"
+    parallel_group: phase-1
+    stories:
+      - id: "1.1"
+        key: 1-1-smtp-relay-stack
+        title: "Create SMTP Relay Docker Compose Stack"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/1-1-smtp-relay-stack.md"
+        implements: "FR29, FR30"
+        depends_on: []
+        parallel_group: phase-1
+      - id: "1.2"
+        key: 1-2-validate-smtp-relay-and-add-delivery-logging
+        title: "Validate SMTP Relay and Add Delivery Logging"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/1-2-validate-smtp-relay-and-add-delivery-logging.md"
+        implements: "FR31"
+        depends_on: ["1.1"]
+        parallel_group: phase-1
+
+  - id: 2
+    title: "Observability and Alerting"
+    status: done
+    frs_covered: "FR7-FR13"
+    target_repos: "homelab-apps"
+    parallel_group: phase-2-pipeline-a
+    stories:
+      - id: "2.1"
+        key: 2-1-deploy-prometheus-with-scrape-targets-for-all-services
+        title: "Deploy Prometheus with Scrape Targets for All Services"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/2-1-deploy-prometheus-with-scrape-targets-for-all-services.md"
+        implements: "FR7"
+        depends_on: ["1.2"]
+        parallel_group: phase-2-pipeline-a
+      - id: "2.2"
+        key: 2-2-create-grafana-service-health-and-resource-dashboard
+        title: "Create Grafana Service Health and Resource Dashboard"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/2-2-create-grafana-service-health-and-resource-dashboard.md"
+        implements: "FR8, FR9"
+        depends_on: ["2.1"]
+        parallel_group: phase-2-pipeline-a
+      - id: "2.3"
+        key: 2-3-configure-grafana-alert-rules-and-email-notification-channel
+        title: "Configure Grafana Alert Rules and Email Notification Channel"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/2-3-configure-grafana-alert-rules-and-email-notification-channel.md"
+        implements: "FR10, FR11, FR12"
+        depends_on: ["2.2"]
+        parallel_group: phase-2-pipeline-a
+      - id: "2.4"
+        key: 2-4-validate-observability-stack-end-to-end
+        title: "Validate Observability Stack End-to-End"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/2-4-validate-observability-stack-end-to-end.md"
+        implements: "Validates FR7-FR12"
+        depends_on: ["2.3"]
+        parallel_group: phase-2-pipeline-a
+
+  - id: 3
+    title: "Centralized Logging"
+    status: done
+    frs_covered: "FR14-FR18"
+    target_repos: "homelab-apps, homelab-infra"
+    parallel_group: phase-3-pipeline-a
+    stories:
+      - id: "3.1"
+        key: 3-1-add-loki-and-promtail-to-observability-stack-on-ct-docker-01
+        title: "Add Loki and Promtail to Observability Stack on ct-docker-01"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/3-1-add-loki-and-promtail-to-observability-stack-on-ct-docker-01.md"
+        implements: "FR14, FR17, FR18"
+        depends_on: ["2.1"]
+        parallel_group: phase-3-pipeline-a
+      - id: "3.2"
+        key: 3-2-deploy-promtail-on-ct-media-01-via-ansible-role
+        title: "Deploy Promtail on ct-media-01 via Ansible Role"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/3-2-deploy-promtail-on-ct-media-01-via-ansible-role.md"
+        implements: "FR14, FR18"
+        depends_on: ["3.1"]
+        parallel_group: phase-3-pipeline-a
+      - id: "3.3"
+        key: 3-3-configure-grafana-loki-datasource-and-log-exploration
+        title: "Configure Grafana Loki Datasource and Log Exploration"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/3-3-configure-grafana-loki-datasource-and-log-exploration.md"
+        implements: "FR15, FR16"
+        depends_on: ["3.1"]
+        parallel_group: phase-3-pipeline-a
+      - id: "3.4"
+        key: 3-4-validate-centralized-logging-end-to-end
+        title: "Validate Centralized Logging End-to-End"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/3-4-validate-centralized-logging-end-to-end.md"
+        implements: "Validates FR14-FR18"
+        depends_on: ["3.2", "3.3"]
+        parallel_group: phase-3-pipeline-a
+
+  - id: 4
+    title: "SSO Gateway"
+    status: done
+    frs_covered: "FR19-FR23"
+    target_repos: "homelab-apps"
+    parallel_group: phase-2-pipeline-b
+    stories:
+      - id: "4.1"
+        key: 4-1-create-authelia-docker-compose-stack
+        title: "Create Authelia Docker Compose Stack"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/4-1-create-authelia-docker-compose-stack.md"
+        implements: "FR19, FR20, FR21, FR23"
+        depends_on: ["1.2"]
+        parallel_group: phase-2-pipeline-b
+      - id: "4.2"
+        key: 4-2-integrate-authelia-forward-auth-middleware-with-traefik
+        title: "Integrate Authelia Forward-Auth Middleware with Traefik"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/4-2-integrate-authelia-forward-auth-middleware-with-traefik.md"
+        implements: "FR19, FR20, FR22"
+        depends_on: ["4.1"]
+        parallel_group: phase-2-pipeline-b
+      - id: "4.3"
+        key: 4-3-roll-out-authelia-middleware-labels-to-all-existing-services
+        title: "Roll Out Authelia Middleware Labels to All Existing Services"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/4-3-roll-out-authelia-middleware-labels-to-all-existing-services.md"
+        implements: "FR20, FR22"
+        depends_on: ["4.2"]
+        parallel_group: phase-2-pipeline-b
+      - id: "4.4"
+        key: 4-4-validate-sso-gateway-end-to-end
+        title: "Validate SSO Gateway End-to-End"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/4-4-validate-sso-gateway-end-to-end.md"
+        implements: "Validates FR19-FR23"
+        depends_on: ["4.3"]
+        parallel_group: phase-2-pipeline-b
+
+  - id: 5
+    title: "Backup and Recovery"
+    status: done
+    frs_covered: "FR1-FR6, FR13"
+    target_repos: "homelab-infra, homelab-apps"
+    parallel_group: phase-2-pipeline-c
+    stories:
+      - id: "5.1"
+        key: 5-1-create-restic-backup-ansible-role
+        title: "Create Restic Backup Ansible Role"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/5-1-create-restic-backup-ansible-role.md"
+        implements: "FR1, FR2, FR6"
+        depends_on: ["1.2"]
+        parallel_group: phase-2-pipeline-c
+      - id: "5.2"
+        key: 5-2-create-restic-failure-notification-service
+        title: "Create Restic Failure Notification Service"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/5-2-create-restic-failure-notification-service.md"
+        implements: "FR1, NFR-REL-1"
+        depends_on: ["5.1"]
+        parallel_group: phase-2-pipeline-c
+      - id: "5.3"
+        key: 5-3-create-restic-restore-and-verification-procedures
+        title: "Create Restic Restore and Verification Procedures"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/5-3-create-restic-restore-and-verification-procedures.md"
+        implements: "FR3, FR4, FR5"
+        depends_on: ["5.2"]
+        parallel_group: phase-2-pipeline-c
+      - id: "5.4"
+        key: 5-4-create-backup-status-grafana-dashboard-panel
+        title: "Create Backup Status Grafana Dashboard Panel"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/5-4-create-backup-status-grafana-dashboard-panel.md"
+        implements: "FR13"
+        depends_on: ["5.3", "2.1"]
+        parallel_group: phase-3-cross-epic
+
+  - id: 6
+    title: "Update Checks"
+    status: done
+    frs_covered: "FR24-FR28"
+    target_repos: "homelab-apps, homelab-infra"
+    parallel_group: phase-2-pipeline-d
+    stories:
+      - id: "6.1"
+        key: 6-1-create-diun-docker-compose-stack-for-container-image-checks
+        title: "Create Diun Docker Compose Stack for Container Image Checks"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-1-create-diun-docker-compose-stack-for-container-image-checks.md"
+        implements: "FR24, FR27"
+        depends_on: ["1.2"]
+        parallel_group: phase-2-pipeline-d
+      - id: "6.2"
+        key: 6-2-deploy-diun-on-ct-media-01-for-media-container-image-checks
+        title: "Deploy Diun on ct-media-01 for Media Container Image Checks"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-2-deploy-diun-on-ct-media-01-for-media-container-image-checks.md"
+        implements: "FR24, FR27"
+        depends_on: ["6.1"]
+        parallel_group: phase-2-pipeline-d
+      - id: "6.3"
+        key: 6-3-create-ansible-role-for-apt-package-update-checks
+        title: "Create Ansible Role for APT Package Update Checks"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-3-create-ansible-role-for-apt-package-update-checks.md"
+        implements: "FR25, FR27"
+        depends_on: ["6.1"]
+        parallel_group: phase-2-pipeline-d
+      - id: "6.4"
+        key: 6-4-create-ansible-role-for-tool-version-checks
+        title: "Create Ansible Role for Tool Version Checks"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-4-create-ansible-role-for-tool-version-checks.md"
+        implements: "FR26, FR27"
+        depends_on: ["6.3"]
+        parallel_group: phase-2-pipeline-d
+      - id: "6.5"
+        key: 6-5-create-update-status-grafana-dashboard
+        title: "Create Update Status Grafana Dashboard"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-5-create-update-status-grafana-dashboard.md"
+        implements: "FR28"
+        depends_on: ["6.4", "2.1"]
+        parallel_group: phase-3-cross-epic
+      - id: "6.6"
+        key: 6-6-validate-update-checks-end-to-end
+        title: "Validate Update Checks End-to-End"
+        status: done
+        story_file: "_bmad-output/implementation-artifacts/6-6-validate-update-checks-end-to-end.md"
+        implements: "Validates FR24-FR28"
+        depends_on: ["6.5"]
+        parallel_group: phase-3-cross-epic
+
+retrospective:
+  entries:
+    - key: epic-1-retrospective
+      status: optional
+    - key: epic-2-retrospective
+      status: optional
+    - key: epic-3-retrospective
+      status: optional
+    - key: epic-4-retrospective
+      status: optional
+    - key: epic-5-retrospective
+      status: optional
+    - key: epic-6-retrospective
+      status: optional
+  notes: |
+    Sprint planning initialized on 2026-04-01.
+    Dependencies added for parallel execution planning.
+    Deployment order: Epic 1 (SMTP) -> then parallel Epics 2/4/5/6 -> Epic 3 after 2.1.
+    ALL 6 epics, 24 stories, 31 FRs COMPLETE as of 2026-04-02.
+    Live deployment verified on ct-docker-01 and ct-media-01.
