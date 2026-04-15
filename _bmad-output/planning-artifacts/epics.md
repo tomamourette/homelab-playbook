@@ -654,6 +654,9 @@ So that I can live-migrate VMs/CTs between cluster nodes and have redundant bulk
 
 ### Story 8.6: Upgrade Cluster to Proxmox VE 9
 
+(pve3 already upgraded — only pve1 and pve2 remain)
+
+
 As a homelab operator,
 I want all three cluster nodes upgraded from Proxmox VE 8.4 to PVE 9,
 So that I get kernel 6.14 (5GbE NIC support on N5 Pro), OpenZFS 2.3.3 (live RAIDZ expansion), OCI container support, and continued upstream security updates.
@@ -677,3 +680,24 @@ So that I get kernel 6.14 (5GbE NIC support on N5 Pro), OpenZFS 2.3.3 (live RAID
 - If containers won't start after upgrade: check LXC config compatibility (PVE 9 uses newer LXC)
 - Keep mixed-version window as short as possible — HA is broken in mixed 8+9 clusters
 - Follow the official upgrade checklist: `pve8to9 --full` before each node upgrade
+
+### Story 8.7: Integrate AI Services into DNS and Reverse Proxy
+
+As a homelab operator,
+I want Open WebUI and Ollama accessible via proper DNS names with HTTPS and SSO protection,
+So that the AI services are consistent with the rest of my homelab infrastructure.
+
+**Acceptance Criteria:**
+
+**Given** Open WebUI is running on ct-ai-01 at 192.168.50.160:3000 (Story 8.4)
+**When** I integrate the AI services into the existing DNS and routing infrastructure
+**Then** `chat.bi-services.be` resolves to the correct IP via Pi-hole custom DNS
+**And** Traefik routes `chat.bi-services.be` to Open WebUI with TLS termination
+**And** Authelia SSO middleware protects the Open WebUI route
+**And** `ollama.bi-services.be` resolves via Pi-hole for direct API access (optional, for programmatic use)
+**And** the Pi-hole custom list template (`pihole-custom.list.j2`) includes the AI service entries
+**And** Terraform ct-ai-01 module exists (or variables are added) so the IP is available as a Terraform output
+
+**Edge Cases:**
+- If Traefik is on ct-docker-01 and Open WebUI is on ct-ai-01: need cross-host routing (like media-indexers.yml pattern)
+- If Authelia blocks API calls: add a bypass rule for the Ollama API endpoint or use a separate route without SSO

@@ -131,9 +131,10 @@ development_status:
   # Epic 8: PVE3 Node + Local LLM — AI Inference at Home
   epic-8: in-progress
   8-1-install-proxmox-on-n5-pro-and-join-cluster: done
-  8-2-integrate-pve3-into-infrastructure-automation: in-progress
-  8-3-setup-gpu-via-oculink-and-lxc-with-ollama: backlog
-  8-4-deploy-gemma-4-26b-and-open-webui: backlog
-  8-5-configure-shared-storage-and-bulk-storage-pools: backlog
+  8-2-integrate-pve3-into-infrastructure-automation: done
+  8-3-setup-gpu-via-oculink-and-lxc-with-ollama: done
+  8-4-deploy-gemma-4-26b-and-open-webui: done
+  8-5-configure-shared-storage-and-bulk-storage-pools: done
   8-6-upgrade-cluster-to-proxmox-ve-9: backlog
+  8-7-integrate-ai-services-into-dns-and-reverse-proxy: in-progress
   epic-8-retrospective: optional
