@@ -69,8 +69,8 @@ development_status:
   1-4-capture-pre-migration-state-snapshot: done
   1-5-capture-media-library-checksum-manifest: backlog
   1-6-commit-and-push-operator-workbench-work: done
-  1-7-verify-fallback-ssh-from-laptop-path: backlog
-  1-8-network-upgrade-decision-and-optional-switch-swap: backlog
+  1-7-verify-fallback-ssh-from-laptop-path: blocked-on-operator
+  1-8-network-upgrade-decision-and-optional-switch-swap: blocked-on-operator
   epic-1-retrospective: optional
 
   # Epic 2: Bulk Storage Foundation with Preserved Media
