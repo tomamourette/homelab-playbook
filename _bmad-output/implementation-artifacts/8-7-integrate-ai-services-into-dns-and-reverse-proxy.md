@@ -1,6 +1,6 @@
 # Story 8.7: Integrate AI Services into DNS and Reverse Proxy
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -61,20 +61,23 @@ So that the AI services are consistent with the rest of my homelab infrastructur
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add DNS entries to Pi-hole template (AC: 1)
-  - [ ] Edit `homelab-infra/ansible/templates/pihole-custom.list.j2`
-  - [ ] Add `{{ ai_ip | default('192.168.50.160') }} chat.bi-services.be` and `ollama.bi-services.be`
-  - [ ] Check if Cloudflare DNS needs A records for chat/ollama subdomains
-- [ ] Task 2: Create Traefik cross-host routing config (AC: 2, 3, 4, 5)
-  - [ ] Create `homelab-apps/stacks/infra-core/config/ai-services.yml` following `media-indexers.yml` pattern
-  - [ ] Define services: chat (→ 192.168.50.160:3000), ollama (→ 192.168.50.160:11434)
-  - [ ] Define routers: chat-secure with Authelia middleware, ollama-secure without middleware
-  - [ ] Both routes use websecure entrypoint with Let's Encrypt TLS
-- [ ] Task 3: Deploy DNS changes (AC: 1)
-  - [ ] Run Ansible to regenerate Pi-hole custom list, or manually add entries to Pi-hole
-- [ ] Task 4: Verify routing (AC: 3, 4, 5)
-  - [ ] Test `https://chat.bi-services.be` — should redirect to Authelia or show Open WebUI
-  - [ ] Test `https://ollama.bi-services.be/api/tags` — should return JSON without auth
+- [x] Task 1: Add DNS entries to Pi-hole template (AC: 1)
+  - [x] Edited `homelab-infra/ansible/templates/pihole-custom.list.j2` — added chat + ollama entries pointing to docker_ip (Traefik)
+  - [x] Added entries directly to Pi-hole on ct-docker-01 and restarted DNS
+  - [x] DNS resolves: `chat.bi-services.be` → 192.168.50.194, `ollama.bi-services.be` → 192.168.50.194
+  - [x] Cloudflare DNS not needed — Let's Encrypt uses DNS challenge via Cloudflare API (already configured)
+- [x] Task 2: Create Traefik cross-host routing config (AC: 2, 3, 4, 5)
+  - [x] Created `homelab-apps/stacks/infra-core/config/ai-services.yml` following media-indexers.yml pattern
+  - [x] Services: chat → 192.168.50.160:3000, ollama → 192.168.50.160:11434
+  - [x] chat-secure: Authelia middleware (`authelia@file`), ollama-secure: no middleware
+  - [x] Updated `docker-compose.yml` to add bind mount for ai-services.yml
+  - [x] Deployed to ct-docker-01, Traefik container recreated
+- [x] Task 3: Deploy DNS changes (AC: 1)
+  - [x] Pi-hole custom.list updated on ct-docker-01 directly
+  - [x] Pi-hole container restarted to pick up changes
+- [x] Task 4: Verify routing (AC: 3, 4, 5)
+  - [x] `https://chat.bi-services.be` → 302 redirect to Authelia (SSO working)
+  - [x] `https://ollama.bi-services.be/api/tags` → JSON response with models (no auth, direct API)
 
 ## Dev Notes
 
@@ -136,8 +139,42 @@ http:
 
 ### Agent Model Used
 
+Claude Opus 4.6 (claude-opus-4-6[1m])
+
 ### Debug Log References
+
+- Traefik file provider `directory: /etc/traefik` does NOT recurse into subdirectories — `dynamic/` files weren't loaded
+- Fixed by adding individual bind mount in docker-compose.yml (matches existing pattern for media-indexers.yml)
+- Let's Encrypt cert uses Cloudflare DNS challenge — no public A records needed, but cert issuance takes a few minutes
+- Pi-hole custom.list is bind-mounted from `/opt/homelab-apps/stacks/dns-pihole/config/custom.list`, not `/etc/pihole/`
+- Pi-hole restartdns requires container restart (kill permission issue inside container)
+
+### Deployment Verification
+
+Result: 5/5 assertions passed.
+
+| # | Assertion | Result |
+|---|-----------|--------|
+| AC-1 | DNS entries in template | PASS — pihole-custom.list.j2 updated |
+| AC-2 | Traefik config exists | PASS — ai-services.yml created + mounted |
+| AC-3 | HTTPS route works | PASS — HTTP 302 (Authelia redirect) |
+| AC-4 | Authelia protects chat | PASS — redirects to auth.bi-services.be |
+| AC-5 | Ollama API no SSO | PASS — returns JSON directly |
 
 ### Completion Notes List
 
+- `chat.bi-services.be` → Authelia SSO → Open WebUI
+- `ollama.bi-services.be` → Ollama API (no auth, programmatic access)
+- Traefik cross-host routing from ct-docker-01 to ct-ai-01 (192.168.50.160)
+- Let's Encrypt cert pending DNS challenge completion (using default cert temporarily)
+- Pi-hole template + docker-compose.yml both updated in repos
+
+### Change Log
+
+- 2026-04-15: Story implemented — DNS + Traefik + Authelia for AI services
+
 ### File List
+
+- `homelab-infra/ansible/templates/pihole-custom.list.j2` — added AI service DNS entries
+- `homelab-apps/stacks/infra-core/config/ai-services.yml` — new Traefik cross-host config
+- `homelab-apps/stacks/infra-core/docker-compose.yml` — added ai-services.yml bind mount

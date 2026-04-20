@@ -28,3 +28,9 @@
 - **D3: Broken pyenv shim passes stat but fails at runtime** — stat only checks file existence, not that the shim resolves to a working Python binary. A broken shim (`pyenv version uninstall`) would cause Hermes MCP spawn errors.
 - **D4: verify.yml uses shell instead of command for grep** — `VERIFY | OMEGA MCP entry` uses `ansible.builtin.shell` where `lineinfile` with `check_mode` would be cleaner. Low priority.
 - **D5: Copy deploys temp/editor backup files** — `ansible.builtin.copy src: "skills/"` copies everything including potential `.swp`, `.DS_Store` files. No exclude mechanism in Ansible copy. Currently no temp files in the directory.
+
+## Deferred from: code review of 3-3-autonomous-task-execution-and-cron-scheduling (2026-04-16)
+
+- **D1: Duplicated PATH construction across 4 files** — PATH environment block (PYENV_ROOT, shims, cargo, nvm) is duplicated in start-hermes.sh.j2, spawn-worker.sh.j2, configure-cron.yml, and verify.yml. Extract to shared variable or include in future refactor.
+- **D2: Hardcoded Hermes binary path in start-hermes.sh.j2** — `/home/{{ dev_user }}/.local/bin/hermes` is hardcoded. Should use a variable like `ai_dev_hermes_binary_path` for portability.
+- **D3: Cron schedule parsing assumes 5 fields with no validation** — `item.schedule.split(' ')` with fixed indices [0]-[4]. Extra spaces or malformed input would cause index errors. Low risk since cron jobs are authored by the role developer.

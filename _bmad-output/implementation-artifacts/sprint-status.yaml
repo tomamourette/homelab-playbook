@@ -40,7 +40,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-04-03
-last_updated: 2026-04-15
+last_updated: 2026-04-16  # Story 6-6 done, Epic 6 done (all stories complete)
 project: homelab - AI Dev Container
 project_key: NOKEY
 tracking_system: file-system
@@ -77,41 +77,41 @@ development_status:
   epic-2-retrospective: done
 
   # Epic 3: Always-On Director — AI That Works While You Sleep
-  epic-3: in-progress
+  epic-3: done
   3-1-install-hermes-agent-and-configure-basics: done
   3-2-configure-omega-mcp-connection-and-bmad-skills: done
-  3-3-autonomous-task-execution-and-cron-scheduling: backlog
-  3-4-operational-guardrails-and-integration-verification: backlog
+  3-3-autonomous-task-execution-and-cron-scheduling: done
+  3-4-operational-guardrails-and-integration-verification: done
   epic-3-retrospective: optional
 
   # Epic 4: One-Command Deployment — Reproducible AI Dev Stack
-  epic-4: backlog
-  4-1-create-deployment-playbook-and-group-vars: backlog
-  4-2-idempotency-independence-and-acceptance-tests: backlog
+  epic-4: done
+  4-1-create-deployment-playbook-and-group-vars: done
+  4-2-idempotency-independence-and-acceptance-tests: done
   epic-4-retrospective: optional
 
   # --- Phase 2: Knowledge Management (added 2026-04-11, SCP-knowledge-mgmt) ---
 
   # Epic 5: LLM Wiki + Obsidian Integration
-  epic-5: backlog
-  5-1-create-llm-wiki-structure-and-schema: backlog
-  5-2-build-wiki-ingest-hermes-skill: backlog
-  5-3-build-wiki-query-hermes-skill: backlog
-  5-4-build-wiki-lint-hermes-skill: backlog
-  5-5-configure-obsidian-vault-per-container: backlog
-  5-6-setup-laptop-meta-vault-with-dataview: backlog
-  5-7-build-article-ingest-skill: backlog
-  5-8-wire-hermes-cron-for-lint-and-git-push: backlog
+  epic-5: done
+  5-1-create-llm-wiki-structure-and-schema: done
+  5-2-build-wiki-ingest-hermes-skill: done
+  5-3-build-wiki-query-hermes-skill: done
+  5-4-build-wiki-lint-hermes-skill: done
+  5-5-configure-obsidian-vault-per-container: done
+  5-6-setup-laptop-meta-vault-with-dataview: done
+  5-7-build-article-ingest-skill: done
+  5-8-wire-hermes-cron-for-lint-and-git-push: done
   epic-5-retrospective: optional
 
   # Epic 6: MemPalace — Deep Memory
-  epic-6: backlog
-  6-1-install-mempalace-and-configure-mcp-server: backlog
-  6-2-initialize-palace-wings-per-project: backlog
-  6-3-mine-existing-conversation-history: backlog
-  6-4-wire-hermes-mempalace-skills: backlog
-  6-5-implement-query-hierarchy: backlog
-  6-6-create-mempalace-ansible-role: backlog
+  epic-6: done
+  6-1-install-mempalace-and-configure-mcp-server: done
+  6-2-initialize-palace-wings-per-project: done
+  6-3-mine-existing-conversation-history: done
+  6-4-wire-hermes-mempalace-skills: done
+  6-5-implement-query-hierarchy: done
+  6-6-create-mempalace-ansible-role: done
   epic-6-retrospective: optional
 
   # Epic 7: Knowledge Ingestion Pipelines
@@ -129,12 +129,12 @@ development_status:
   # --- Infrastructure Expansion (added 2026-04-15, SCP-pve3-local-llm) ---
 
   # Epic 8: PVE3 Node + Local LLM — AI Inference at Home
-  epic-8: in-progress
+  epic-8: done
   8-1-install-proxmox-on-n5-pro-and-join-cluster: done
   8-2-integrate-pve3-into-infrastructure-automation: done
   8-3-setup-gpu-via-oculink-and-lxc-with-ollama: done
   8-4-deploy-gemma-4-26b-and-open-webui: done
   8-5-configure-shared-storage-and-bulk-storage-pools: done
-  8-6-upgrade-cluster-to-proxmox-ve-9: backlog
-  8-7-integrate-ai-services-into-dns-and-reverse-proxy: in-progress
+  8-6-upgrade-cluster-to-proxmox-ve-9: done
+  8-7-integrate-ai-services-into-dns-and-reverse-proxy: done
   epic-8-retrospective: optional
