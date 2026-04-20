@@ -82,9 +82,9 @@ development_status:
   2-5-migrate-354-gb-media-via-zfs-send-zfs-recv: done
   2-6-verify-media-via-sha-256-manifest-diff: done
   2-7-promote-staging-to-final-location-and-rename-datasets: done
-  2-8-nfs-cutover-from-shared-nfs-to-shared-nfs-bulk: backlog
-  2-9-update-ct-media-01-config-to-use-shared-nfs-bulk-and-validate: backlog
-  2-10-deploy-pbs-datastore-on-hdd-pool-pbs: backlog
+  2-8-nfs-cutover-from-shared-nfs-to-shared-nfs-bulk: done
+  2-9-update-ct-media-01-config-to-use-shared-nfs-bulk-and-validate: done
+  2-10-deploy-pbs-datastore-on-hdd-pool-pbs: deferred-to-epic-3
   2-11-48-h-soak-test-and-decommission-shared-pool: backlog
   epic-2-retrospective: optional
 
