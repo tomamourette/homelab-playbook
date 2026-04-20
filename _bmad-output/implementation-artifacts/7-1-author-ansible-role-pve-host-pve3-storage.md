@@ -199,3 +199,164 @@ Second run is clean at `production` profile (the strictest).
   **Operator follow-up:** when Story 7.2 runs the fresh-state test, create
   `playbooks/pve-host-pve3-storage.yml` as the canonical invocation and
   reference it from the epic runbook.
+
+## Post-adversarial fixes
+
+A cynical review surfaced 10 defects in the initial authorship. Each was
+addressed in a follow-up pass while keeping the role lint-clean at the
+`production` profile.
+
+### Fix 1 — Hostname guard
+
+The role had no safeguard against being run on the wrong host (`-l pve1`
+typo). Added a `hostname_guard` default (`"pve3"`) and a leading
+`assert: ansible_facts['hostname'] == hostname_guard` in `tasks/main.yml`.
+Override with `-e hostname_guard=other`; disable with `-e hostname_guard=""`.
+Documented under a new "Hostname guard" section in the README.
+
+**Files:** `tasks/main.yml` (new assert block, top of file), `defaults/main.yml`
+(new `hostname_guard: "pve3"` default), `README.md` (new section).
+
+### Fix 2 — ZFS kernel module precheck
+
+`zpool --version` returns 0 even when the ZFS kernel module isn't loaded,
+making every subsequent `zpool` call fail with "Failed to load ZFS module".
+Added a dedicated `zpool list` (no args) probe with an explicit `fail` task
+matching on `'Failed to load ZFS module' in stderr or rc != 0`. Error
+message tells the operator to `modprobe zfs` or check zfs-dkms / kernel
+alignment.
+
+**File:** `tasks/main.yml` (two new tasks after the `zpool --version` probe).
+
+### Fix 3 — Exported / FAULTED hdd-pool handling
+
+Original probe (`zpool list -H -o name`) conflated three states: absent,
+exported, and FAULTED — all return rc=1. Running `zpool create` against an
+exported or faulted pool would attempt to overwrite disks still holding
+data.
+
+Fixed by:
+- Prefixing `zpool import -a -N -o readonly=on` (non-destructive, picks up
+  exported pools so the probe sees them).
+- Extending the probe to `zpool list -H -o name,health` and parsing
+  health into a `hdd_pool_health` fact.
+- Adding an explicit fail-task when the pool exists but reports
+  `FAULTED` or `UNAVAIL`.
+- Gating the create task on `not hdd_pool_exists | bool` instead of the
+  raw probe rc.
+
+**File:** `tasks/hdd-pool.yml` (probe section rewritten).
+
+### Fix 4 — Cluster-join precheck for nfs-export
+
+`pvesm add nfs` on a cluster-unjoined node creates a node-local storage
+entry that conflicts on subsequent cluster join. The old code had no
+quorum check.
+
+Added a `pvesh get /cluster/status` probe that parses the JSON response
+for a `type: cluster` entry with `quorate: 1`. Non-quorate runs fail with
+an actionable message ("defer to post-cluster-join") unless the operator
+explicitly sets `nfs_skip_cluster_check: true`, in which case a warning
+debug task emits and the run continues.
+
+**Files:** `tasks/nfs-export.yml` (probe + fail + warn tasks before the
+existing storage probe), `defaults/main.yml` (new
+`nfs_skip_cluster_check: false`).
+
+### Fix 5 — Special-vdev probe regex
+
+The old `awk '/^\s*special$/'` pattern missed newer ZFS status output
+where the `special` section header carries trailing status text
+(e.g. `special  ONLINE  0  0  0`).
+
+Replaced with a two-stage probe: `zdb -C <pool>` primary, looking for
+`type: 'special'` in the pool config (authoritative), falling back to
+`zpool status -v | grep -E '^\s+special\b'` (whole-word match, tolerates
+trailing columns).
+
+**File:** `tasks/special-vdev.yml`.
+
+### Fix 6 — PBS datastore task ordering
+
+The original `pbs-datastore.yml` stat'd the dataset path before
+installing `proxmox-backup-server`. That ordering is backwards: without
+the package, none of the downstream tasks can run regardless of path
+presence.
+
+Reordered:
+1. Install `proxmox-backup-server` (apt).
+2. Ensure `proxmox-backup-proxy` is running.
+3. Stat the datastore path (precondition for datastore registration).
+4. Probe existing datastores.
+5. Create the datastore if absent.
+
+**File:** `tasks/pbs-datastore.yml` (task block reordered; comment block
+added explaining why).
+
+### Fix 7 — Hardcoded NFS server IP
+
+`defaults/main.yml` had `pve_storage_server: 192.168.50.203`, coupling
+the supposedly-agnostic role to pve3's specific LAN IP. Replaced with
+`"{{ ansible_facts.default_ipv4.address | default(...) | default('192.168.50.203') }}"`
+so the role adapts to any host's primary-IPv4 facts, falling back to
+`hostvars[inventory_hostname].ansible_host` and ultimately to the
+original static IP for safety.
+
+**File:** `defaults/main.yml`.
+
+### Fix 8 — Handler noise
+
+`handlers/main.yml` had `changed_when: true` on the `exportfs -ra`
+command, reporting a change every notify even when nothing changed. The
+notifying task (`blockinfile` on `/etc/exports`) already reports the real
+change; `exportfs -ra` itself is idempotent at the NFS layer.
+
+Changed to `changed_when: false` with a comment explaining the rationale.
+
+**File:** `handlers/main.yml`.
+
+### Fix 9 — Test playbook scope & check-mode limitation
+
+The test playbook was syntax-check only with no block comment explaining
+why `--check` was out of scope. Added a detailed header explaining:
+- What the harness covers (YAML parse, role load).
+- What a meaningful `--check --diff` would require (hostname fixture,
+  loaded ZFS module, fabricated by-id block devices, quorate PVE cluster,
+  installable PBS package).
+- That Story 7.2 is where the fixture + clean-slate test is authored.
+- How to invoke real check-mode against pve3 once ready.
+
+Also set `hostname_guard: ""` in the harness vars so the new guard
+doesn't trip against `localhost`.
+
+**File:** `playbooks/test-pve-host-pve3-storage.yml`.
+
+### Fix 10 — Collection requirements documented
+
+`meta/main.yml` had `min_ansible_version: 2.12` but no mention of the
+`community.general` collection, despite `community.general.zfs` being
+used in two task files. Added:
+
+- `collections: [community.general]` in `meta/main.yml`.
+- A dedicated `requirements.yml` at the role root pinning
+  `community.general >= 3.0.0`.
+- README "Collection requirements" section with the
+  `ansible-galaxy collection install -r` invocation.
+
+**Files:** `meta/main.yml`, `requirements.yml` (new), `README.md`.
+
+### Post-fix validation
+
+| Test | Tool | Result |
+|------|------|--------|
+| YAML parse + role load | `ansible-playbook --syntax-check playbooks/test-pve-host-pve3-storage.yml` | **Pass** |
+| Lint (production profile) | `ansible-lint 26.4.0 roles/pve-host-pve3-storage` | **Pass** — 0 failures, 0 warnings, 12 files processed |
+| Lint of test playbook | `ansible-lint --profile=production playbooks/test-pve-host-pve3-storage.yml` | **1 pre-existing** `role-name[path]` warning (intrinsic to `role: ../roles/...` relative path, pre-dates adversarial review, unchanged) |
+
+### Nothing compromised
+
+All 10 fixes are additive or refactoring — none remove existing
+idempotency, no behaviour on a well-formed pve3 target changes. The
+fixes make the role strictly safer (guards) and cleaner (handler noise,
+task ordering, collection docs) while remaining backward compatible
+with the production invocation shape captured in the README.
