@@ -1,0 +1,153 @@
+# generated: 2026-04-20
+# last_updated: 2026-04-20
+# project: homelab - PVE3 Storage Architecture Migration
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics 1-7 have a STRICT LINEAR dependency chain: E1 → E2 → E3 → E4 → E5 → E6 → E7
+#   Each epic must complete before the next starts (except Epic 7 draft work, see below)
+# - Epic 7 codification work (Ansible role, CI guardrail, docs) may be AUTHORED in parallel
+#   with earlier epics, but cannot be marked 'done' until Epics 1-6 are complete and the
+#   codified artifacts reflect the achieved reality
+# - Epic 4 (Operator Workbench Safe Harbor) is a GATING prerequisite for Epic 5 — do not
+#   start Epic 5 until Epic 4 is complete; the workbench on pve1 must be evacuated to pve3
+#   before pve1 is reinstalled, otherwise the operator loses their live session mid-migration
+# - Within each epic, stories are SEQUENTIAL and must be completed in numerical order
+#   (they have real ordering dependencies, not just suggested ordering)
+# - Stories can NOT be worked in parallel within an epic — the migration is inherently serial
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+#
+# MIGRATION WINDOW RECOMMENDATIONS:
+# =================================
+# - Epic 1: can be done across multiple days (prep work, no service impact)
+# - Epic 2: single session, ~4 hours (includes 48 h soak at end for Story 2.11)
+# - Epic 3: single maintenance window, ~4-6 hours (pve3 reinstall)
+# - Epic 4: ~30 minutes (evacuation + reconnect)
+# - Epic 5: two maintenance windows across ~2 days (pve1 then pve2, each ~2-3 hours)
+# - Epic 6: ~2 hours for config + drills
+# - Epic 7: can be done across multiple days (codification is deskwork)
+
+generated: 2026-04-20
+last_updated: 2026-04-20
+project: homelab - PVE3 Storage Architecture Migration
+project_key: NOKEY
+tracking_system: file-system
+story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Migration Readiness
+  epic-1: backlog
+  1-1-procure-cold-spare-22-tb-wd-purple-pro: backlog
+  1-2-set-up-migration-window-pbs-datastore-off-pve3: backlog
+  1-3-full-cluster-pbs-backup-with-verified-restore-test: backlog
+  1-4-capture-pre-migration-state-snapshot: backlog
+  1-5-capture-media-library-checksum-manifest: backlog
+  1-6-commit-and-push-operator-workbench-work: backlog
+  1-7-verify-fallback-ssh-from-laptop-path: backlog
+  1-8-network-upgrade-decision-and-optional-switch-swap: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: Bulk Storage Foundation with Preserved Media
+  epic-2: backlog
+  2-1-identify-and-document-all-5-hdds-by-dev-disk-by-id: backlog
+  2-2-create-hdd-pool-raidz1-without-special-vdev-yet: backlog
+  2-3-create-hdd-pool-datasets-and-tune-properties: backlog
+  2-4-snapshot-shared-pool-as-pre-migration-rollback-point: backlog
+  2-5-migrate-354-gb-media-via-zfs-send-zfs-recv: backlog
+  2-6-verify-media-via-sha-256-manifest-diff: backlog
+  2-7-promote-staging-to-final-location-and-rename-datasets: backlog
+  2-8-nfs-cutover-from-shared-nfs-to-shared-nfs-bulk: backlog
+  2-9-update-ct-media-01-config-to-use-shared-nfs-bulk-and-validate: backlog
+  2-10-deploy-pbs-datastore-on-hdd-pool-pbs: backlog
+  2-11-48-h-soak-test-and-decommission-shared-pool: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: pve3 Target NVMe Architecture
+  epic-3: backlog
+  3-1-evacuate-ct160-and-ct162-from-pve3-pre-reinstall: backlog
+  3-2-reinstall-proxmox-on-pve3-with-2-way-zfs-mirror: backlog
+  3-3-rejoin-pve3-to-the-cluster: backlog
+  3-4-add-mirrored-special-vdev-to-hdd-pool: backlog
+  3-5-configure-special-small-blocks-for-metadata-heavy-datasets: backlog
+  3-6-create-single-disk-fast-pool-on-nvme2: backlog
+  3-7-re-establish-nfs-export-for-hdd-pool-bulk: backlog
+  3-8-restore-ct160-and-migrate-ct162-back-to-pve3: backlog
+  3-9-add-hdd-pool-models-mount-to-ct160-and-relocate-ollama-models: backlog
+  3-10-validate-pve3-storage-state-v1-v2-v7: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Operator Workbench Safe Harbor
+  epic-4: backlog
+  4-1-final-commit-push-of-any-trailing-workbench-work: backlog
+  4-2-fresh-pbs-backup-of-ct150-post-checkpoint: backlog
+  4-3-restore-ct150-to-pve3-as-parallel-instance: backlog
+  4-4-verify-pve3-resident-ct150-operational: backlog
+  4-5-cut-operator-session-over-to-pve3-resident-ct150: backlog
+  4-6-retain-pve1-ct150-as-tombstone-until-epic-5-completes: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Cluster-wide ZFS Parity (pve1 + pve2)
+  epic-5: backlog
+  5-1-evacuate-pve1-cts-vms-before-reinstall: backlog
+  5-2-reinstall-proxmox-on-pve1-with-zfs-single-disk-rpool: backlog
+  5-3-rejoin-pve1-to-the-cluster: backlog
+  5-4-restore-vm100-smarthome-to-pve1-with-usb-passthrough: backlog
+  5-5-move-selected-cts-back-to-pve1-per-4-5-matrix: backlog
+  5-6-update-terraform-tfvars-for-pve1-cts: backlog
+  5-7-evacuate-pve2-cts-before-reinstall: backlog
+  5-8-reinstall-proxmox-on-pve2-with-zfs-single-disk-rpool: backlog
+  5-9-rejoin-pve2-to-the-cluster: backlog
+  5-10-restore-pve2-cts-and-let-terraform-recreate-ct152: backlog
+  5-11-update-terraform-tfvars-for-pve2-cts: backlog
+  5-12-validate-cluster-wide-storage-id-consistency: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: High Availability Activated
+  epic-6: backlog
+  6-1-create-replication-jobs-per-4-5-matrix: backlog
+  6-2-verify-replication-state-and-deltas: backlog
+  6-3-define-ha-groups: backlog
+  6-4-assign-cts-and-vms-to-ha-groups: backlog
+  6-5-validation-drill-v3-replication-rpo-for-ct162: backlog
+  6-6-validation-drill-v4-simulated-failover-via-migrate: backlog
+  6-7-validation-drill-v5-pull-plug-pve3: backlog
+  6-8-validation-drill-v6-pve3-recovery: backlog
+  6-9-document-validated-ha-behavior-in-runbook: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Reproducibility & Guardrails
+  epic-7: backlog
+  7-1-author-ansible-role-pve-host-pve3-storage: backlog
+  7-2-idempotency-test-of-ansible-role-against-fresh-state: backlog
+  7-3-implement-ci-guardrail-preventing-ha-ct-on-non-replicable-storage: backlog
+  7-4-update-terraform-module-defaults: backlog
+  7-5-update-architecture-docs-to-reflect-target-state: backlog
+  7-6-enable-weekly-zfs-scrub-automation: backlog
+  7-7-retrospective-and-memory-updates: backlog
+  epic-7-retrospective: optional
