@@ -1,0 +1,10 @@
+  LV                        VG  Attr       LSize   Pool Origin        Data%  Meta%  Move Log Cpy%Sync Convert
+  data                      pve twi-aotz-- 794.30g                    4.69   0.39                            
+  root                      pve -wi-ao----  96.00g                                                           
+  snap_vm-151-disk-0_vzdump pve Vri-aotz-k  20.00g data vm-151-disk-0 26.43                                  
+  swap                      pve -wi-ao----   8.00g                                                           
+  vm-105-disk-0             pve Vwi-aotz--   8.00g data               16.25                                  
+  vm-105-disk-1             pve Vwi-aotz-- 500.00g data               2.79                                   
+  vm-151-disk-0             pve Vwi-aotz--  20.00g data               26.43                                  
+  vm-152-disk-0             pve Vwi-aotz--  15.00g data               74.71                                  
+  vm-153-disk-0             pve Vwi-aotz--  20.00g data               27.40                                  

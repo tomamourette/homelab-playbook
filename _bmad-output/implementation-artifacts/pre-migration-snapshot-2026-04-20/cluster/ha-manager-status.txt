@@ -1,0 +1,2 @@
+quorum OK
+fencing standby (CRM watchdog standby)

@@ -1,0 +1,5 @@
+      VMID NAME                 STATUS     MEM(MB)    BOOTDISK(GB) PID       
+       100 smarthome            running    2048              32.00 1619      
+       103 vm-haos-01           running    4096               0.00 1285      
+       999 ubuntu-dev-template  stopped    4096              50.00 0         
+      9000 ubuntu-22.04-cloudimg stopped    2048               2.20 0         

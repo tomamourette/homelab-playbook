@@ -1,0 +1,12 @@
+zfs error: cannot open 'rpool': no such pool
+
+zfs error: cannot open 'rpool': no such pool
+
+could not activate storage 'local-zfs', zfs error: cannot import 'rpool': no such pool available
+
+Name                 Type     Status     Total (KiB)      Used (KiB) Available (KiB)        %
+local                 dir     active        98497780         6655740        86792492    6.76%
+local-lvm         lvmthin     active       832884736        39645313       793239422    4.76%
+local-zfs         zfspool   inactive               0               0               0    0.00%
+pbs-migration         pbs     active       514937088         6210612       482495692    1.21%
+shared-nfs            nfs     active       942927872       372744192       570183680   39.53%

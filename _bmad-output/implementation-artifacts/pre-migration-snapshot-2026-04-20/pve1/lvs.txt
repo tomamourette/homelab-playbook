@@ -1,0 +1,15 @@
+  LV                        VG  Attr       LSize   Pool Origin        Data%  Meta%  Move Log Cpy%Sync Convert
+  base-9000-disk-0          pve Vri---tz-k  <2.20g data                                                      
+  base-999-disk-0           pve Vri---tz-k   4.00m data                                                      
+  base-999-disk-1           pve Vri---tz-k  50.00g data                                                      
+  data                      pve twi-aotz-- 337.86g                    87.89  3.33                            
+  root                      pve -wi-ao----  96.00g                                                           
+  snap_vm-102-disk-0_vzdump pve Vri-a-tz-k 240.00g data vm-102-disk-0 99.94                                  
+  swap                      pve -wi-ao----   8.00g                                                           
+  vm-100-disk-0             pve Vwi-aotz--   4.00m data               14.06                                  
+  vm-100-disk-1             pve Vwi-aotz--  32.00g data               21.89                                  
+  vm-101-disk-0             pve Vwi-aotz--  20.00g data               99.21                                  
+  vm-102-disk-0             pve Vwi-aotz-- 240.00g data               99.94                                  
+  vm-104-disk-0             pve Vwi-aotz--   4.00g data               49.52                                  
+  vm-150-disk-0             pve Vwi-aotz--  50.00g data               36.80                                  
+  vm-9000-cloudinit         pve Vwi-a-tz--   4.00m data               9.38                                   

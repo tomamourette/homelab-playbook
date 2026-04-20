@@ -1,0 +1,109 @@
+===== /etc/pve/lxc/101.conf =====
+#Managed by Terraform
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-docker-01
+memory: 4096
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:42:E4:3D,ip=192.168.50.194/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-101-disk-0,size=20G
+swap: 512
+tags: docker-host;homelab
+tty: 2
+unprivileged: 1
+===== /etc/pve/lxc/102.conf =====
+#Managed by Terraform
+arch: amd64
+cmode: tty
+console: 1
+cores: 4
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1,keyctl=1
+hostname: ct-media-01
+lock: backup
+memory: 8192
+mp0: /mnt/pve/shared-nfs/media,mp=/media,replicate=0,shared=1
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:66:39:07,ip=192.168.50.161/24,type=veth
+onboot: 1
+ostype: debian
+parent: vzdump
+protection: 0
+rootfs: local-lvm:vm-102-disk-0,size=240G
+swap: 512
+tags: homelab;media
+tty: 2
+lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+
+[vzdump]
+#vzdump backup snapshot
+arch: amd64
+cmode: tty
+console: 1
+cores: 4
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1,keyctl=1
+hostname: ct-media-01
+memory: 8192
+mp0: /mnt/pve/shared-nfs/media,mp=/media,replicate=0,shared=1
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:66:39:07,ip=192.168.50.161/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-102-disk-0,size=240G
+snaptime: 1776713565
+swap: 512
+tags: homelab;media
+tty: 2
+lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+===== /etc/pve/lxc/104.conf =====
+arch: amd64
+cmode: tty
+console: 1
+cores: 1
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-zeroclaw-01
+memory: 1024
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:44:5F:C4,ip=192.168.50.104/24,type=veth
+onboot: 1
+ostype: ubuntu
+protection: 0
+rootfs: local-lvm:vm-104-disk-0,size=4G
+swap: 512
+tags: homelab;zeroclaw
+tty: 2
+unprivileged: 1
+===== /etc/pve/lxc/150.conf =====
+#Managed by Terraform
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1,keyctl=1
+hostname: ct-dev-homelab
+memory: 8192
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:C4:D8:06,ip=192.168.50.150/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-150-disk-0,size=50G
+swap: 512
+tags: dev;homelab
+tty: 2
+lxc.mount.auto: proc:rw sys:rw cgroup:rw

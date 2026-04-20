@@ -1,0 +1,7 @@
+no such logical volume pve/data
+Name                 Type     Status     Total (KiB)      Used (KiB) Available (KiB)        %
+local                 dir     active       894035712          126848       893908864    0.01%
+local-lvm         lvmthin   inactive               0               0               0    0.00%
+local-zfs         zfspool     active       930072208        36163328       893908880    3.89%
+pbs-migration         pbs     active       514937088         6512944       482193360    1.26%
+shared-nfs            nfs     active       942927872       372744192       570183680   39.53%

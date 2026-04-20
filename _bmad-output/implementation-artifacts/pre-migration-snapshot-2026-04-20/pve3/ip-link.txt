@@ -1,0 +1,7 @@
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+enp197s0         DOWN           38:05:25:37:3d:cc <BROADCAST,MULTICAST> 
+eno1             UP             38:05:25:37:3d:cd <BROADCAST,MULTICAST,UP,LOWER_UP> 
+enxa0cec87fcb8b  DOWN           a0:ce:c8:7f:cb:8b <BROADCAST,MULTICAST> 
+vmbr0            UP             38:05:25:37:3d:cd <BROADCAST,MULTICAST,UP,LOWER_UP> 
+veth160i0@if2    UP             fe:0b:31:29:c5:9f <BROADCAST,MULTICAST,UP,LOWER_UP> 
+veth162i0@if2    UP             fe:a4:e1:f3:09:7e <BROADCAST,MULTICAST,UP,LOWER_UP> 

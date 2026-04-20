@@ -1,0 +1,3 @@
+VMID       Status     Lock         Name                
+160        running                 ct-ai-01            
+162        running    backup       ct-quant-trading    

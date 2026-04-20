@@ -1,0 +1,5 @@
+VMID       Status     Lock         Name                
+105        running                 ct-pbs-migration    
+151        running    backup       ct-sparkle-cps      
+152        running                 ct-dev-test         
+153        running                 ct-isabelle         

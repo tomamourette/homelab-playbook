@@ -1,0 +1,12 @@
+NAME                                  USED  AVAIL  REFER  MOUNTPOINT
+rpool                                46.8G   852G   104K  /rpool
+rpool/ROOT                           3.64G   852G    96K  /rpool/ROOT
+rpool/ROOT/pve-1                     3.64G   852G  3.64G  /
+rpool/data                           34.5G   852G    96K  /rpool/data
+rpool/data/subvol-160-disk-0         30.4G  19.6G  30.4G  /rpool/data/subvol-160-disk-0
+rpool/data/subvol-162-disk-0         4.08G  45.9G  4.08G  /rpool/data/subvol-162-disk-0
+rpool/data/subvol-162-disk-0@vzdump   104K      -  4.08G  -
+rpool/swap                           8.50G   861G    56K  -
+rpool/var-lib-vz                      124M   852G   124M  /var/lib/vz
+shared-pool                           355G   544G    96K  /shared-pool
+shared-pool/nfs                       355G   544G   355G  /shared-pool/nfs

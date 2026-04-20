@@ -1,0 +1,10 @@
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+enp1s0           UP             
+enp2s0           DOWN           
+enp3s0           DOWN           
+enp4s0           DOWN           
+vmbr0            UP             192.168.50.202/24 fe80::2d0:4cff:fe10:41d4/64 
+veth151i0@if2    UP             
+veth152i0@if2    UP             
+veth153i0@if2    UP             
+veth105i0@if2    UP             

@@ -1,0 +1,8 @@
+netlink error: failed to retrieve link settings
+netlink error: No such device
+netlink error: failed to retrieve link settings
+netlink error: No such device
+Settings for enp197s0:
+	Supports Wake-on: pumbg
+	Wake-on: d
+	Link detected: no

@@ -1,0 +1,101 @@
+===== /etc/pve/lxc/105.conf =====
+arch: amd64
+cores: 2
+features: nesting=1
+hostname: ct-pbs-migration
+memory: 2048
+mp0: local-lvm:vm-105-disk-1,mp=/var/lib/proxmox-backup,size=500G
+nameserver: 192.168.50.1
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:FA:D9:25,ip=192.168.50.155/24,type=veth
+onboot: 1
+ostype: debian
+rootfs: local-lvm:vm-105-disk-0,size=8G
+swap: 512
+tags: homelab;migration-window;pbs;temporary
+unprivileged: 1
+===== /etc/pve/lxc/151.conf =====
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-sparkle-cps
+lock: backup
+memory: 4096
+nameserver: 192.168.50.194
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:0A:22:6F,ip=192.168.50.151/24,type=veth
+onboot: 1
+ostype: debian
+parent: vzdump
+protection: 0
+rootfs: local-lvm:vm-151-disk-0,size=20G
+searchdomain: bi-services.be
+swap: 512
+tags: homelab;project;sparkle-cps
+tty: 2
+unprivileged: 1
+
+[vzdump]
+#vzdump backup snapshot
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-sparkle-cps
+memory: 4096
+nameserver: 192.168.50.194
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:0A:22:6F,ip=192.168.50.151/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-151-disk-0,size=20G
+searchdomain: bi-services.be
+snaptime: 1776713566
+swap: 512
+tags: homelab;project;sparkle-cps
+tty: 2
+unprivileged: 1
+===== /etc/pve/lxc/152.conf =====
+#Managed by Terraform
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1,keyctl=1
+hostname: ct-dev-test
+memory: 8192
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:C9:87:A7,ip=192.168.50.152/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-152-disk-0,size=15G
+swap: 512
+tags: dev;homelab;test
+tty: 2
+===== /etc/pve/lxc/153.conf =====
+#Managed by Terraform
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-isabelle
+memory: 4096
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:64:41:70,ip=192.168.50.153/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-lvm:vm-153-disk-0,size=20G
+swap: 512
+tags: homelab;isabelle;project
+tty: 2
+unprivileged: 1

@@ -1,0 +1,26 @@
+  pool: rpool
+ state: ONLINE
+status: Some supported and requested features are not enabled on the pool.
+	The pool can still be used, but some features are unavailable.
+action: Enable all features using 'zpool upgrade'. Once this is done,
+	the pool may no longer be accessible by software that does not support
+	the features. See zpool-features(7) for details.
+config:
+
+	NAME                                 STATE     READ WRITE CKSUM
+	rpool                                ONLINE       0     0     0
+	  mirror-0                           ONLINE       0     0     0
+	    nvme-eui.0025384361a071f9-part3  ONLINE       0     0     0
+	    nvme-eui.0025384261b00ca8-part3  ONLINE       0     0     0
+
+errors: No known data errors
+
+  pool: shared-pool
+ state: ONLINE
+config:
+
+	NAME                                            STATE     READ WRITE CKSUM
+	shared-pool                                     ONLINE       0     0     0
+	  nvme-Samsung_SSD_990_PRO_1TB_S7HDNL0L322630L  ONLINE       0     0     0
+
+errors: No known data errors

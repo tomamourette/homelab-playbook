@@ -1,0 +1,5 @@
+VMID       Status     Lock         Name                
+101        running                 ct-docker-01        
+102        running    snapshot     ct-media-01         
+104        running                 ct-zeroclaw-01      
+150        running                 ct-dev-homelab      
