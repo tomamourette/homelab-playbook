@@ -68,7 +68,7 @@ development_status:
   1-3-full-cluster-pbs-backup-with-verified-restore-test: backlog
   1-4-capture-pre-migration-state-snapshot: done
   1-5-capture-media-library-checksum-manifest: backlog
-  1-6-commit-and-push-operator-workbench-work: backlog
+  1-6-commit-and-push-operator-workbench-work: done
   1-7-verify-fallback-ssh-from-laptop-path: backlog
   1-8-network-upgrade-decision-and-optional-switch-swap: backlog
   epic-1-retrospective: optional
