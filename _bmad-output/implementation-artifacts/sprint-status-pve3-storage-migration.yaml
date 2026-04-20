@@ -145,7 +145,7 @@ development_status:
   epic-7: backlog
   7-1-author-ansible-role-pve-host-pve3-storage: done
   7-2-idempotency-test-of-ansible-role-against-fresh-state: backlog
-  7-3-implement-ci-guardrail-preventing-ha-ct-on-non-replicable-storage: review
+  7-3-implement-ci-guardrail-preventing-ha-ct-on-non-replicable-storage: done
   7-4-update-terraform-module-defaults: done
   7-5-update-architecture-docs-to-reflect-target-state: backlog
   7-6-enable-weekly-zfs-scrub-automation: done
