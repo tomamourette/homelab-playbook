@@ -103,13 +103,13 @@ development_status:
   epic-3-retrospective: optional
 
   # Epic 4: Operator Workbench Safe Harbor
-  epic-4: backlog
-  4-1-final-commit-push-of-any-trailing-workbench-work: backlog
-  4-2-fresh-pbs-backup-of-ct150-post-checkpoint: backlog
-  4-3-restore-ct150-to-pve3-as-parallel-instance: backlog
-  4-4-verify-pve3-resident-ct150-operational: backlog
-  4-5-cut-operator-session-over-to-pve3-resident-ct150: backlog
-  4-6-retain-pve1-ct150-as-tombstone-until-epic-5-completes: backlog
+  epic-4: in-progress
+  4-1-final-commit-push-of-any-trailing-workbench-work: done
+  4-2-fresh-pbs-backup-of-ct150-post-checkpoint: done
+  4-3-restore-ct150-to-pve3-as-parallel-instance: done
+  4-4-verify-pve3-resident-ct150-operational: done
+  4-5-cut-operator-session-over-to-pve3-resident-ct150: awaiting-operator-cutover
+  4-6-retain-pve1-ct150-as-tombstone-until-epic-5-completes: active
   epic-4-retrospective: optional
 
   # Epic 5: Cluster-wide ZFS Parity (pve1 + pve2)
