@@ -1,6 +1,6 @@
 ---
 date: 2026-04-21
-verdict: YELLOW — proceed when final CT102 retry + VM103 backup complete
+verdict: GREEN — all pre-flight gates passed; proceed when operator confirms thermal-pad + USB installer + household notification
 related: P1-pve1-nvme-failure-2026-04-20.md, vm100-ddrescue-report-2026-04-20.md, pve1-solo-nvme-replacement-runbook.md
 ---
 
@@ -49,12 +49,12 @@ Sweep of the four guests that will be PBS-restored (CT101, CT102, CT104, VM103 �
 
 | VMID | Name | Status | Duration | Size (PBS) | Timestamp | Notes |
 |------|------|--------|----------|------------|-----------|-------|
-| 104 | ct-zeroclaw-01 | OK | ~1 min | 1.59 GB | 2026-04-21T11:47:02Z | clean |
-| 101 | ct-docker-01 | OK | ~2 min | 17.3 GB | 2026-04-21T11:47:18Z | clean |
-| 102 | ct-media-01 | FAIL (broken pipe) then retry in progress | retry started 13:48:33 | ~225 GB compressed (estimate from prior sweep) | 2026-04-21T11:48:29Z failed, retry running | first attempt hit broken-pipe when the orchestrating agent session terminated; serial retry running now |
-| 103 | vm-haos-01 | in progress | < 1 min expected (iso-boot, no disk) | trivial | running at report time | will complete before CT102 |
+| 104 | ct-zeroclaw-01 | ✅ OK | ~1 min | 1.59 GB | 2026-04-21T11:47:02Z | clean |
+| 101 | ct-docker-01 | ✅ OK | ~2 min | 17.3 GB | 2026-04-21T11:47:18Z | clean |
+| 102 | ct-media-01 | ✅ OK (retry succeeded) | ~30 min | 227.8 GB | 2026-04-21T11:49:57Z | first attempt hit broken-pipe when the orchestrating agent session terminated; serial retry succeeded |
+| 103 | vm-haos-01 | ✅ OK | < 1 min | 775 B | 2026-04-21T11:57:51Z | iso-boot, no disk |
 
-**Progress to continue after report writing:** wait for CT102 retry (expected ~30 min total) and VM103 (expected ~1 min). When both `OK`, the swap can proceed.
+**All four backups OK — PBS sweep fully covered.** Combined with the ddrescue-authoritative VM100 rescue (§1 above), every pve1 guest is recoverable.
 
 ## Section 3 — Other prerequisites
 
@@ -71,13 +71,30 @@ Sweep of the four guests that will be PBS-restored (CT101, CT102, CT104, VM103 �
 
 ## Section 4 — Go / no-go verdict
 
-**Overall: YELLOW** — proceed when:
+**Overall: GREEN** — swap is cleared to proceed as soon as operator confirms:
 
-1. CT102 retry completes with `OK` status
-2. VM103 backup completes with `OK` status
-3. Operator confirms thermal pad + USB installer + household notification
+1. ☐ M.2 thermal pad on hand (1mm, ≥5 W/m·K)
+2. ☐ Proxmox 9 install USB prepared
+3. ☐ Household notified of VM100 downtime (~1 h)
 
-Once those three are met → **GREEN** for swap.
+Data-preservation and service-continuity gates are all PASSED:
+
+- VM100 rescue image validated — all 5 critical HA state files readable
+- Final PBS backups of CT101/CT102/CT104/VM103 all OK on 2026-04-21
+- ddrescue image + mapfile + original vm100.conf present on pve3:/hdd-pool/bulk/rescue/
+- Operator workbench safely on pve3 (CT250 @ 192.168.50.156)
+- Cluster quorate 3/3
+
+### Evacuation target update
+
+Revised plan: **everything → pve3** (instead of split pve2/pve3). Runbook Phase 1 table updated. Rationale:
+- Single target → simpler runbook and fewer SSH-hop chains
+- CT102 + CT101 + CT104 + VM103 all land on pve3 local-zfs (ZFS from the start — no temporary LVM hop)
+- CT102's NFS mount to shared-nfs-bulk becomes local-loopback on pve3 (served + consumed on same node)
+- Return-migration post-swap is uniformly pve3→pve1 for every guest
+- pve3 capacity comfortable: +264 GB of guests on a 928 GB pool currently 38 GB used → ~628 GB free after
+
+Downside: if pve3 itself hits trouble during the pve1 window, all evacuated guests go down. Mitigated by pve3's stable state (healthy rpool, new hdd-pool, scrubs armed).
 
 **Non-blocking caveats** (flagged by the runbook author):
 - VM100 efidisk0 (the 4 MB EFI vars storage) was NOT in the ddrescue (it's a separate LV that wasn't targeted). HAOS may boot fresh efivars cleanly; if it doesn't, operator will need to boot rescue media and re-enroll the UEFI keys. Low probability — HAOS is designed to handle missing efivars on first boot.

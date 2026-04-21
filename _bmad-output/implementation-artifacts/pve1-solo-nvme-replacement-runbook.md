@@ -39,10 +39,10 @@
 
 | VMID | Guest | Current state | Target node | Mechanism | Post-swap destination | Notes |
 |------|-------|---------------|-------------|-----------|------------------------|-------|
-| 101 | ct-docker-01 | pve1 local-lvm, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | HA-candidate; restore fresh avoids any LVM-thin residue |
-| 102 | ct-media-01 | pve1 local-lvm 240G, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | Keep mp0 → `shared-nfs-bulk` |
-| 104 | ct-zeroclaw-01 | pve1 local-lvm 4G, running | **pve2 local-lvm** | PBS restore | back to pve1 local-zfs | Tiny, disposable |
-| 103 | vm-haos-01 | pve1 local-lvm, running | **pve2 local-lvm** | PBS restore | back to pve1 local-zfs | ISO-only, trivial |
+| 101 | ct-docker-01 | pve1 local-lvm, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | Goes to ZFS from the start — no temporary LVM hop |
+| 102 | ct-media-01 | pve1 local-lvm 240G, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | Keep mp0 → `shared-nfs-bulk`; pve3 also serves the export → NFS becomes local-loopback (faster) |
+| 104 | ct-zeroclaw-01 | pve1 local-lvm 4G, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | Tiny, ride-along |
+| 103 | vm-haos-01 | pve1 local-lvm, running | **pve3 local-zfs** | PBS restore | back to pve1 local-zfs | ISO-only, trivial; single-target simplifies orchestration |
 | 100 | VM smarthome (HA) | pve1 local-lvm **BAD NVMe** | **stays down** | ddrescue image (complete) | pve1 local-zfs (restore from image) | Zigbee USB `10c4:ea60` pins it to pve1 — cannot move |
 | 150 | ct-dev-homelab | already on pve3 as CT250 | — (Epic 4 complete) | — | CT150 tombstone stays on pve1 until wipe | Operator uses CT250 throughout |
 | 999, 9000 | templates | stopped | — | destroyed by pve1 wipe | recreated from terraform after rejoin | Templates, not data |
@@ -82,15 +82,15 @@ ssh root@192.168.50.203 'sed -i "s|/mnt/pve/shared-nfs/media|/mnt/pve/shared-nfs
 ssh root@192.168.50.203 'pct start 102'
 ssh root@192.168.50.203 'pct exec 102 -- ls /media/movies | head'           # media reachable
 
-# === 1.5 Restore CT104 to pve2 (tiny) ===
-BACKUP_104=$(ssh root@192.168.50.202 'pvesm list pbs-migration' | awk '/ct\/104\//{print $1}' | tail -1)
-ssh root@192.168.50.202 "pct restore 104 $BACKUP_104 --storage local-lvm --rootfs local-lvm:4"
-ssh root@192.168.50.202 'pct start 104'
+# === 1.5 Restore CT104 to pve3 (tiny) ===
+BACKUP_104=$(ssh root@192.168.50.203 'pvesm list pbs-migration' | awk '/ct\/104\//{print $1}' | tail -1)
+ssh root@192.168.50.203 "pct restore 104 $BACKUP_104 --storage local-zfs --rootfs local-zfs:4"
+ssh root@192.168.50.203 'pct start 104'
 
-# === 1.6 Restore VM103 to pve2 (trivial, iso-only) ===
-BACKUP_103=$(ssh root@192.168.50.202 'pvesm list pbs-migration' | awk '/vm\/103\//{print $1}' | tail -1)
-ssh root@192.168.50.202 "qmrestore $BACKUP_103 103 --storage local-lvm"
-ssh root@192.168.50.202 'qm start 103'
+# === 1.6 Restore VM103 to pve3 (trivial, iso-only) ===
+BACKUP_103=$(ssh root@192.168.50.203 'pvesm list pbs-migration' | awk '/vm\/103\//{print $1}' | tail -1)
+ssh root@192.168.50.203 "qmrestore $BACKUP_103 103 --storage local-zfs"
+ssh root@192.168.50.203 'qm start 103'
 
 # === 1.7 Verify VM100 ddrescue artifacts are safe on pve3 ===
 ssh root@192.168.50.203 'ls -la /hdd-pool/bulk/rescue/'
@@ -101,8 +101,7 @@ ssh root@192.168.50.201 'pct list ; qm list'   # all stopped; CT150 stopped; tem
 ```
 
 **Exit criteria for Phase 1:**
-- CT101, CT102 running on pve3 with `local-zfs` rootfs, CT102 serving media from `shared-nfs-bulk`
-- CT104, VM103 running on pve2
+- CT101, CT102, CT104, VM103 all running on pve3 with `local-zfs` rootfs; CT102 serving media from `shared-nfs-bulk`
 - VM100 stopped on pve1 (drive is still readable); ddrescue image triple-confirmed on pve3
 - `pvecm status` still shows 3/3 quorate
 - Announce to household: "Home Assistant going down for ~1 h in 5 min"
