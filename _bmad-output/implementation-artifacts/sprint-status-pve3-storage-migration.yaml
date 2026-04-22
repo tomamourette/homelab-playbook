@@ -113,13 +113,13 @@ development_status:
   epic-4-retrospective: optional
 
   # Epic 5: Cluster-wide ZFS Parity (pve1 + pve2)
-  epic-5: backlog
-  5-1-evacuate-pve1-cts-vms-before-reinstall: backlog
-  5-2-reinstall-proxmox-on-pve1-with-zfs-single-disk-rpool: backlog
-  5-3-rejoin-pve1-to-the-cluster: backlog
-  5-4-restore-vm100-smarthome-to-pve1-with-usb-passthrough: backlog
-  5-5-move-selected-cts-back-to-pve1-per-4-5-matrix: backlog
-  5-6-update-terraform-tfvars-for-pve1-cts: backlog
+  epic-5: in-progress
+  5-1-evacuate-pve1-cts-vms-before-reinstall: done
+  5-2-reinstall-proxmox-on-pve1-with-zfs-single-disk-rpool: done
+  5-3-rejoin-pve1-to-the-cluster: done
+  5-4-restore-vm100-smarthome-to-pve1-with-usb-passthrough: done
+  5-5-move-selected-cts-back-to-pve1-per-4-5-matrix: done
+  5-6-update-terraform-tfvars-for-pve1-cts: done-with-tfstate-drift
   5-7-evacuate-pve2-cts-before-reinstall: backlog
   5-8-reinstall-proxmox-on-pve2-with-zfs-single-disk-rpool: backlog
   5-9-rejoin-pve2-to-the-cluster: backlog
