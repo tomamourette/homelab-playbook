@@ -1,5 +1,7 @@
 # CT150 Evacuation — Operator Cutover Runbook
 
+> **2026-04-22 update:** operator is permanently on CT250 at 192.168.50.156 (soft cutover — Option B). Option A (hard IP swap to .150) is no longer urgent since pve1 was rebuilt on healthy hardware and the original CT150 tombstone is gone. This runbook is retained as a reference in case a future emergency cutover is needed.
+
 **Current state (as of 2026-04-20 20:45 UTC):** two workbenches running in parallel.
 
 | Instance | Node | VMID | IP | Hostname | Role |

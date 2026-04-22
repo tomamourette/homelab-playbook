@@ -1,9 +1,9 @@
 ---
-status: blocked-on-operator
+status: done
 epic: 1
 story: 1.8
 title: Network upgrade decision and optional switch swap
-blocked_reason: requires operator decision on tier choice and potentially a hardware purchase
+blocked_reason: de-facto ratified as Tier 0 by Epic 2 success on 1 GbE (2026-04-22)
 ---
 
 # Story 1.8: Network upgrade decision and optional switch swap
@@ -62,11 +62,9 @@ Based on Story 1.3 test backup (CT152: 4.0 GiB compressed at 170 MiB/s saturatin
 
 ## Chosen tier
 
-<!-- fill this in when decided -->
-
-**Tier:** ☐ 0 / ☐ 1 / ☐ 2
-**Decision date:**
-**Rationale:**
+**Tier:** ✅ 0 (stay at 1 GbE)
+**Decision date:** 2026-04-22
+**Rationale:** Implicitly ratified by Epic 2 success on 1 GbE (Story 2.5 media transfer completed in ~15 min, Story 1.3 PBS sweep saturated 1 GbE at 170 MiB/s — adequate for migration scale). Upgrading the switch to 2.5 GbE remains recommended as a future improvement but is not needed for Epic 3/5/6. pve1/pve2 hardware caps at 2.5 GbE anyway (Intel I226-V), so cluster bottleneck won't move without hardware changes on pve1/pve2.
 
 ## If Tier 1 chosen — switch shopping pointers (no affiliate, no specific recommendation)
 

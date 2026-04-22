@@ -1,5 +1,7 @@
 # PVE3 hdd-pool Cold Spare Inventory
 
+> **2026-04-22: scope expanded** — this doc now tracks both HDD (`hdd-pool` RAIDZ1) cold spares AND NVMe (`rpool` on pve1/pve2/pve3) cold spares. Rename to `cold-spare-inventory.md` covers both classes of spare. HDD spares protect against bulk-pool drive failure; NVMe spares protect against rpool single-drive failure on nodes without NVMe mirror (pve1, pve2 as of Epic 5 Window A).
+
 ## Purpose
 
 The pve3 `hdd-pool` is a RAIDZ1 vdev of 5x 22 TB WD Purple Pro drives — single-parity, so it tolerates exactly one drive failure. During a resilver (which at 22 TB scale runs many hours to several days), a second-drive failure is catastrophic: the entire pool and the 354 GB media library it holds are lost. The risk this cold spare mitigates is not drive failure itself (inevitable) but **time-to-replace**: having a sealed drive already on the shelf turns a 3-7 day shipping window into a 15-minute physical swap, collapsing the exposure window where the pool is running degraded and a second failure would be fatal.
@@ -28,6 +30,16 @@ The pve3 `hdd-pool` is a RAIDZ1 vdev of 5x 22 TB WD Purple Pro drives — single
 
 Source command: `for d in sda sdb sdc sdd sde; do smartctl -i /dev/$d | grep -E 'Device Model|Serial'; done` on pve3.
 
+### Production NVMe inventory (added 2026-04-22 — tracked for spare-strategy visibility only)
+
+The pve2 and pve3 NVMes are listed for completeness but are OUT OF SCOPE of this original "HDD cold spare" doc. The P1 pve1 NVMe failure (2026-04-20) broadened the spare strategy to include NVMe; only pve1's NVMe is in scope for this doc's cold-spare tracking.
+
+| Node | Device                | Model                      | Capacity | Notes |
+|------|-----------------------|----------------------------|----------|-------|
+| pve1 | nvme-eui.0025384261a105e3 | Samsung 990 PRO 1 TB    | 1 TB     | **In scope** — installed 2026-04-22, replaces failed 970 EVO Plus 500 GB per P1 incident. Single-drive rpool; cold spare strategy now tracked below. |
+| pve2 | (see pve2 host)       | (current pve2 NVMe)        | 1 TB     | Out of scope of this doc — tracked implicitly by Epic 5 Window B plan. |
+| pve3 | (see pve3 host)       | (current pve3 NVMes)       | ~1 TB ×2 | Out of scope — pve3 gets 2-way rpool mirror in Epic 3; single-drive failure is cluster-survivable. |
+
 ## Procurement ownership & gating
 
 - **Owner:** tomamourette (Tom)
@@ -38,9 +50,10 @@ Source command: `for d in sda sdb sdc sdd sde; do smartctl -i /dev/$d | grep -E 
 
 ## Cold spare record
 
-| Status    | Order date | Supplier | Serial | Delivery date | Physical location | Notes |
-|-----------|------------|----------|--------|---------------|-------------------|-------|
-| to order  | TBD        | TBD      | TBD    | TBD           | TBD               | TBD   |
+| Status               | Order date                          | Supplier | Serial                      | Delivery date | Physical location                                    | Notes |
+|----------------------|-------------------------------------|----------|-----------------------------|---------------|------------------------------------------------------|-------|
+| consumed 2026-04-22  | TBD (pre-P1-incident order)         | TBD      | nvme-eui.0025384261a105e3   | 2026-04-21    | installed as pve1 rpool (no longer on shelf)         | Consumed during Epic 5 Window A pve1 NVMe swap; P1 970 EVO Plus was failing. Note: this record originally tracked an HDD cold spare — scope broadened by P1 to include the NVMe that was actually on-shelf and got pulled into emergency service. |
+| **RE-ORDER NEEDED** — to order | TBD                        | TBD      | TBD                         | TBD           | TBD — shelf is currently empty                       | Re-order the HDD cold spare (WD221PURP) per the "Target drive spec" table above. Shelf has been empty since 2026-04-22. |
 
 Fields to fill in post-procurement:
 

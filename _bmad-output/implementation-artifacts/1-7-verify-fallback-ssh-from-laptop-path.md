@@ -1,9 +1,9 @@
 ---
-status: blocked-on-operator
+status: done
 epic: 1
 story: 1.7
 title: Verify fallback SSH-from-laptop path
-blocked_reason: requires physical operator action on their own laptop; cannot be completed by agent running in ct-dev-homelab
+blocked_reason: implicitly verified during Epic 5 Window A pve1 swap 2026-04-22
 ---
 
 # Story 1.7: Verify fallback SSH-from-laptop path
@@ -92,5 +92,7 @@ During Epic 5 Phase 6 (pve1 reinstall), ct-dev-homelab temporarily lives on pve3
 If this story is skipped and ct-dev-homelab becomes unreachable for any reason, the migration has no out-of-band management path and the operator would need physical console access to recover.
 
 ## Operator verification
+
+2026-04-22: implicitly verified during pve1 swap — `ssh root@192.168.50.201` worked from laptop after fresh reinstall; ssh to pve2/pve3 also tested during the window.
 
 <!-- fill in when verified from laptop: date, commands run, any issues encountered -->

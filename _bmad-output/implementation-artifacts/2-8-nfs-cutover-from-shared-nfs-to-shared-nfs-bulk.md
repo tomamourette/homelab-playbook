@@ -30,6 +30,7 @@ As an operator, I want the NFS export to serve from `hdd-pool/bulk`, so that ct-
 - Used `sed -i` on /etc/exports to do an in-place swap rather than adding and leaving both. Result: the old `/shared-pool/nfs` export is gone, `/hdd-pool/bulk` is active.
 - `shared-nfs` storage entry in cluster storage.cfg is now INACTIVE (export no longer served). Left intact for rollback until Story 2.11 soak passes; will be removed then.
 - `shared-nfs-bulk` storage registered with content types `rootdir,images` — matches the old `shared-nfs` usage (ct-media-01 mp0 mount) and keeps future flexibility.
+- **2026-04-21 update:** the old `shared-nfs` storage entry in `/etc/pve/storage.cfg` was removed ahead of Story 2.11's soak window (via `pvesm remove shared-nfs` on pve3) because it was causing a 5-second-interval `rpc.mountd` log-spam loop. Rollback mechanism is now via the `shared-pool/nfs` ZFS snapshot (`shared-pool@pre-migration` on nvme1) rather than via the storage.cfg entry. No data risk: soak criteria are being met regardless.
 
 ## Implementation Report
 

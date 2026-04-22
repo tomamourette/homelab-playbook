@@ -76,7 +76,7 @@ NFR10: Operator workbench CT150 SHALL remain operational throughout the migratio
 
 NFR11: 1 GbE network is sufficient for correctness; 2.5 GbE switch upgrade is nice-to-have but not blocking. No Proxmox reconfiguration required for later network upgrade.
 
-NFR12: The cluster SHALL NOT deploy Ceph — asymmetric node capacity (500 GB / 1 TB / ~100 TB) and 1 GbE network make it architecturally wrong.
+NFR12: The cluster SHALL NOT deploy Ceph — asymmetric node capacity (1 TB / 1 TB / ~100 TB post-Epic-5-Window-A; post-Epic-5-Window-B: 1 TB / 1 TB / ~100 TB homogeneous) and 1 GbE network make it architecturally wrong.
 
 NFR13: Weekly ZFS scrubs SHALL be enabled on rpool and hdd-pool to detect silent corruption (required given non-ECC RAM).
 
@@ -760,7 +760,7 @@ So that replication becomes possible.
 
 **Given** pve1 is evacuated (Story 5.1)
 **When** I boot pve1 from Proxmox 9 install USB
-**And** I install with "ZFS (RAID0)" option on the single 500 GB NVMe, pool name `rpool`
+**And** I install with "ZFS (RAID0)" option on the single 1 TB Samsung 990 PRO NVMe (upgraded from failing 500 GB 970 EVO Plus during Epic 5 Window A), pool name `rpool`
 **Then** pve1 boots with `zpool status rpool` ONLINE single-disk
 **And** `/etc/pve/storage.cfg` (once rejoined) shows `local-zfs` ID pointing to `rpool/data`
 
@@ -842,6 +842,18 @@ So that pve2 can be wiped without losing work.
 - Any VMs that ended up on pve2 during Story 5.1 (VM103, CT104) → migrate back to pve1 or pve3
 **Then** `pct list` / `qm list` on pve2 is empty (or only stopped templates)
 
+**Evacuation matrix (including migration-window PBS):**
+
+| Guest | Source storage (pve2) | Target (during pve2 window) | Method | Post-window home | Notes |
+|-------|------------------------|----------------------------|--------|------------------|-------|
+| CT151 ct-sparkle-cps | pve2 local-lvm | pve1 local-zfs | migrate or PBS restore | pve1 or pve2 per §4.5 | Standard evacuation |
+| CT153 ct-isabelle    | pve2 local-lvm | pve1 local-zfs | migrate or PBS restore | pve1 or pve2 per §4.5 | Standard evacuation |
+| CT152 ct-dev-test    | pve2 local-lvm | destroyed      | Terraform recreate after Story 5.10 | pve2 local-zfs | Ephemeral; no data to preserve |
+| VM103 / CT104 (if on pve2 post-5.1) | pve2 local-lvm | pve1 or pve3 | migrate | per §4.5 | Temporary relocation only |
+| CT105 ct-pbs-migration | pve2 local-lvm | pve3 local-zfs temporarily OR external (fallback) | PBS restore | back to pve2 local-zfs | **Critical**: this is the migration-window PBS (Story 1.2). Moving pve2 → pve3 during the pve2 window breaks Path A. Alternative: copy migration-window datastore to `hdd-pool/pbs` on pve3 first, import there, then destroy original. |
+
+**Dev Note:** VM105 requires special handling — it's the cluster's only backup destination during the window. Moving the PBS while it is the sole backup target breaks the PBS-runbook "Decommissioning Path A" (the migration-window PBS must remain reachable and immutable until pve2 is back and rollback is no longer needed). Consider standing up the permanent PBS on `hdd-pool/pbs` (Story 2.10 deferred) **before** starting Epic 5 Window B, so the migration-window datastore can be decommissioned cleanly instead of relocated mid-window.
+
 ### Story 5.8: Reinstall Proxmox on pve2 with ZFS single-disk rpool
 
 As an operator,
@@ -885,6 +897,21 @@ I want pve2 back in full operation.
 **When** I update `terraform.tfvars` for pve2-targeted resources (remove `local-lvm`, use `local-zfs`)
 **Then** `terraform plan` shows zero changes
 **And** the tfvars change is committed + pushed
+
+### Story 5.13: Add second NVMe to pve1 as ZFS mirror (optional; hardware permitting)
+
+As an operator,
+I want pve1's `rpool` to be a 2-way ZFS mirror instead of a single-disk pool,
+So that pve1 survives a single NVMe failure without requiring cluster-replication-driven recovery.
+
+**Acceptance Criteria:**
+
+**Given** pve1 has a spare NVMe slot and a second 1 TB (or larger) NVMe is procured
+**When** I attach the second NVMe to the existing `rpool` via `zpool attach rpool <existing-by-id> <new-by-id>`
+**Then** `zpool status rpool` shows a `mirror-0` vdev of two devices, resilver completes cleanly
+**And** pve1 now tolerates a single-drive failure without needing PBS restore
+
+**Rationale:** Enables real-time protection against pve1 single-drive failure (complementary to cluster replication, which handles node-level failure but not bare-metal single-drive hot-swap without downtime). Deferred to backlog — not required for Epic 6 HA correctness, which relies on cluster replication across nodes, not intra-node redundancy.
 
 ### Story 5.12: Validate cluster-wide storage ID consistency
 
