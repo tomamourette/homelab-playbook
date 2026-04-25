@@ -1,0 +1,45 @@
+[
+  {
+    "alertname": "AlertmanagerDeadManSwitch",
+    "severity": "info",
+    "host": null,
+    "state": "firing",
+    "activeAt": "2026-04-24T20:29:01.791013576Z"
+  },
+  {
+    "alertname": "ServiceDown",
+    "severity": "critical",
+    "host": "ct-media-01",
+    "state": "firing",
+    "activeAt": "2026-04-24T17:13:07.748258241Z"
+  },
+  {
+    "alertname": "ServiceDown",
+    "severity": "critical",
+    "host": "ct-zeroclaw-01",
+    "state": "firing",
+    "activeAt": "2026-04-24T17:13:07.748258241Z"
+  },
+  {
+    "alertname": "ServiceDown",
+    "severity": "critical",
+    "host": "ct-dev-homelab",
+    "state": "firing",
+    "activeAt": "2026-04-24T17:13:07.748258241Z"
+  },
+  {
+    "alertname": "ServiceDown",
+    "severity": "critical",
+    "host": "ct-dev-test",
+    "state": "firing",
+    "activeAt": "2026-04-24T17:13:07.748258241Z"
+  },
+  {
+    "alertname": "ServiceDown",
+    "severity": "critical",
+    "host": "ct-docker-01",
+    "state": "firing",
+    "activeAt": "2026-04-24T17:13:07.748258241Z"
+  }
+]
+--- pre-drill (10:14 CEST) baseline ---

@@ -1,0 +1,20 @@
+quorum OK
+master pve1 (active, Sat Apr 25 10:14:01 2026)
+lrm pve1 (active, Sat Apr 25 10:14:04 2026)
+lrm pve2 (active, Sat Apr 25 10:14:03 2026)
+lrm pve3 (active, Sat Apr 25 10:14:04 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+---PCT-LIST-PVE1---
+VMID       Status     Lock         Name                
+101        running                 ct-docker-01        
+102        running                 ct-media-01         
+---QM-LIST-PVE1---
+      VMID NAME                 STATUS     MEM(MB)    BOOTDISK(GB) PID       
+       100 smarthome            running    2048              32.00 1451      
+       999 ubuntu-dev-template  stopped    4096              50.00 0         
+      9000 ubuntu-22.04-cloudimg stopped    2048               2.20 0         

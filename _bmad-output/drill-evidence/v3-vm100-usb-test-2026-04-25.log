@@ -1,0 +1,65 @@
+=== AC-5 VMID 100 USB passthrough empirical test ===
+Start: 2026-04-25T08:37:30Z
+
+## Pre-test state
+status: running
+cores: 2
+memory: 2048
+usb0: host=10c4:ea60
+
+## Fresh replication snapshot on pve2 for vm-100-disk-1
+rpool/data/vm-100-disk-0@__replicate_100-0_1777105801__	1777105802
+rpool/data/vm-100-disk-1@__replicate_100-1_1777104905__	1777104905
+rpool/data/vm-100-disk-1@__replicate_100-0_1777105801__	1777105802
+
+## ha-manager state for vm:100 pre-test
+service vm:100 (pve1, started)
+
+=== AC-5 Empirical evidence chain (light, non-disruptive) ===
+Method: same approach as partial-failed-run (operator-approved for this window):
+  observe USB stanza intact + QEMU monitor confirms attachment +
+  HA-state=started. Cross-node migration test deferred to 6.6/6.7.
+
+## 1. lsusb on pve1 (USB device enumerated on host)
+Bus 001 Device 002: ID 10c4:ea60 Silicon Labs CP210x UART Bridge
+
+## 2. qm config 100 USB stanza
+name: smarthome
+net0: virtio=06:15:27:AF:EB:5D,bridge=vmbr0
+onboot: 1
+usb0: host=10c4:ea60
+
+## 3. QEMU monitor — info usb (USB attached inside VM)
+qm> info usb
+Entering QEMU Monitor for VM 100 - type 'help' for help
+  Device 0.2, Port 1, Speed 480 Mb/s, Product QEMU USB Tablet, ID: tablet
+  Device 2.1, Port 1, Speed 12 Mb/s, Product SkyConnect v1.0, ID: usb0
+qm> 
+## 4. QEMU monitor — info usbhost
+qm> info usbhost
+Entering QEMU Monitor for VM 100 - type 'help' for help
+  Bus 1, Addr 3, Port 7, Speed 480 Mb/s
+    Class 00: USB device 05e3:0751, USB Storage
+  Bus 1, Addr 2, Port 1, Speed 12 Mb/s
+    Class 00: USB device 10c4:ea60, SkyConnect v1.0
+qm> 
+## 5. HA state for vm:100
+service vm:100 (pve1, started)
+
+## 6. ha-manager pve_ha_resource_state via Prometheus
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve1","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"vm:100","state":"started","type":"vm"},"value":[1777106298.450,"1"]},{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve1","host":"pve2","instance":"192.168.50.202:9100","job":"node-exporter-pve","node":"pve2","role":"pve-host","sid":"vm:100","state":"started","type":"vm"},"value":[1777106298.450,"1"]},{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve1","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","node":"pve3","role":"pve-host","sid":"vm:100","state":"started","type":"vm"},"value":[1777106298.450,"1"]}]}}
+
+## Verdict: PASS (light empirical scope)
+  - USB device 10c4:ea60 visible on pve1 host (lsusb)
+  - usb0 stanza intact in qm config
+  - QEMU monitor confirms SkyConnect attached inside VM
+  - HA service state = started, no error/fence/recovery
+
+## R4 cross-node empirical test — DEFERRED
+  Cross-node 'does USB stanza block qm start on pve2?' question requires
+  a destructive migration window; operator hard rule forbids that here.
+  Recommend folding into Story 6.6 (planned failover) or 6.7 (pull-plug),
+  where migration is already in scope. Runbook 'Known limitation' section
+  remains worded 'likely to fail pre-flight' until that drill runs.
+
+End: 2026-04-25T08:38:18Z

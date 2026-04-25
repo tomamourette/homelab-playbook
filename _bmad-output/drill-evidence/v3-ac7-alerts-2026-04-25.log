@@ -1,0 +1,118 @@
+=== AC-7 alert chain checkpoint ===
+Start: 2026-04-25T08:38:34Z
+
+## ct:162 HA state series during drill
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "__name__": "pve_ha_resource_state",
+                    "exported_node": "pve3",
+                    "host": "pve1",
+                    "instance": "192.168.50.201:9100",
+                    "job": "node-exporter-pve",
+                    "node": "pve1",
+                    "role": "pve-host",
+                    "sid": "ct:162",
+                    "state": "disabled",
+                    "type": "ct"
+                },
+                "value": [
+                    1777106315.108,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "pve_ha_resource_state",
+                    "exported_node": "pve3",
+                    "host": "pve1",
+                    "instance": "192.168.50.201:9100",
+                    "job": "node-exporter-pve",
+                    "node": "pve1",
+                    "role": "pve-host",
+                    "sid": "ct:162",
+                    "state": "error",
+                    "type": "ct"
+                },
+                "value": [
+                    1777106315.108,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "pve_ha_resource_state",
+                    "exported_node": "pve3",
+                    "host": "pve1",
+                    "instance": "192.168.50.201:9100",
+                    "job": "node-exporter-pve",
+                    "node": "pve1",
+                    "role": "pve-host",
+                    "sid": "ct:162",
+                    "state": "fence",
+                    "type": "ct"
+                },
+                "value": [
+                    1777106315.108,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "pve_ha_resource_state",
+                    "exported_node": "pve3",
+                    "host": "pve1",
+                    "instance": "192.168.50.201:9100",
+                    "job": "node-exporter-pve",
+                    "node": "pve1",
+                    "role": "pve-host",
+                    "sid": "ct:162",
+                    "state": "freeze",
+                    "type": "ct"
+                },
+                "value": [
+                    1777106315.108,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "pve_ha_resource_state",
+
+## changes(pve_ha_resource_state{sid="ct:162"}[15m]) — should be 0 if no flap
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"disabled","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"error","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"fence","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"freeze","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"migrate","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"queued","type":"ct"},"value":[1777106315.402,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","
+
+## Firing alerts (PVEReplication* + PVEHA*)
+{"status":"success","data":{"resultType":"vector","result":[]}}
+
+## pve_replication_fail_count for 162-*
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"pve_replication_fail_count","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-0","node":"pve3","role":"pve-host","source":"pve3","target":"pve1"},"value":[1777106315.983,"0"]},{"metric":{"__name__":"pve_replication_fail_count","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-1","node":"pve3","role":"pve-host","source":"pve3","target":"pve2"},"value":[1777106315.983,"0"]}]}}
+
+## pve_replication_state for 162-*
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"pve_replication_state","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-0","node":"pve3","role":"pve-host","source":"pve3","target":"pve1"},"value":[1777106316.275,"0"]},{"metric":{"__name__":"pve_replication_state","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-1","node":"pve3","role":"pve-host","source":"pve3","target":"pve2"},"value":[1777106316.275,"0"]}]}}
+
+End: 2026-04-25T08:38:36Z
+
+=== AC-7 final post-drill alert chain check ===
+Time: 2026-04-25T08:52:09Z
+
+## Firing alerts matching PVE.*
+{"status":"success","data":{"resultType":"vector","result":[]}}
+
+## All firing alerts (sanity — should be unchanged from pre-drill: DeadManSwitch + ServiceDown set)
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"ALERTS","alertname":"AlertmanagerDeadManSwitch","alertstate":"firing","domain":"alerting","severity":"info"},"value":[1777107129.637,"1"]},{"metric":{"__name__":"ALERTS","alertname":"ServiceDown","alertstate":"firing","domain":"service","host":"ct-dev-homelab","instance":"192.168.50.150:9100","job":"node-exporter-hosts","node":"pve2","severity":"critical"},"value":[1777107129.637,"1"]},{"metric":{"__name__":"ALERTS","alertname":"ServiceDown","alertstate":"firing","domain":"service","host":"ct-dev-test","instance":"192.168.50.152:9100","job":"node-exporter-hosts","node":"pve2","severity":"critical"},"value":[1777107129.637,"1"]},{"metric":{"__name__":"ALERTS","alertname":"ServiceDown","alertstate":"firing","domain":"service","host":"ct-docker-01","instance":"host.docker.internal:9323","job":"docker","severity":"critical"},"value":[1777107129.637,"1"]},{"metric":{"__name__":"ALERTS","alertname":"ServiceDown","alertstate":"firing","domain":"service","host":"ct-media-01","instance":"192.168.50.161:8080","job":"cadvisor-media","severity":"critical"},"value":[1777107129.637,"1"]},{"metric":{"__name__":"ALERTS","alertname":"ServiceDown","alertstate":"firing","domain":"service","host":"ct-zeroclaw-01","instance":"192.168.50.104:9100","job":"node-exporter-hosts","node":"pve1","severity":"critical"},"value":[1777107129.637,"1"]}]}}
+
+## ct:162 state series — should still be started=1, all others 0
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"started","type":"ct"},"value":[1777107129.935,"1"]},{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve3","host":"pve2","instance":"192.168.50.202:9100","job":"node-exporter-pve","node":"pve2","role":"pve-host","sid":"ct:162","state":"started","type":"ct"},"value":[1777107129.935,"1"]},{"metric":{"__name__":"pve_ha_resource_state","exported_node":"pve3","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","node":"pve3","role":"pve-host","sid":"ct:162","state":"started","type":"ct"},"value":[1777107129.935,"1"]}]}}
+
+## changes(pve_ha_resource_state{sid="ct:162"}[20m]) — should remain 0 (no flap during drill)
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"disabled","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"error","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"fence","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"freeze","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"migrate","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","state":"queued","type":"ct"},"value":[1777107130.253,"0"]},{"metric":{"exported_node":"pve3","host":"pve1","instance":"192.168.50.201:9100","job":"node-exporter-pve","node":"pve1","role":"pve-host","sid":"ct:162","
+
+## pve_replication_fail_count for 162-* — should remain 0
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"pve_replication_fail_count","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-0","node":"pve3","role":"pve-host","source":"pve3","target":"pve1"},"value":[1777107130.534,"0"]},{"metric":{"__name__":"pve_replication_fail_count","exported_node":"pve3","guest":"162","host":"pve3","instance":"192.168.50.203:9100","job":"node-exporter-pve","jobid":"162-1","node":"pve3","role":"pve-host","source":"pve3","target":"pve2"},"value":[1777107130.534,"0"]}]}}
+
+End: 2026-04-25T08:52:10Z

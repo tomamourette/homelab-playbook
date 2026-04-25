@@ -1,0 +1,36 @@
+=== AC-4 workload-delta test ===
+Start: 2026-04-25T08:36:49Z
+
+T_write_epoch=1777106209
+T_write_iso=2026-04-25T08:36:49Z
+
+## Issuing dd 100MB inside ct:162 via pct exec (single string, runs in CT)
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 0.499378 s, 210 MB/s
+dd exit: 0
+T_write_complete: 2026-04-25T08:36:50Z
+
+## Verify file exists inside ct:162 (separate command, runs in CT):
+-rw-r--r-- 1 root root 104857600 Apr 25 08:36 /root/v3-drill-marker.bin
+
+
+## Polling pve1 for __replicate_162-0_<epoch> snapshot with epoch >= 1777106209
+Poll start: 2026-04-25T08:37:08Z
+  iter=1 now=1777106228 no-match-yet
+  iter=2 now=1777106233 no-match-yet
+  iter=3 now=1777106238 match=rpool/data/subvol-162-disk-0@__replicate_162-0_1777106224__|1777106225 delta_seconds=16
+T_snapshot_162-0=1777106225 (delta=16s)
+
+## Polling pve2 for __replicate_162-1_<epoch> snapshot with epoch >= 1777106209
+Poll start: 2026-04-25T08:37:18Z
+  iter=1 now=1777106239 match=rpool/data/subvol-162-disk-0@__replicate_162-1_1777106235__|1777106236 delta_seconds=27
+T_snapshot_162-1=1777106236 (delta=27s)
+
+Poll end: 2026-04-25T08:37:19Z
+
+## Summary
+T_write          = 1777106209 (2026-04-25T08:36:49Z)
+T_snapshot_162-0 = 1777106225 (2026-04-25T08:37:05Z) delta=16s
+T_snapshot_162-1 = 1777106236 (2026-04-25T08:37:16Z) delta=27s
+AC-4 verdict: PASS (both deltas ≤ 60s)

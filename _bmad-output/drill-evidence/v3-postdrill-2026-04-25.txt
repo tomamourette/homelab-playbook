@@ -1,0 +1,69 @@
+=== Post-drill cleanup + zero-residual checks ===
+Time: 2026-04-25T08:51:43Z
+
+## Delete /root/v3-drill-marker.bin inside ct:162
+rm exit: 0
+
+## Verify deletion (separate command, runs in CT)
+ls: cannot access '/root/v3-drill-marker.bin': No such file or directory
+v3-drill-payload
+
+## Final pvesr status (pve3) — schedule should remain */1 (KEEP decision)
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_10:51:04  2026-04-25_10:52:00   2.548392          0 OK
+162-1      Yes        local/pve2            2026-04-25_10:51:06  2026-04-25_10:52:00   2.267257          0 OK
+250-0      Yes        local/pve1            2026-04-25_10:30:04  2026-04-25_11:00:00   3.606989          0 OK
+250-1      Yes        local/pve2            2026-04-25_10:30:07  2026-04-25_11:00:00   2.723056          0 OK
+
+## /etc/pve/replication.cfg — 162-* schedule
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */1
+--
+local: 162-1
+	comment ct-quant-trading HA replica to pve2
+	target pve2
+	rate 50
+	schedule */1
+
+## ha-manager status — guest run-states unchanged
+quorum OK
+master pve1 (active, Sat Apr 25 10:51:43 2026)
+lrm pve1 (active, Sat Apr 25 10:51:45 2026)
+lrm pve2 (active, Sat Apr 25 10:51:44 2026)
+lrm pve3 (active, Sat Apr 25 10:51:45 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+## qm config 100 usb stanza intact
+name: smarthome
+usb0: host=10c4:ea60
+
+## VM/CT statuses
+status: running
+status: running
+status: running
+
+## free -m on pve1 (compare with pre-flight baseline)
+               total        used        free      shared  buff/cache   available
+Mem:           15767       13044        1171         389        2543        2723
+Swap:              0           0           0
+
+## free -m on pve3
+               total        used        free      shared  buff/cache   available
+Mem:           63911       14416       42424          68        7860       49495
+Swap:              0           0           0
+
+## Cleanup leftover from previous failed run
+rm exit: 0
+/root:
+
+/tmp:
+code-75a87e24-4e5a-40ce-b806-5b35e4cb2a24
+systemd-private-57bb495655454c36947fa390007c709b-systemd-logind.service-JNsQoE

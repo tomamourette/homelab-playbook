@@ -1,0 +1,67 @@
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_10:00:11  2026-04-25_10:15:00   2.658383          0 OK
+162-1      Yes        local/pve2            2026-04-25_10:00:13  2026-04-25_10:15:00   2.308597          0 OK
+250-0      Yes        local/pve1            2026-04-25_10:00:04  2026-04-25_10:30:00   4.051946          0 OK
+250-1      Yes        local/pve2            2026-04-25_10:00:08  2026-04-25_10:30:00   2.702377          0 OK
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_10:00:01  2026-04-25_10:15:00   3.190614          0 OK
+100-1      Yes        local/pve3            2026-04-25_10:00:05  2026-04-25_10:15:00   2.712192          0 OK
+101-0      Yes        local/pve2            2026-04-25_10:00:07  2026-04-25_10:15:00   6.467746          0 OK
+101-1      Yes        local/pve3            2026-04-25_10:00:14  2026-04-25_10:15:00   6.090522          0 OK
+--- /etc/pve/replication.cfg ---
+local: 100-0
+	comment smarthome HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 100-1
+	comment smarthome HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-0
+	comment ct-docker-01 HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-1
+	comment ct-docker-01 HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */15
+	source pve3
+
+local: 162-1
+	comment ct-quant-trading HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve3
+
+local: 250-0
+	comment ct-dev-homelab HA replica to pve1
+	target pve1
+	rate 50
+	schedule */30
+	source pve3
+
+local: 250-1
+	comment ct-dev-homelab HA replica to pve2
+	target pve2
+	rate 50
+	schedule */30
+	source pve3
+
