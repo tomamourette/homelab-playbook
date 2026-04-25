@@ -1,5 +1,5 @@
 ---
-status: draft
+status: review
 epic: 6
 story: 6.6
 title: Validation drill V4 — simulated failover via ha-manager migrate
@@ -9,7 +9,7 @@ author: BMad SM (via planner agent)
 
 # Story 6.6: Validation drill V4 — simulated failover via ha-manager migrate
 
-Status: draft
+Status: review
 
 > **PVE 9.1+ note:** uses HA rules (node-affinity), not legacy HA groups — see Story 6.3 sprint-change note and `/home/developer/.claude/projects/-home-developer-workspace-homelab/memory/project_pve9_ha_rules_migration.md`. The `migrate` subcommand has moved to `ha-manager crm-command migrate <sid> <node>` (verified live on this cluster 2026-04-25 via `ha-manager help migrate`). The legacy form `ha-manager migrate <sid> <node>` may still work via a compatibility shim; the canonical form is the `crm-command` namespace. `nofailback` is now per-resource `failback` (inverted boolean). Terminology updated below where it appears.
 
@@ -414,3 +414,92 @@ ssh pve3 "pvesr status"
   - `ha-manager` man page: <https://pve.proxmox.com/pve-docs/ha-manager.1.html>
   - CRM + LRM architecture: <https://pve.proxmox.com/pve-docs/chapter-ha-manager.html>
 - **Sprint change authority**: `homelab-playbook/_bmad-output/planning-artifacts/sprint-change-proposal-2026-04-24.md` §2 (HA priority matrix — CT162 critical)
+
+## Dev Agent Record (2026-04-25)
+
+**Operator:** BMad Dev (claude-opus-4-7) via Claude Agent SDK
+**Drill window:** 09:28 → 09:34 UTC (≈6 min wall-clock; CT162 active offline ~23 s total across both legs)
+**Outcome:** **PASS — GREEN on every measured threshold.** Story 6.7 decision gate: green-light.
+
+### Timeline (UTC, all epochs from polling output and LRM journals)
+
+| Phase | T (UTC) | Epoch | Event |
+|---|---|---|---|
+| Pre-flight | 09:28:39 | 1777109319 | `pvecm status` 3/3 quorate; 6 HA services started; 162-* OK; 0 PVE alerts |
+| Pre-flight | 09:28:59 | 1777109339 | Heartbeat written inside ct:162 on pve3: `v4-drill T_pre=2026-04-25T09:28:59Z epoch=1777109339` |
+| Pre-flight | ~09:30:00 | — | Detected `prometheus` container exited at 09:24:30Z (clean compaction, exit 255 no error). Restarted before AC-8 capture; healthy throughout drill. |
+| Forward | 09:30:34 | 1777109434 | `ha-manager crm-command migrate ct:162 pve2` issued from pve1 |
+| Forward | 09:30:38 | 1777109438 | LRM pve3: `vzshutdown:162` task ended OK |
+| Forward | 09:30:46 | 1777109446 | First poll: HA `(pve2, starting)`, pct status running on pve2 |
+| Forward | 09:30:49 | 1777109449 | LRM pve2: `service status ct:162 started` |
+| Forward | 09:30:56 | 1777109456 | CRM acknowledged `(pve2, started)` |
+| Verify | 09:31:14 | — | Heartbeat readable on pve2 (byte-identical), uptime 0 min, IP 192.168.50.162 up |
+| Replication | 09:31:01–09:31:06 | — | First post-fwd cycle: `162-0`/`162-1` re-sourced from pve2 automatically (auto-flip) |
+| Backward | 09:31:59 | 1777109519 | `ha-manager crm-command migrate ct:162 pve3` issued from pve1 |
+| Backward | 09:32:07 | 1777109527 | LRM pve2: `vzshutdown:162` task ended OK |
+| Backward | 09:32:15 | — | Polling sees HA `(pve3, starting)`, pct status running on pve3 |
+| Backward | 09:32:19 | 1777109539 | LRM pve3: `service status ct:162 started` |
+| Backward | 09:32:25 | 1777109545 | CRM acknowledged `(pve3, started)` |
+| Verify | 09:32:35 | — | Heartbeat readable on pve3 (byte-identical), uptime 0 min, IP up |
+| Replication | 09:32:01–09:32:08 | — | Post-back cycle: `162-0`/`162-1` re-sourced from pve3, target pve1/pve2 |
+| Post-state | 09:33:55 | — | Final `ha-manager status`: 6/6 services started, ct:162 (pve3, started) |
+
+### AC verdict table
+
+| AC | Verdict | Evidence | Notes |
+|---|---|---|---|
+| AC-1 Pre-flight baseline | PASS | `pre/preflight.txt`, `pre/heartbeat-pre.txt`, `pre/alertmanager-alerts-pre.json`, `pre/pve_ha_resource_state-ct162-pre.json` | Cluster 3/3, replication OK, no PVE alerts. Prometheus container had exited 4 min pre-drill; restarted before AC-8 evidence capture. |
+| AC-2 Forward migrate timing | PASS (GREEN) | `during/timeline.txt`, `during/ha-manager-fwd-poll.txt`, `during/lrm-journal-fwd.txt` | Wall-clock cmd → CRM started: 22 s. Outage (LRM-bounded): 11 s. Both ≤60 s green. |
+| AC-3 Outage + heartbeat RTO | PASS (GREEN) | `during/heartbeat-postfwd.txt`, `post/heartbeat-post.txt` | Outage 11 s fwd / 12 s back. Heartbeat byte-identical both legs. CT uptime 0 min on both targets (real restart). |
+| AC-4 Replication direction flip | PASS (Outcome: auto-flip in-place) | `during/pvesr-postfwd.txt`, `post/pvesr-post.txt` | Proxmox rewrote `source` field within one cycle. `162-0`/`162-1` source pve3 → pve2 → pve3. FailCount=0. Cosmetic stale comment on `162-1`. |
+| AC-5 ntfy notification | PASS (Outcome B documented) | `during/alertmanager-alerts-during.json`, `post/alertmanager-alerts-post.json` | Only `AlertmanagerDeadManSwitch` (info heartbeat) firing. No HA-migration alert exists; backlog note captured. Expected gap, does not block 6.7. |
+| AC-6 Migrate-back | PASS (GREEN) | `during/ha-manager-back-poll.txt`, `post/lrm-journal-back.txt` | Outage 12 s, wall-clock 26 s, round-trip 111 s — all GREEN. Heartbeat survived. |
+| AC-7 Runbook V4 section | PASS | `homelab-infra/docs/ha-replication-runbook.md` | New `### V4 Drill Results (2026-04-25)` section inserted above `### End-to-end drill status`, ~70 lines. |
+| AC-8 Story 6.10 alert chain | PASS | `post/ac8-prometheus.txt` | `pve_ha_resource_state` captured both transitions via `exported_node` label mutation. Honest query: `count by (exported_node) (count_over_time(...[20m]))` returns 3 distinct samples each for pve2 and pve3. `error/fence/recovery` always 0; `PVEHAResourceUnhealthy` correctly silent. |
+
+### Files touched
+
+**Modified:**
+
+- `homelab-infra/docs/ha-replication-runbook.md` — added V4 Drill Results section (~70 lines, between V3 Drill Results and End-to-end drill status)
+- `homelab-playbook/_bmad-output/implementation-artifacts/6-6-validation-drill-v4-simulated-failover-via-migrate.md` — frontmatter `status: draft → review`; this Dev Agent Record appended
+
+**Created:**
+
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/pre/preflight.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/pre/heartbeat-pre.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/pre/ct162-uptime.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/pre/alertmanager-alerts-pre.json`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/pre/pve_ha_resource_state-ct162-pre.json`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/timeline.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/ha-manager-fwd-poll.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/ha-manager-back-poll.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/lrm-journal-fwd.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/heartbeat-postfwd.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/pvesr-postfwd.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/during/alertmanager-alerts-during.json`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/heartbeat-post.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/lrm-journal-back.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/pvesr-post.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/ha-manager-status.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/ac8-prometheus.txt`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/post/alertmanager-alerts-post.json`
+- `homelab-playbook/_bmad-output/drill-evidence/v4-ct162-failover-2026-04-25/v4-summary-2026-04-25.md`
+
+### Deviations from story plan
+
+1. **Prometheus container was in `Exited (255)` state at start of drill** (last log entry 09:00:01Z TSDB compaction; container actually exited 09:24:30Z with no error). Detected during AC-1 pre-flight; restarted with `docker start prometheus` and verified `/-/healthy` before proceeding. Did not abort because the cause was clearly clean shutdown (no error stack, no OOM, exit during compaction window) and the drill window allowed recovery. Logged as a separate observation; this is unrelated to the V4 drill itself but worth noting as a flap of unknown origin in the alerting infrastructure — recommend a follow-up to set `restart: always` on prometheus container or investigate compose file (currently `unless-stopped`, which means a manual stop would persist; a clean shutdown then-no-restart could indicate something stopped it manually or a watchdog issue).
+
+2. **`ha-manager status --verbose` poll cadence**: story plan specified 2 s polling for 120 s. Used the same 2 s cadence but with a bounded 60-iteration loop and 8 s per-SSH timeout (exit-on-state-match). Forward leg matched at iteration 12 (T+22 s); backward at iteration 14 (T+26 s). No timeouts.
+
+3. **`changes()` query for AC-8 returned 0**: this is a known semantic of Prometheus `changes()` — it works on values within a single time series, but the home-node transition surfaces as new series creation / old series removal (the `exported_node` label changes). The honest verification is `count by (exported_node) (count_over_time(...[20m]))` and a range query showing `exported_node=pve2` series existed for ~105 s during the migration window. Documented in the runbook section. Not a defect in Story 6.10; just a subtlety of the metric model (state IS captured; `changes()` is the wrong function for a label-mutation transition).
+
+4. **No abort scenarios encountered.** All 8 ACs verified PASS. No HA `error`/`fence` state; replication FailCount=0 throughout; cluster stayed quorate; no unexpected alerts; heartbeat survived.
+
+### Next actions for operator
+
+- Flip sprint-status YAML for Story 6.6 from in-progress → review (outside Dev scope; per project rules).
+- Story 6.7 (pull-plug drill) decision gate is GREEN — can be scheduled.
+- Optional Epic 7 backlog: add a `PVEClusterCTMigrated` alert rule (would close Outcome B notification gap); not blocking.
+- Optional infra follow-up: investigate the `prometheus` container clean-exit at 09:24:30Z — likely a one-off but worth confirming no recurring pattern.
+

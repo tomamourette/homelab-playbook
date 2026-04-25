@@ -1,0 +1,8 @@
+--- AC-3: heartbeat post forward migrate ---
+v4-drill T_pre=2026-04-25T09:28:59Z epoch=1777109339
+--- ct162 uptime on pve2 (should be very recent) ---
+ 09:31:14 up 0 min,  0 users,  load average: 0.34, 0.21, 0.18
+--- ct162 IP check ---
+2: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet 192.168.50.162/24 scope global eth0
+       valid_lft forever preferred_lft forever

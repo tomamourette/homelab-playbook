@@ -1,0 +1,43 @@
+--- LRM journals migrate-back ---
+=== pve2 LRM (last 30) ===
+Apr 25 11:30:47 pve2 pve-ha-lrm[514154]: starting service ct:162
+Apr 25 11:30:47 pve2 pve-ha-lrm[514154]: <root@pam> starting task UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam:
+Apr 25 11:30:47 pve2 pve-ha-lrm[514155]: starting CT 162: UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam:
+Apr 25 11:30:49 pve2 pve-ha-lrm[514154]: <root@pam> end task UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam: OK
+Apr 25 11:30:49 pve2 pve-ha-lrm[514154]: service status ct:162 started
+Apr 25 11:32:07 pve2 pve-ha-lrm[515466]: <root@pam> starting task UPID:pve2:0007DD8B:009324D9:69EC8A17:vzshutdown:162:root@pam:
+Apr 25 11:32:07 pve2 pve-ha-lrm[515467]: shutdown CT 162: UPID:pve2:0007DD8B:009324D9:69EC8A17:vzshutdown:162:root@pam:
+Apr 25 11:32:08 pve2 pve-ha-lrm[515466]: <root@pam> end task UPID:pve2:0007DD8B:009324D9:69EC8A17:vzshutdown:162:root@pam: OK
+Apr 25 11:32:08 pve2 pve-ha-lrm[515466]: <root@pam> starting task UPID:pve2:0007DDC5:0093255D:69EC8A18:vzmigrate:162:root@pam:
+Apr 25 11:32:11 pve2 pve-ha-lrm[515466]: <root@pam> end task UPID:pve2:0007DDC5:0093255D:69EC8A18:vzmigrate:162:root@pam: OK
+=== pve3 LRM (last 30) ===
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: starting service ct:162
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: <root@pam> starting task UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam:
+Apr 25 09:20:12 pve3 pve-ha-lrm[842914]: starting CT 162: UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam:
+Apr 25 09:20:12 pve3 pve-ha-lrm[842914]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: <root@pam> end task UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: unable to start service ct:162
+Apr 25 09:20:12 pve3 pve-ha-lrm[2842]: restart policy: retry number 3 for service 'ct:162'
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: starting service ct:162
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: <root@pam> starting task UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam:
+Apr 25 09:20:22 pve3 pve-ha-lrm[843030]: starting CT 162: UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam:
+Apr 25 09:20:22 pve3 pve-ha-lrm[843030]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: <root@pam> end task UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: unable to start service ct:162
+Apr 25 09:20:22 pve3 pve-ha-lrm[2842]: unable to start service ct:162 on local node after 3 retries
+Apr 25 09:20:42 pve3 pve-ha-lrm[843270]: service ct:162 is in an error state and needs manual intervention. Look up 'ERROR RECOVERY' in the documentation.
+Apr 25 09:25:02 pve3 pve-ha-lrm[849915]: starting service ct:162
+Apr 25 09:25:02 pve3 pve-ha-lrm[849915]: <root@pam> starting task UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam:
+Apr 25 09:25:02 pve3 pve-ha-lrm[849917]: starting CT 162: UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam:
+Apr 25 09:25:03 pve3 pve-ha-lrm[849915]: <root@pam> end task UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam: OK
+Apr 25 09:25:03 pve3 pve-ha-lrm[849915]: service status ct:162 started
+Apr 25 11:30:38 pve3 pve-ha-lrm[1034383]: <root@pam> starting task UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam:
+Apr 25 11:30:38 pve3 pve-ha-lrm[1034385]: shutdown CT 162: UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam:
+Apr 25 11:30:39 pve3 pve-ha-lrm[1034383]: <root@pam> end task UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam: OK
+Apr 25 11:30:39 pve3 pve-ha-lrm[1034383]: <root@pam> starting task UPID:pve3:000FC8DA:005E19D1:69EC89BF:vzmigrate:162:root@pam:
+Apr 25 11:30:43 pve3 pve-ha-lrm[1034383]: <root@pam> end task UPID:pve3:000FC8DA:005E19D1:69EC89BF:vzmigrate:162:root@pam: OK
+Apr 25 11:32:18 pve3 pve-ha-lrm[1037193]: starting service ct:162
+Apr 25 11:32:18 pve3 pve-ha-lrm[1037193]: <root@pam> starting task UPID:pve3:000FD38B:005E40A2:69EC8A22:vzstart:162:root@pam:
+Apr 25 11:32:18 pve3 pve-ha-lrm[1037195]: starting CT 162: UPID:pve3:000FD38B:005E40A2:69EC8A22:vzstart:162:root@pam:
+Apr 25 11:32:19 pve3 pve-ha-lrm[1037193]: <root@pam> end task UPID:pve3:000FD38B:005E40A2:69EC8A22:vzstart:162:root@pam: OK
+Apr 25 11:32:19 pve3 pve-ha-lrm[1037193]: service status ct:162 started

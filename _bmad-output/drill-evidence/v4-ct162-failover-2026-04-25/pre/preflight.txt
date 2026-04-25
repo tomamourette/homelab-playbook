@@ -1,0 +1,183 @@
+=== pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 11:28:53 2026
+Quorum provider:  corosync_votequorum
+Nodes:            3
+Node ID:          0x00000001
+Ring ID:          1.1c0
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      3
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201 (local)
+0x00000002          1 192.168.50.202
+0x00000003          1 192.168.50.203
+
+=== ha-manager status --verbose ===
+quorum OK
+master pve1 (active, Sat Apr 25 11:28:45 2026)
+lrm pve1 (active, Sat Apr 25 11:28:47 2026)
+lrm pve2 (active, Sat Apr 25 11:28:47 2026)
+lrm pve3 (active, Sat Apr 25 11:28:47 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+full cluster state:
+{
+   "lrm_status" : {
+      "pve1" : {
+         "mode" : "active",
+         "results" : {
+            "HM6Xl1B8GNMGF8kkuPJ/VA" : {
+               "exit_code" : 0,
+               "sid" : "vm:100",
+               "state" : "started"
+            },
+            "np4NkBA1MuV97uOXMXUpww" : {
+               "exit_code" : 0,
+               "sid" : "ct:101",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109327
+      },
+      "pve2" : {
+         "mode" : "active",
+         "results" : {
+            "IjNaCTLEHSO55nt/QEWceQ" : {
+               "exit_code" : 0,
+               "sid" : "ct:151",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109327
+      },
+      "pve3" : {
+         "mode" : "active",
+         "results" : {
+            "6I5NULNQsg6ZREJ8Si2x8g" : {
+               "exit_code" : 0,
+               "sid" : "ct:162",
+               "state" : "started"
+            },
+            "7BY7gOL9j/+7hlNd4xV1kg" : {
+               "exit_code" : 0,
+               "sid" : "ct:250",
+               "state" : "started"
+            },
+            "wadwEvk8yS5A18HVsAfyQw" : {
+               "exit_code" : 0,
+               "sid" : "ct:160",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109327
+      }
+   },
+   "manager_status" : {
+      "master_node" : "pve1",
+      "node_status" : {
+         "pve1" : "online",
+         "pve2" : "online",
+         "pve3" : "online"
+      },
+      "service_status" : {
+         "ct:101" : {
+            "node" : "pve1",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "np4NkBA1MuV97uOXMXUpww"
+         },
+         "ct:151" : {
+            "node" : "pve2",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "IjNaCTLEHSO55nt/QEWceQ"
+         },
+         "ct:160" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "wadwEvk8yS5A18HVsAfyQw"
+         },
+         "ct:162" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "6I5NULNQsg6ZREJ8Si2x8g"
+         },
+         "ct:250" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "7BY7gOL9j/+7hlNd4xV1kg"
+         },
+         "vm:100" : {
+            "node" : "pve1",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "HM6Xl1B8GNMGF8kkuPJ/VA"
+         }
+      },
+      "timestamp" : 1777109325
+   },
+   "quorum" : {
+      "node" : "pve1",
+      "quorate" : "1"
+   }
+}
+
+=== ha-manager rules config --resource ct:162 ===
+│ 1       │ in use │ critical    │ node-affinity │ ct:162               │ Epic 6 critical-tier: ct-quant-trading                   │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+│ 1       │ in use │ pinned-pve3 │ node-affinity │ ct:160               │ Epic 6 pve3-only: CT160 ct-ai-01 (iGPU passthrough)      │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+│ 1       │ in use │ pinned-pve1 │ node-affinity │ vm:100               │ Epic 6 pve1-only: VM100 smarthome (Zigbee USB 10c4:ea60) │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+
+=== ha-manager config (ct:162) ===
+
+=== pvesr status (pve3) ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_11:28:00  2026-04-25_11:29:00   2.532274          0 OK
+162-1      Yes        local/pve2            2026-04-25_11:28:02  2026-04-25_11:29:00      2.269          0 OK
+250-0      Yes        local/pve1            2026-04-25_11:00:04  2026-04-25_11:30:00   4.790738          0 OK
+250-1      Yes        local/pve2            2026-04-25_11:00:09  2026-04-25_11:30:00   2.788368          0 OK
+
+=== pct list pve1 ===
+VMID       Status     Lock         Name                
+101        running                 ct-docker-01        
+102        running                 ct-media-01         
+
+=== pct list pve2 ===
+VMID       Status     Lock         Name                
+151        running                 ct-sparkle-cps      
+
+=== pct list pve3 ===
+VMID       Status     Lock         Name                
+160        running                 ct-ai-01            
+162        running                 ct-quant-trading    
+250        running                 ct-dev-homelab      

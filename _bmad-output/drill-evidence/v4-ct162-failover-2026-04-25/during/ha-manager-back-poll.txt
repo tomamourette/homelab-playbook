@@ -1,0 +1,8 @@
+[1777109521] 2026-04-25T09:32:01Z HA: service ct:162 (pve2, started) | pve3: absent
+[1777109524] 2026-04-25T09:32:04Z HA: service ct:162 (pve2, migrate) | pve3: absent
+[1777109528] 2026-04-25T09:32:08Z HA: service ct:162 (pve2, migrate) | pve3: absent
+[1777109531] 2026-04-25T09:32:11Z HA: service ct:162 (pve2, migrate) | pve3: status: stopped
+[1777109535] 2026-04-25T09:32:15Z HA: service ct:162 (pve3, starting) | pve3: status: stopped
+[1777109538] 2026-04-25T09:32:18Z HA: service ct:162 (pve3, starting) | pve3: status: running
+[1777109542] 2026-04-25T09:32:22Z HA: service ct:162 (pve3, starting) | pve3: status: running
+[1777109545] 2026-04-25T09:32:25Z HA: service ct:162 (pve3, started) | pve3: status: running

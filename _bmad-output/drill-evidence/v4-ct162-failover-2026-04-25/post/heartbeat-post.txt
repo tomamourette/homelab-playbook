@@ -1,0 +1,8 @@
+--- AC-6 heartbeat post migrate-back ---
+v4-drill T_pre=2026-04-25T09:28:59Z epoch=1777109339
+--- ct162 uptime post ---
+ 09:32:35 up 0 min,  0 users,  load average: 0.56, 0.64, 0.55
+--- ct162 IP check post ---
+2: eth0@if12: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000 link-netnsid 0
+    inet 192.168.50.162/24 scope global eth0
+       valid_lft forever preferred_lft forever

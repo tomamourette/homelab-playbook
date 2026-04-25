@@ -1,0 +1,27 @@
+--- pvesr status post-back ---
+=== pve1 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_11:30:00  2026-04-25_11:45:00   8.582942          0 OK
+100-1      Yes        local/pve3            2026-04-25_11:30:09  2026-04-25_11:45:00   6.808125          0 OK
+101-0      Yes        local/pve2            2026-04-25_11:30:15  2026-04-25_11:45:00  20.167531          0 OK
+101-1      Yes        local/pve3            2026-04-25_11:30:36  2026-04-25_11:45:00    19.7786          0 OK
+=== pve2 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+=== pve3 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_11:32:01  2026-04-25_11:33:00   2.391095          0 OK
+162-1      Yes        local/pve2            2026-04-25_11:32:08  2026-04-25_11:33:00    1.63937          0 OK
+250-0      Yes        local/pve1            2026-04-25_11:30:00  2026-04-25_12:00:00   4.454135          0 OK
+250-1      Yes        local/pve2            2026-04-25_11:30:05  2026-04-25_12:00:00   2.962086          0 OK
+--- replication.cfg post ---
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */1
+--
+local: 162-1
+	comment ct-quant-trading HA replica to pve2
+	target pve2
+	rate 50
+	schedule */1

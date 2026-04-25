@@ -1,0 +1,119 @@
+--- final ha-manager status ---
+quorum OK
+master pve1 (active, Sat Apr 25 11:33:55 2026)
+lrm pve1 (active, Sat Apr 25 11:33:57 2026)
+lrm pve2 (active, Sat Apr 25 11:33:57 2026)
+lrm pve3 (active, Sat Apr 25 11:33:58 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+full cluster state:
+{
+   "lrm_status" : {
+      "pve1" : {
+         "mode" : "active",
+         "results" : {
+            "TWLNzrFv8ttPIrpXP6RAYA" : {
+               "exit_code" : 0,
+               "sid" : "ct:101",
+               "state" : "started"
+            },
+            "vMis8/+7adiImlfbMQ6pEA" : {
+               "exit_code" : 0,
+               "sid" : "vm:100",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109637
+      },
+      "pve2" : {
+         "mode" : "active",
+         "results" : {
+            "2ME4n5OO3t98U/TScnzBOQ" : {
+               "exit_code" : 0,
+               "sid" : "ct:151",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109637
+      },
+      "pve3" : {
+         "mode" : "active",
+         "results" : {
+            "NyAm2k8lxGjvmdmEham7sQ" : {
+               "exit_code" : 0,
+               "sid" : "ct:160",
+               "state" : "started"
+            },
+            "PhpoxCJkkW+A9LDhoMJt6A" : {
+               "exit_code" : 0,
+               "sid" : "ct:162",
+               "state" : "started"
+            },
+            "Ul2CRHMZ1kYxvPrxyMiaYQ" : {
+               "exit_code" : 0,
+               "sid" : "ct:250",
+               "state" : "started"
+            }
+         },
+         "state" : "active",
+         "timestamp" : 1777109638
+      }
+   },
+   "manager_status" : {
+      "master_node" : "pve1",
+      "node_status" : {
+         "pve1" : "online",
+         "pve2" : "online",
+         "pve3" : "online"
+      },
+      "service_status" : {
+         "ct:101" : {
+            "node" : "pve1",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "TWLNzrFv8ttPIrpXP6RAYA"
+         },
+         "ct:151" : {
+            "node" : "pve2",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "2ME4n5OO3t98U/TScnzBOQ"
+         },
+         "ct:160" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "NyAm2k8lxGjvmdmEham7sQ"
+         },
+         "ct:162" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "PhpoxCJkkW+A9LDhoMJt6A"
+         },
+         "ct:250" : {
+            "node" : "pve3",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "Ul2CRHMZ1kYxvPrxyMiaYQ"
+         },
+         "vm:100" : {
+            "node" : "pve1",
+            "running" : 1,
+            "state" : "started",
+            "uid" : "vMis8/+7adiImlfbMQ6pEA"
+         }
+      },
+      "timestamp" : 1777109635
+   },
+   "quorum" : {
+      "node" : "pve1",
+      "quorate" : "1"
+   }
+}

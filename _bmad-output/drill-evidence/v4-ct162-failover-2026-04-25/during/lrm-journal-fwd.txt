@@ -1,0 +1,102 @@
+--- pve3 LRM journal recent (last 50 lines) ---
+Apr 25 09:19:32 pve3 pve-ha-lrm[842364]: starting service ct:162
+Apr 25 09:19:32 pve3 pve-ha-lrm[842364]: <root@pam> starting task UPID:pve3:000CDA7E:005218DB:69EC6B04:vzstart:162:root@pam:
+Apr 25 09:19:32 pve3 pve-ha-lrm[842366]: starting CT 162: UPID:pve3:000CDA7E:005218DB:69EC6B04:vzstart:162:root@pam:
+Apr 25 09:19:32 pve3 pve-ha-lrm[842366]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:19:32 pve3 pve-ha-lrm[842364]: <root@pam> end task UPID:pve3:000CDA7E:005218DB:69EC6B04:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:19:32 pve3 pve-ha-lrm[842364]: unable to start service ct:162
+Apr 25 09:19:32 pve3 pve-ha-lrm[2842]: unable to start service ct:162 on local node after 3 retries
+Apr 25 09:19:42 pve3 pve-ha-lrm[842493]: <root@pam> starting task UPID:pve3:000CDAFF:00521CC8:69EC6B0E:vzmigrate:162:root@pam:
+Apr 25 09:19:42 pve3 pve-ha-lrm[842495]: migration aborted
+Apr 25 09:19:42 pve3 pve-ha-lrm[842493]: <root@pam> end task UPID:pve3:000CDAFF:00521CC8:69EC6B0E:vzmigrate:162:root@pam: migration aborted
+Apr 25 09:19:42 pve3 pve-ha-lrm[842493]: service ct:162 not moved (migration error)
+Apr 25 09:19:52 pve3 pve-ha-lrm[842611]: starting service ct:162
+Apr 25 09:19:52 pve3 pve-ha-lrm[842611]: <root@pam> starting task UPID:pve3:000CDB75:005220C6:69EC6B18:vzstart:162:root@pam:
+Apr 25 09:19:52 pve3 pve-ha-lrm[842613]: starting CT 162: UPID:pve3:000CDB75:005220C6:69EC6B18:vzstart:162:root@pam:
+Apr 25 09:19:52 pve3 pve-ha-lrm[842613]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:19:52 pve3 pve-ha-lrm[842611]: <root@pam> end task UPID:pve3:000CDB75:005220C6:69EC6B18:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:19:52 pve3 pve-ha-lrm[842611]: unable to start service ct:162
+Apr 25 09:19:52 pve3 pve-ha-lrm[2842]: restart policy: retry number 1 for service 'ct:162'
+Apr 25 09:20:02 pve3 pve-ha-lrm[842771]: starting service ct:162
+Apr 25 09:20:02 pve3 pve-ha-lrm[842771]: <root@pam> starting task UPID:pve3:000CDC18:005224B2:69EC6B22:vzstart:162:root@pam:
+Apr 25 09:20:02 pve3 pve-ha-lrm[842776]: starting CT 162: UPID:pve3:000CDC18:005224B2:69EC6B22:vzstart:162:root@pam:
+Apr 25 09:20:02 pve3 pve-ha-lrm[842776]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:02 pve3 pve-ha-lrm[842771]: <root@pam> end task UPID:pve3:000CDC18:005224B2:69EC6B22:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:02 pve3 pve-ha-lrm[842771]: unable to start service ct:162
+Apr 25 09:20:02 pve3 pve-ha-lrm[2842]: restart policy: retry number 2 for service 'ct:162'
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: starting service ct:162
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: <root@pam> starting task UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam:
+Apr 25 09:20:12 pve3 pve-ha-lrm[842914]: starting CT 162: UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam:
+Apr 25 09:20:12 pve3 pve-ha-lrm[842914]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: <root@pam> end task UPID:pve3:000CDCA2:0052289E:69EC6B2C:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:12 pve3 pve-ha-lrm[842912]: unable to start service ct:162
+Apr 25 09:20:12 pve3 pve-ha-lrm[2842]: restart policy: retry number 3 for service 'ct:162'
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: starting service ct:162
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: <root@pam> starting task UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam:
+Apr 25 09:20:22 pve3 pve-ha-lrm[843030]: starting CT 162: UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam:
+Apr 25 09:20:22 pve3 pve-ha-lrm[843030]: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: <root@pam> end task UPID:pve3:000CDD16:00522C8C:69EC6B36:vzstart:162:root@pam: zfs error: cannot open 'rpool/data/subvol-162-disk-0': dataset does not exist
+Apr 25 09:20:22 pve3 pve-ha-lrm[843028]: unable to start service ct:162
+Apr 25 09:20:22 pve3 pve-ha-lrm[2842]: unable to start service ct:162 on local node after 3 retries
+Apr 25 09:20:42 pve3 pve-ha-lrm[843270]: service ct:162 is in an error state and needs manual intervention. Look up 'ERROR RECOVERY' in the documentation.
+Apr 25 09:25:02 pve3 pve-ha-lrm[849915]: starting service ct:162
+Apr 25 09:25:02 pve3 pve-ha-lrm[849915]: <root@pam> starting task UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam:
+Apr 25 09:25:02 pve3 pve-ha-lrm[849917]: starting CT 162: UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam:
+Apr 25 09:25:03 pve3 pve-ha-lrm[849915]: <root@pam> end task UPID:pve3:000CF7FD:005299D1:69EC6C4E:vzstart:162:root@pam: OK
+Apr 25 09:25:03 pve3 pve-ha-lrm[849915]: service status ct:162 started
+Apr 25 11:30:38 pve3 pve-ha-lrm[1034383]: <root@pam> starting task UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam:
+Apr 25 11:30:38 pve3 pve-ha-lrm[1034385]: shutdown CT 162: UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam:
+Apr 25 11:30:39 pve3 pve-ha-lrm[1034383]: <root@pam> end task UPID:pve3:000FC891:005E1967:69EC89BE:vzshutdown:162:root@pam: OK
+Apr 25 11:30:39 pve3 pve-ha-lrm[1034383]: <root@pam> starting task UPID:pve3:000FC8DA:005E19D1:69EC89BF:vzmigrate:162:root@pam:
+Apr 25 11:30:43 pve3 pve-ha-lrm[1034383]: <root@pam> end task UPID:pve3:000FC8DA:005E19D1:69EC89BF:vzmigrate:162:root@pam: OK
+--- pve2 LRM journal recent (last 50 lines) ---
+Apr 23 21:04:22 pve2 systemd[1]: Starting pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:04:23 pve2 pve-ha-lrm[1209]: starting server
+Apr 23 21:04:23 pve2 pve-ha-lrm[1209]: status change startup => wait_for_agent_lock
+Apr 23 21:04:23 pve2 systemd[1]: Started pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+Apr 23 21:06:33 pve2 systemd[1]: Stopping pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:06:33 pve2 pve-ha-lrm[1209]: received signal TERM
+Apr 23 21:06:33 pve2 pve-ha-lrm[1209]: got shutdown request with shutdown policy 'conditional'
+Apr 23 21:06:33 pve2 pve-ha-lrm[1209]: shutdown LRM, stop all services
+Apr 23 21:06:33 pve2 pve-ha-lrm[1209]: server stopped
+Apr 23 21:06:34 pve2 systemd[1]: pve-ha-lrm.service: Deactivated successfully.
+Apr 23 21:06:34 pve2 systemd[1]: Stopped pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+Apr 23 21:06:34 pve2 systemd[1]: pve-ha-lrm.service: Consumed 1.507s CPU time, 230.5M memory peak.
+-- Boot 4349ae9422044de4af245b5b8486ebe1 --
+Apr 23 21:08:10 pve2 systemd[1]: Starting pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:08:11 pve2 pve-ha-lrm[1184]: starting server
+Apr 23 21:08:11 pve2 pve-ha-lrm[1184]: status change startup => wait_for_agent_lock
+Apr 23 21:08:11 pve2 systemd[1]: Started pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+-- Boot 0a6d565b9c6744009e81303bea313f74 --
+Apr 23 21:14:22 pve2 systemd[1]: Starting pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:14:23 pve2 pve-ha-lrm[1172]: starting server
+Apr 23 21:14:23 pve2 pve-ha-lrm[1172]: status change startup => wait_for_agent_lock
+Apr 23 21:14:23 pve2 systemd[1]: Started pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+Apr 23 21:18:55 pve2 systemd[1]: Stopping pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:18:56 pve2 pve-ha-lrm[1172]: received signal TERM
+Apr 23 21:18:56 pve2 pve-ha-lrm[1172]: got shutdown request with shutdown policy 'conditional'
+Apr 23 21:18:56 pve2 pve-ha-lrm[1172]: shutdown LRM, stop all services
+Apr 23 21:18:56 pve2 pve-ha-lrm[1172]: server stopped
+Apr 23 21:18:57 pve2 systemd[1]: pve-ha-lrm.service: Deactivated successfully.
+Apr 23 21:18:57 pve2 systemd[1]: Stopped pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+Apr 23 21:18:57 pve2 systemd[1]: pve-ha-lrm.service: Consumed 1.516s CPU time, 230.9M memory peak.
+-- Boot bbb753b22fac448cba587ed391a9174b --
+Apr 23 21:19:44 pve2 systemd[1]: Starting pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 23 21:19:45 pve2 pve-ha-lrm[1174]: starting server
+Apr 23 21:19:45 pve2 pve-ha-lrm[1174]: status change startup => wait_for_agent_lock
+Apr 23 21:19:45 pve2 systemd[1]: Started pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+-- Boot 46f461d68e0240d386373bf24a12c6e0 --
+Apr 24 08:45:03 pve2 systemd[1]: Starting pve-ha-lrm.service - PVE Local HA Resource Manager Daemon...
+Apr 24 08:45:04 pve2 pve-ha-lrm[1206]: starting server
+Apr 24 08:45:04 pve2 pve-ha-lrm[1206]: status change startup => wait_for_agent_lock
+Apr 24 08:45:04 pve2 systemd[1]: Started pve-ha-lrm.service - PVE Local HA Resource Manager Daemon.
+Apr 24 09:08:55 pve2 pve-ha-lrm[1206]: cluster file system update failed - ipcc_send_rec[1] failed: Connection refused
+Apr 24 09:08:55 pve2 pve-ha-lrm[1206]: updating service status from manager failed: Connection refused
+Apr 25 07:50:08 pve2 pve-ha-lrm[1206]: successfully acquired lock 'ha_agent_pve2_lock'
+Apr 25 07:50:08 pve2 pve-ha-lrm[1206]: watchdog active
+Apr 25 07:50:08 pve2 pve-ha-lrm[1206]: status change wait_for_agent_lock => active
+Apr 25 11:30:47 pve2 pve-ha-lrm[514154]: starting service ct:162
+Apr 25 11:30:47 pve2 pve-ha-lrm[514154]: <root@pam> starting task UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam:
+Apr 25 11:30:47 pve2 pve-ha-lrm[514155]: starting CT 162: UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam:
+Apr 25 11:30:49 pve2 pve-ha-lrm[514154]: <root@pam> end task UPID:pve2:0007D86B:009305C7:69EC89C7:vzstart:162:root@pam: OK
+Apr 25 11:30:49 pve2 pve-ha-lrm[514154]: service status ct:162 started

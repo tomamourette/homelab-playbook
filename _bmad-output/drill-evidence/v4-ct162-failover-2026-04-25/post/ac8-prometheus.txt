@@ -1,0 +1,476 @@
+--- AC-8: changes(pve_ha_resource_state{sid="ct:162",state="started"}[20m]) ---
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"exported_node":"pve2"},"value":[1777109644.292,"0"]},{"metric":{"exported_node":"pve3"},"value":[1777109644.292,"0"]}]}}--- AC-8: error/fence/recovery state metric (should be 0) ---
+{"status":"success","data":{"resultType":"vector","result":[]}}--- AC-8: changes() per host instance ---
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "disabled"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "error"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "fence"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "freeze"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "migrate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "queued"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "relocate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "request_start"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "request_start_balance"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "request_stop"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "started"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "started_failure_recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve1",
+                    "state": "stopped"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "disabled"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "error"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "fence"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "freeze"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "migrate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "queued"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "relocate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "request_start"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "request_start_balance"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "request_stop"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "started"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "started_failure_recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve2",
+                    "state": "stopped"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "disabled"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "error"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "fence"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "freeze"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "migrate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "queued"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "relocate"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "request_start"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "request_start_balance"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "request_stop"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "started"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "started_failure_recovery"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "host": "pve3",
+                    "state": "stopped"
+                },
+                "value": [
+                    1777109660.147,
+                    "0"
+                ]
+            }
+        ]
+    }
+}
+--- AC-8: total changes summed ---
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {},
+                "value": [
+                    1777109660.457,
+                    "0"
+                ]
+            }
+        ]
+    }
+}
+--- AC-8 alt: count distinct exported_node values for ct:162 over 20m ---
+{
+    "status": "success",
+    "data": {
+        "resultType": "vector",
+        "result": [
+            {
+                "metric": {
+                    "exported_node": "pve2"
+                },
+                "value": [
+                    1777109675.195,
+                    "3"
+                ]
+            },
+            {
+                "metric": {
+                    "exported_node": "pve3"
+                },
+                "value": [
+                    1777109675.195,
+                    "3"
+                ]
+            }
+        ]
+    }
+}
+exported_node=pve2: present from epoch 1777109495 to 1777109600 (8 samples)
+exported_node=pve3: present from epoch 1777109075 to 1777109675 (19 samples)
