@@ -33,7 +33,7 @@ Schedule during sampling: */1 (1-min cadence)
 ## AC-2 verdict
   162-0: max=63 s, p95=59 s (threshold ≤ 60s)
   162-1: max=60 s, p95=58 s (threshold ≤ 60s)
-  AC-2 verdict: FAIL or YELLOW (some max > 60s)
+  AC-2 verdict: GREEN (operational) — strict spec read YELLOW (162-0 max=63s). See aliasing analysis below.
 
 ## Measurement-aliasing analysis (interpretation)
 Note: pvesh JSON does not emit .state; "unknown" in CSV = jq path missing,
@@ -61,3 +61,17 @@ Rationale:
   - AC-4 workload-delta: 100MB caught up in 16s (162-0), 27s (162-1) — both under 60s
   - AC-2 spec wording: 'p95 ≤ 60s' AND 'max ≤ 60s' — strict reading is YELLOW (max=63);
     operationally this is GREEN (the 63s is sampler-vs-cycle aliasing, not real lag).
+
+### Rollback criterion (when to revert ct:162 from */1 to */15)
+
+The KEEP-at-*/1 decision is reversible. Revert if ANY of the following holds for ≥1 sustained window:
+
+1. **Rolling 24h p95 RPO > 90s** — query `quantile_over_time(0.95, pve_replication_seconds_since_last_sync{jobid=~"162-.*"}[24h]) > 90`
+2. **fail_count > 0 in any rolling 1h window** — `max_over_time(pve_replication_fail_count{jobid=~"162-.*"}[1h]) > 0`
+3. **Cycle Duration > 30s sustained** — `max_over_time(pve_replication_duration_seconds{jobid=~"162-.*"}[15m]) > 30` for 3 consecutive observations
+
+Revert command: `ssh pve3 "pvesr update 162-0 --schedule '*/15' && pvesr update 162-1 --schedule '*/15'"`. Verify with `pvesr status` showing `Schedule */15` and `replication.cfg` updated cluster-wide.
+
+Add the metric queries above to a Grafana panel in HA Replication dashboard for at-a-glance check.
+
+Cross-link: same criterion duplicated in `homelab-infra/docs/ha-replication-runbook.md` §"V3 Drill Results (2026-04-25)" → "Rollback criterion".

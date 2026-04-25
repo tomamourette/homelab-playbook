@@ -54,11 +54,19 @@
 # - Epic 7: can be done across multiple days (codification is deskwork)
 
 generated: 2026-04-20
-last_updated: 2026-04-20
+last_updated: 2026-04-24
 project: homelab - PVE3 Storage Architecture Migration
 project_key: NOKEY
 tracking_system: file-system
 story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+# 2026-04-24 update: reflects Window B completion (pve2 reinstall) + Story 5.13 (pve1 mirror)
+# + RAM redistribution + workload consolidation. See:
+#   - implementation-artifacts/window-b-complete-2026-04-24.md
+#   - planning-artifacts/sprint-change-proposal-2026-04-24.md
+# Epic 5 now DONE (with scope revisions on 5-10/5-11 captured in sprint-change-proposal).
+# Epic 7 gained 3 new stories (7-8, 7-9, 7-10) for DHCP reservations, pve-node-bootstrap
+# playbook, and pve3 BIOS VRAM runbook.
 
 development_status:
   # Epic 1: Migration Readiness
@@ -74,7 +82,7 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Bulk Storage Foundation with Preserved Media
-  epic-2: in-progress
+  epic-2: done
   2-1-identify-and-document-all-5-hdds-by-dev-disk-by-id: done
   2-2-create-hdd-pool-raidz1-without-special-vdev-yet: done
   2-3-create-hdd-pool-datasets-and-tune-properties: done
@@ -84,22 +92,22 @@ development_status:
   2-7-promote-staging-to-final-location-and-rename-datasets: done
   2-8-nfs-cutover-from-shared-nfs-to-shared-nfs-bulk: done
   2-9-update-ct-media-01-config-to-use-shared-nfs-bulk-and-validate: done
-  2-10-deploy-pbs-datastore-on-hdd-pool-pbs: deferred-to-epic-3
-  2-11-48-h-soak-test-and-decommission-shared-pool: backlog
+  2-10-deploy-pbs-datastore-on-hdd-pool-pbs: done  # 2026-04-24 — PBS live on pve3 (UI port 8007), pve3-pbs datastore registered cluster-wide, CT160 pre-Epic-3 safety-net backup completed (ct/160/2026-04-24T11:42:58Z, 20.2 GiB). Post-3.2 the role re-run reinstates PBS pointing at preserved /hdd-pool/pbs data.
+  2-11-48-h-soak-test-and-decommission-shared-pool: done  # 2026-04-24 destroyed; nvme1n1 freed for Epic 3 fast-pool
   epic-2-retrospective: optional
 
   # Epic 3: pve3 Target NVMe Architecture
-  epic-3: backlog
-  3-1-evacuate-ct160-and-ct162-from-pve3-pre-reinstall: backlog
-  3-2-reinstall-proxmox-on-pve3-with-2-way-zfs-mirror: backlog
-  3-3-rejoin-pve3-to-the-cluster: backlog
-  3-4-add-mirrored-special-vdev-to-hdd-pool: backlog
-  3-5-configure-special-small-blocks-for-metadata-heavy-datasets: backlog
-  3-6-create-single-disk-fast-pool-on-nvme2: backlog
-  3-7-re-establish-nfs-export-for-hdd-pool-bulk: backlog
-  3-8-restore-ct160-and-migrate-ct162-back-to-pve3: backlog
-  3-9-add-hdd-pool-models-mount-to-ct160-and-relocate-ollama-models: backlog
-  3-10-validate-pve3-storage-state-v1-v2-v7: backlog
+  epic-3: done-pending-scrub  # 2026-04-24: full target architecture live; overnight scrub in progress (3.10)
+  3-1-evacuate-ct160-and-ct162-from-pve3-pre-reinstall: done  # 2026-04-24: CT162→pve2, CT250→pve1 (after CT102 stop), CT160 stopped + 2 PBS backups, hdd-pool force-exported
+  3-2-reinstall-proxmox-on-pve3-with-2-way-zfs-mirror: done  # 2026-04-24: PVE 9.1 reinstalled, ZFS RAID1 mirror across nvme0+nvme2 with hdsize=828 (103 GB free tail per drive for 3.4). BIOS UMA=32G set (installer offered 16/32/48, 24 not available — guide superseded). rpool-OLD label required manual zpool destroy via initramfs; 2 ISO rebuilds needed (by-id paths fail in installer env; kernel names work). Cosmetic drive-name swap between installer env and running OS noted in window-b-complete-2026-04-24.md lesson set.
+  3-3-rejoin-pve3-to-the-cluster: done  # 2026-04-24: pve-node-bootstrap playbook (Story 7.9) ran clean (56 ok / 15 changed / 0 failed). Bootstrap pubkey bug in firstboot.sh required one-time manual key install on pve3 console before playbook could SSH in — Story 7.9 followup.
+  3-4-add-mirrored-special-vdev-to-hdd-pool: done  # 2026-04-24: nvme0p4 + nvme2p4 mirror (103 GB each) added to hdd-pool as `special` vdev
+  3-5-configure-special-small-blocks-for-metadata-heavy-datasets: done  # 2026-04-24: hdd-pool/pbs special_small_blocks=128K
+  3-6-create-single-disk-fast-pool-on-nvme2: done  # 2026-04-24: fast-pool single-disk on nvme1n1 (S6Z1NF0L202025D), ashift=12, compression=lz4
+  3-7-re-establish-nfs-export-for-hdd-pool-bulk: done  # 2026-04-24: /etc/exports reconciled by role, shared-nfs-bulk cluster storage active, CT102 verified reading media
+  3-8-restore-ct160-and-migrate-ct162-back-to-pve3: done  # 2026-04-24: CT160 PBS-restored (ct/160/2026-04-24T13:13:01Z stop-mode snapshot), CT162+CT250 migrated back from pve2/pve1
+  3-9-add-hdd-pool-models-mount-to-ct160-and-relocate-ollama-models: done  # 2026-04-24: mp0: /hdd-pool/models,mp=/var/lib/ollama/models; 80 TB avail inside CT160 ready for Ollama re-pull
+  3-10-validate-pve3-storage-state-v1-v2-v7: in-progress  # 2026-04-24: all 3 pools ONLINE/0-errors; scrubs started async (rpool, hdd-pool, fast-pool) — complete overnight
   epic-3-retrospective: optional
 
   # Epic 4: Operator Workbench Safe Harbor
@@ -109,46 +117,87 @@ development_status:
   4-3-restore-ct150-to-pve3-as-parallel-instance: done
   4-4-verify-pve3-resident-ct150-operational: done
   4-5-cut-operator-session-over-to-pve3-resident-ct150: done-soft
-  4-6-retain-pve1-ct150-as-tombstone-until-epic-5-completes: done
+  4-6-retain-pve1-ct150-as-tombstone-until-epic-5-completes: done  # CT150 destroyed 2026-04-24 (no longer needed)
   epic-4-retrospective: optional
 
   # Epic 5: Cluster-wide ZFS Parity (pve1 + pve2)
-  epic-5: in-progress
+  epic-5: done-with-scope-revisions  # see sprint-change-proposal-2026-04-24.md
   5-1-evacuate-pve1-cts-vms-before-reinstall: done
   5-2-reinstall-proxmox-on-pve1-with-zfs-single-disk-rpool: done
   5-3-rejoin-pve1-to-the-cluster: done
   5-4-restore-vm100-smarthome-to-pve1-with-usb-passthrough: done
   5-5-move-selected-cts-back-to-pve1-per-4-5-matrix: done
   5-6-update-terraform-tfvars-for-pve1-cts: done-with-tfstate-drift
-  5-7-evacuate-pve2-cts-before-reinstall: backlog
-  5-8-reinstall-proxmox-on-pve2-with-zfs-single-disk-rpool: backlog
-  5-9-rejoin-pve2-to-the-cluster: backlog
-  5-10-restore-pve2-cts-and-let-terraform-recreate-ct152: backlog
-  5-11-update-terraform-tfvars-for-pve2-cts: backlog
-  5-12-validate-cluster-wide-storage-id-consistency: backlog
-  5-13-add-second-nvme-to-pve1-rpool-as-zfs-mirror: backlog
+  5-7-evacuate-pve2-cts-before-reinstall: done  # 2026-04-24 (CT151 migrated via pbs-migration; CT105/152/153 destroyed)
+  5-8-reinstall-proxmox-on-pve2-with-zfs-single-disk-rpool: done  # 2026-04-24 (actually 2-way mirror — better than planned)
+  5-9-rejoin-pve2-to-the-cluster: done  # 2026-04-24 (manual recovery — lessons → Story 7.9)
+  5-10-restore-pve2-cts-and-let-terraform-recreate-ct152: done-with-scope-change  # only CT151 restored; 105/152/153 destroyed per operator decision
+  5-11-update-terraform-tfvars-for-pve2-cts: done  # 2026-04-24 — removed ct_dev_homelab/ct_dev_test/ct_isabelle/ct_zeroclaw_01 modules + state entries; flipped ct_sparkle_cps to local-zfs; refresh-only applied. Pre-existing Ansible drift on sparkle/quant left for future cleanup.
+  5-12-validate-cluster-wide-storage-id-consistency: done  # all 3 nodes now on local-zfs, no LVM remaining
+  5-13-add-second-nvme-to-pve1-rpool-as-zfs-mirror: done  # 2026-04-23, resilver 35s
   epic-5-retrospective: optional
 
+  # ==========================================================================
+  # DEPENDENCY GRAPH FOR OPEN STORIES (added 2026-04-24)
+  # ==========================================================================
+  # Parallel-safe pools (can run concurrently with agents):
+  #   Pool A — run NOW, no dependency on any in-flight story:
+  #     • 7-2 idempotency test           (pve3 Ansible role re-run, read-mostly)
+  #     • 7-5 update architecture docs   (desk work; could partially wait for 6.x but RAM/ZFS/DHCP facts are stable)
+  #     • 3-10 (already in-progress, self-closing when scrubs finish overnight)
+  #
+  #   Pool B — becomes parallel-safe after 6-2 closes:
+  #     • 6-3 define HA groups           (cluster config — technically no direct 6-2 code dep, but runbook hygiene = close 6-2 first)
+  #
+  #   Pool C — after 6-3 + 6-4 complete (HA actually active):
+  #     • 6-5 drill V3 replication RPO   (measures the working monitoring from 6-2)
+  #     • 6-6 drill V4 simulated failover
+  #
+  #   Pool D — sequential after 6-6 completes:
+  #     • 6-7 drill V5 pull-plug pve3    (riskiest; user should be present)
+  #     • 6-8 drill V6 pve3 recovery     (right after 6-7)
+  #
+  #   Pool E — blocked on all drills complete:
+  #     • 6-9 document validated HA behavior
+  #
+  #   Pool F — blocked on everything:
+  #     • 7-7 retrospective              (end-of-project)
+  #
+  # Live-risk tier (DO NOT run unattended):
+  #   6-7 (pull-plug), 6-8 (recovery verify)
+  # ==========================================================================
+
   # Epic 6: High Availability Activated
-  epic-6: backlog
-  6-1-create-replication-jobs-per-4-5-matrix: backlog
-  6-2-verify-replication-state-and-deltas: backlog
-  6-3-define-ha-groups: backlog
-  6-4-assign-cts-and-vms-to-ha-groups: backlog
-  6-5-validation-drill-v3-replication-rpo-for-ct162: backlog
-  6-6-validation-drill-v4-simulated-failover-via-migrate: backlog
-  6-7-validation-drill-v5-pull-plug-pve3: backlog
-  6-8-validation-drill-v6-pve3-recovery: backlog
-  6-9-document-validated-ha-behavior-in-runbook: backlog
+  epic-6: in-progress  # 2026-04-24: Epic 3 done, all nodes on ZFS, kicking off 6.1
+  6-1-create-replication-jobs-per-4-5-matrix: done  # 2026-04-24: 8 jobs live rate=50, code-review + adversarial-review + fixes applied; deferrals R1→6.2, R4→6.5, corosync-2nd-ring→6.3 ; ct:162 retuned to */1 by Story 6-5 (2026-04-25 V3 drill, p95 59s; KEEP at */1 with rollback criterion docked in runbook)
+  6-2-verify-replication-state-and-deltas: done  # 2026-04-24: exporter + 7 alert rules (expanded from 4 during fix-apply: added Missing/UnknownSchedule/JobsMissing absent-guards) + HA Replication dashboard live on CT101 via Traefik SSO. Runbook URLs fixed to Traefik paths. Flock, timeout, unknown-schedule sentinel all added. Alertmanager + push channel deferred to Epic 7 backlog (gate before 6.3 HA activation). | blocked_by: 6-1 (done) | blocks: 6-3, 6-5
+  6-3-define-ha-groups: done  # 2026-04-25: SPRINT-CHANGE PIVOT (PVE 9 rules model) + Dev + Code Review + Adversarial Review + Fix-apply COMPLETE. 6 HA resources registered (ct:101/151/162/250 ct:160 vm:100), 4 node-affinity rules (critical/standard/pinned-pve1/pinned-pve3), failback=1 on non-pinned. New role pve-ha-rules + playbook (homelab-infra@d71a7ed, homelab-playbook@9a043c3, NOT pushed). Idempotent (4 runs all changed=0). Story 7.3 guardrail PASS. Surfaced findings → 6-10 (HIGH gating before 6.5), 7-13 (MED), 6-9 backlog (failback divergence + 2-node-loss + pinned-node death + RPO matrix). Absorbed 6-4. | supersedes: 6-4 | blocked_by: none | blocks: 6-5, 6-6, 6-7 (now via 6-10 gate)
+  6-4-assign-cts-and-vms-to-ha-groups: superseded  # 2026-04-25: superseded_by 6-3 (PVE 9 rules model couples rule + resources at creation). Original AC matrix archived in 6-4 file body for historical reference.
+  6-5-validation-drill-v3-replication-rpo-for-ct162: ready  # 2026-04-25: UNBLOCKED. Absorbs 6-1 R4 (VM100 USB empirical test). PVE 9 terminology pass complete. New AC-7 added 2026-04-25 (Story 6.10 alert-chain assertion via fix-apply). blocked_by: none | blocks: 6-9
+  6-6-validation-drill-v4-simulated-failover-via-migrate: ready  # 2026-04-25: UNBLOCKED. Graceful ha-manager crm-command migrate (corrected from pct migrate per PVE 9). New AC-8 added 2026-04-25 (Story 6.10 alert-chain assertion). Pre-flight: 6-9-1 drill safety preconditions recommended before kick-off. blocked_by: none | blocks: 6-7
+  6-7-validation-drill-v5-pull-plug-pve3: backlog  # LIVE-RISK: needs operator presence. blocked_by: 6-6 (prove graceful works first), 6-9-1 (drill safety guard recommended) | blocks: 6-8
+  6-8-validation-drill-v6-pve3-recovery: backlog  # LIVE-RISK: recovery verification from 6-7. blocked_by: 6-7 | blocks: 6-9
+  6-9-document-validated-ha-behavior-in-runbook: backlog  # final HA runbook w/ measured RPO/RTO. Must include: failback divergence window for ct:162 (R4), 2-node-loss recovery (R5), pinned-node permanent failure unpinning (R6), per-resource RPO matrix (R8). PVE 9 error-state recovery section ALREADY ADDED to runbook 2026-04-25 via 6-10 fix-apply. blocked_by: 6-5, 6-6, 6-7, 6-8 | blocks: epic-6-done
+  6-9-1-drill-safety-preconditions: backlog  # NEW 2026-04-25 — surfaced by 6-10 adversarial R7: drill window not enforced, ct:162 market-hours risk. 468-line draft, 7 ACs, pre-flight script that refuses drill execution outside safe window unless --force passed. Recommended (not strictly gating) before 6-6/6-7. blocked_by: 6-3 (done), 6-10 (done) | blocks: nothing (recommendation)
+  6-10-ha-state-prometheus-exporter: done  # 2026-04-25: Dev + Code Review (APPROVE-WITH-MINOR) + Adversarial Review (BLOCK-ON-FIX 2 HIGH) + Fix-apply COMPLETE. Exporter on all 3 PVE nodes (cron, every 60s), 7 alert rules loaded, Grafana dashboard 5→11 panels, AC-6 fault-injection drill on ct:162 PASSED (8m29s wall-clock, ntfy push received at T+318s). Fix-apply 2026-04-25: M1+R5 (error-state recovery in runbook + role README + AC-6 correction + alert annotation), M2 (PVEHAExporterMissing severity bump to critical), M3 (Grafana panel filter aggregation), R12 (for: clauses tuned), R13 (amended 6-5+6-6 ACs), R9 (severity case grep). promtool/amtool both SUCCESS. R1+R8 → 6-10-1; R3 → 6-11; R7 → 6-9-1. Memory: feedback_pve9_ha_error_recovery.md. Commits: homelab-infra@0abd307+@c861d25; homelab-apps@2e4703c+@55b2cd7; homelab-playbook@fc2285e+@78172ca (NOT pushed). blocked_by: none | blocks: nothing now (6-5, 6-6 ready)
+  6-10-1-ha-alert-tuning-post-soak: backlog  # NEW 2026-04-25 — surfaced by 6-10 adversarial R1+R8: 3 ntfy pushes per event (alertmanager group_by includes node label) + ANY-match observer consensus could false-fire on pmxcfs partition. 323-line draft, 7 ACs, depends on 2-week soak data. blocked_by: 6-10 (done) + 2-week soak | blocks: nothing
+  6-11-node-systemd-unit-health: backlog  # NEW 2026-04-25 — surfaced by 6-10 adversarial R3: cron-daemon-death is unobserved at meta level. Cross-cutting alert pack for cron/chrony/sshd/pve-cluster/corosync/pvedaemon/pveproxy. 360-line draft, 7 ACs. blocked_by: 6-2 (done) | blocks: nothing
+  6-X-autoshutdown-idle-project-containers: backlog  # FUTURE 2026-04-25: auto-shutdown timer for ct:151 (sparkle-cps), ct:250 (dev-homelab) after N hours of idle. Reduces RAM pressure during low-activity periods. Surfaced during 6-3 sprint-change as operator policy: project-CTs only fail over if running. blocked_by: 6-3 (done) | blocks: nothing
   epic-6-retrospective: optional
 
   # Epic 7: Reproducibility & Guardrails
-  epic-7: backlog
+  epic-7: in-progress
   7-1-author-ansible-role-pve-host-pve3-storage: done
-  7-2-idempotency-test-of-ansible-role-against-fresh-state: backlog
+  7-2-idempotency-test-of-ansible-role-against-fresh-state: done-with-finding  # 2026-04-24: runs 2+3 (PBS-disabled) = changed=0 CONFIRMS idempotency. Run 1 (PBS-enabled) failed on apt-cache refresh (pbs-enterprise 401 — cosmetic, PBS is already installed). Check-mode shows 3 false-positive changed (community.general.zfs check-mode limitation). Real finding: PBS apt task should precheck dpkg before update_cache (new story candidate).
   7-3-implement-ci-guardrail-preventing-ha-ct-on-non-replicable-storage: done
   7-4-update-terraform-module-defaults: done
-  7-5-update-architecture-docs-to-reflect-target-state: backlog
+  7-5-update-architecture-docs-to-reflect-target-state: review  # 2026-04-24: architecture doc 342→449 lines; all current-state facts (cluster HW, pve3 Option-D storage, NFS, PBS, replication + monitoring, known gaps); HA placeholder section deferred to 6-9
   7-6-enable-weekly-zfs-scrub-automation: done
-  7-7-retrospective-and-memory-updates: backlog
+  7-7-retrospective-and-memory-updates: backlog  # POOL F — end-of-project. blocked_by: 6-9, 7-5 | blocks: nothing (terminal)
+  7-8-dhcp-reservations-for-pve-macs-on-asus-router: done  # 2026-04-24
+  7-9-ansible-pve-node-bootstrap-playbook: done  # 2026-04-24 — dev + code review (8H/14M/22L findings) + adversarial review (15 findings, 2 catastrophic) all resolved; idempotency proven on pve2 (runs: 11 → 1 → 0 changed; check mode: 0 changed); R1 used from-iso (inline not supported on PVE 9.1.7); R2 scoped bridge-ports replace with before/after anchors
+  7-10-pve3-bios-fixed-vram-24gb-guide: done  # guide authored; execution pending Epic 3 Story 3.2
+  7-11-alertmanager-and-ntfy-push-channel: done  # 2026-04-24 — All reviews closed + 13/13 E2E pass post-fix. R1+R2+R4+R5+R6+M1+M2+M3 landed via fix-apply. R3 (CF token rotation) resolved via vault-backed flow: token now in vault_cloudflare_api_token, synced to terraform.tfvars + CT101 .env by playbooks/sync-cloudflare-token.yml. LE certs issued for llama/ntfy/alertmanager (Let's Encrypt R12/R13). Gotcha documented: docker compose restart ≠ re-read .env (need up -d --force-recreate). Absorbed scope of 7-12 for the CF token path. blocked_by: 6-2 (done) | blocks: 6-3 (now unblocked)
+  7-12-ansible-vault-secrets-rendering: partially-done  # 2026-04-24 — CF token path COMPLETE via sync-cloudflare-token.yml. Remaining scope (other secrets: pve_token_secret, PORTAINER_AGENT_SECRET, TRAEFIK_ADMIN_PASSWORD_HASH, dev_vm_password, Authelia secrets etc.) deferred until they need rotation or a new consumer. Pattern is proven; extending it is mechanical. blocked_by: none | blocks: none
+  7-13-pve-ha-rules-reconcile-mode: backlog  # NEW 2026-04-25 — surfaced by 6-3 adversarial R3: pve-ha-rules role only checks resource/rule existence, does NOT reconcile field drift (nodes/strict/comment/resources/state/max_relocate). 358-line draft, 7 ACs, parse-existing-config pattern from failback.yml. NEEDS OPERATOR CONFIRMATION inline: state_managed_by_operator default-on for project CTs (151/250), default-off for always-on infra. blocked_by: 6-3 (done) | blocks: nothing
   epic-7-retrospective: optional

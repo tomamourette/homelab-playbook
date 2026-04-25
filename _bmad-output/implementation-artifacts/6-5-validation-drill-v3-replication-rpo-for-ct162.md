@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.5
 title: Validation drill V3 — replication RPO for CT162 (+ absorb 6.1 R4 VM100 USB empirical test)
@@ -9,7 +9,7 @@ author: BMad SM (via planner agent)
 
 # Story 6.5: Validation drill V3 — replication RPO for CT162 (+ absorb 6.1 R4 VM100 USB empirical test)
 
-Status: review
+Status: done
 
 > **PVE 9.1+ note:** uses HA rules (node-affinity), not legacy HA groups — see Story 6.3 sprint-change note and `/home/developer/.claude/projects/-home-developer-workspace-homelab/memory/project_pve9_ha_rules_migration.md`. This drill issues no `ha-manager` rule/resource commands; only `pvesr` and `qm`. Terminology updated below where it appears.
 
@@ -399,9 +399,34 @@ This run executed AC-1 / Task 1 first: `pvesr update 162-0 --schedule '*/1'` and
 | AC-2 cadence-tighten | PASS | `pvesr update --schedule '*/1'` worked first try on PVE 9; 3 successful 1-min cycles observed in warm-up; schedule visible in `pvesr status` and `/etc/pve/replication.cfg` |
 | AC-3 sustained sampling | PASS (operationally GREEN) | 90 samples × 2 legs; p95 ≤ 60 s on both; max 63 s (162-0) attributable to sampler/cycle aliasing; 0 fail_count; 0 negative-age rows |
 | AC-4 workload delta | PASS | 100 MB write at T_write=08:36:49Z; 162-0 caught up at 08:37:05Z (Δ16 s); 162-1 at 08:37:16Z (Δ27 s); cycle duration 2.5 s |
-| AC-5 VM100 USB (light) | PASS / cross-node DEFERRED | `lsusb` + `qm config` + QEMU monitor + HA state confirm USB working on pve1; cross-node migration test punted to 6.6/6.7 per operator hard rule |
+| AC-5 VM100 USB (light) | **PARTIAL — light-scope only** | TESTED: static USB enumeration on pve1 (`lsusb` + `qm config 100` + QEMU monitor `info usb` + HA state `vm:100 (pve1, started)`). OPEN: cross-node start-failure semantics — does HAOS start without the device, or remain in error? OWNED-BY: Story 6.6 (graceful migrate) and Story 6.7 (pull-plug pve3) — those drills exercise the cross-node migration where the empirical question is naturally answered. See "Partial AC-5" subsection below for the full scope split. |
 | AC-6 zero-residual | PASS | Marker file deleted; partial-failed-run leftover also cleaned; HA service map identical pre/post; usb0 stanza intact; RAM unchanged |
 | AC-7 alert chain | PASS | No PVE.* alerts fired; ct:162 state="started"=1 throughout; `changes(...[20m])=0`; pre/post firing-alert sets identical (DeadManSwitch + 4 unrelated ServiceDown) |
+
+### Partial AC-5 — formal scope split
+
+**Status: PARTIAL — light-scope only.** AC-5 was authored to absorb Story 6.1 R4 (VM100 USB-passthrough empirical test). This drill closed the static/host-side portion only; the cross-node start-failure semantics remain OPEN and are owned by downstream drills.
+
+**What was tested (CLOSED in this drill):**
+
+- Static USB enumeration on pve1: `lsusb` shows `10c4:ea60` Silicon Labs CP210x present.
+- VM config sanity: `qm config 100` shows `usb0: host=10c4:ea60`.
+- Live QEMU view: QEMU monitor `info usb` confirms `Device 2.1 SkyConnect v1.0` attached inside the running VM.
+- HA-state correctness: `pve_ha_resource_state{sid="vm:100",state="started"}=1` from all three exporters; `ha-manager status` shows `service vm:100 (pve1, started)`.
+- Negative confirmation: VM100 was NOT migrated during this drill window (operator hard rule), and replication cycles did not perturb the USB attachment on pve1.
+
+**What is OPEN (DEFERRED to downstream drills):**
+
+- Cross-node start-failure semantics: when VM100 is migrated to pve2 or pve3 and `qm start 100` is issued, does pre-flight reject the start with a USB-related error (Outcome A in AC-5) or does the stanza get silently stripped/ignored and the VM boots without Zigbee (Outcome B)?
+- Recovery path validation: if Outcome A, does the documented `qm set 100 --delete usb0 && qm start 100` recovery actually unblock boot in the runbook's "Known limitation" section?
+- Migrate-back behaviour: does restoring `--usb0 host=10c4:ea60` after migration back to pve1 cleanly re-attach the Zigbee stick?
+
+**Owned-by (downstream stories):**
+
+- **Story 6.6** (validation drill V4 — simulated failover via graceful migrate): naturally exercises VM100 cross-node start because the drill's mechanic is `ha-manager crm-command migrate vm:100`. Operator presence required.
+- **Story 6.7** (validation drill V5 — pull-plug pve3, then pve1 in a follow-up): exercises VM100 cross-node start under unplanned-failover conditions (HA-driven, not operator-initiated). Live-risk; operator presence mandatory.
+
+Until 6.6 (or 6.7) closes the cross-node empirical question, the runbook's "Known limitation: VMID 100 Zigbee USB passthrough" section retains its current "VM start is **likely** to fail pre-flight" wording and the operator-checklist gating note ("Do NOT HA-tag VMID 100 in Story 6.4 until empirically verified — light-scope confirmed in 6.5; cross-node deferred to 6.6/6.7").
 
 ### What I did differently from the failed attempt (per the briefing checklist)
 
@@ -427,11 +452,14 @@ This run executed AC-1 / Task 1 first: `pvesr update 162-0 --schedule '*/1'` and
 - `_bmad-output/drill-evidence/v3-ct162-rpo-2026-04-25.csv` — 180 sample rows.
 - `_bmad-output/drill-evidence/v3-ct162-rpo-2026-04-25-summary.txt` — per-leg stats + cadence decision.
 - `_bmad-output/drill-evidence/v3-ct162-rpo-2026-04-25-loop.log` — sampler iteration log.
-- `_bmad-output/drill-evidence/v3-ct162-rpo-2026-04-25-sampler.out` — nohup capture.
 - `_bmad-output/drill-evidence/v3-ct162-delta-2026-04-25.log` — workload-delta evidence.
 - `_bmad-output/drill-evidence/v3-vm100-usb-test-2026-04-25.log` — light USB-passthrough evidence.
 - `_bmad-output/drill-evidence/v3-ac7-alerts-2026-04-25.log` — Prometheus alert/state queries.
 - `_bmad-output/drill-evidence/v3-postdrill-2026-04-25.txt` — post-drill state + cleanup verification.
+- `_bmad-output/drill-evidence/v3-replication-cfg-pve1-2026-04-25.txt` — pmxcfs propagation evidence (pve1 view, F5 fix-apply).
+- `_bmad-output/drill-evidence/v3-replication-cfg-pve2-2026-04-25.txt` — pmxcfs propagation evidence (pve2 view, F5 fix-apply).
+- `_bmad-output/drill-evidence/v3-replication-cfg-pve3-2026-04-25.txt` — pmxcfs propagation evidence (pve3 view, F5 fix-apply).
+- `_bmad-output/drill-evidence/v3-replication-cfg-cross-node-diff-2026-04-25.txt` — cross-node diff (empty = healthy propagation, F5 fix-apply).
 
 **`homelab-infra`:**
 - `docs/ha-replication-runbook.md` — added `### V3 Drill Results (2026-04-25)` section (~57 lines); updated Measured RPO table for 162-0/162-1 to reflect `*/1` cadence + post-drill p95/max; updated cadence-list note above; clarified operator-checklist item about Story 6.5 light-scope vs cross-node deferral.
@@ -443,3 +471,7 @@ The Story 6.5 sprint-status entry should be flipped via the sprint-status skill 
 ### Not pushed
 
 Both commits (one per repo) live on `main` locally only. No `git push` was issued.
+
+## Change Log
+
+- **2026-04-25 — fix-apply pass**: Applied F1 (summary verdict canonicalization), F2 (sampler set -e + trap), F3 (CSV state column fix to use .error), F4 (rollback criterion documented in runbook + summary), F5 (schedule-propagation cross-node evidence), F6 (AC-5 formal partial-AC status), F7 (file list cleanup). Sprint-status 6-1 entry enriched with cadence-clarifying line. Adversarial R2 (aliasing falsification) → Story 6-5-1; R4+R5 (long-term soak) → Story 6-5-2; R6 (pvesr fail_count alerting) → Story 6-10-2.

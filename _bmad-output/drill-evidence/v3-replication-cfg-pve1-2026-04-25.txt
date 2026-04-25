@@ -1,0 +1,11 @@
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */1
+--
+local: 162-1
+	comment ct-quant-trading HA replica to pve2
+	target pve2
+	rate 50
+	schedule */1

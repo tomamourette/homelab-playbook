@@ -1,0 +1,23 @@
+# Cross-node diff of /etc/pve/replication.cfg (jobs 162-*)
+# Captured 2026-04-25 for Story 6.5 fix-apply F5
+# Confirms pmxcfs propagated the */1 schedule cluster-wide.
+#
+# Files compared:
+#   v3-replication-cfg-pve1-2026-04-25.txt
+#   v3-replication-cfg-pve2-2026-04-25.txt
+#   v3-replication-cfg-pve3-2026-04-25.txt
+#
+# Expected: all three identical (pmxcfs replicates /etc/pve cluster-wide).
+
+=== diff pve1 vs pve2 ===
+(empty — files identical)
+
+=== diff pve1 vs pve3 ===
+(empty — files identical)
+
+=== diff pve2 vs pve3 ===
+(empty — files identical)
+
+VERDICT: pmxcfs propagation healthy — all three nodes carry identical 162-0 / 162-1
+stanzas with `schedule */1`. The KEEP-at-*/1 decision from Story 6.5 is in effect
+cluster-wide and survives node restarts.

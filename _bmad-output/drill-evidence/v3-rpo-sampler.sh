@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # V3 RPO sampling loop — bounded, idempotent, with explicit timeouts
 # Hard cap: 90 iterations × 10s = 900s wall-clock. Adds ~2-3s/iter SSH latency.
-set -uo pipefail
+set -euo pipefail
+trap 'echo "[$(date -u +%FT%TZ)] ERR at line $LINENO (exit=$?)" >> "${LOG:-/tmp/v3-sampler-err.log}"' ERR
 EVIDENCE_DIR=/home/developer/workspace/homelab/homelab-playbook/_bmad-output/drill-evidence
 DATE=$(date +%F)
 CSV="$EVIDENCE_DIR/v3-ct162-rpo-${DATE}.csv"
@@ -20,11 +21,12 @@ for i in $(seq 1 90); do
     sleep 10
     continue
   fi
+  # PVE 9 pvesh exposes .error (not .state); legacy column name kept for CSV schema continuity.
   echo "$RAW" | jq -r --arg now "$NOW" --arg ts "$TS" '
     .[] | select(.id | startswith("162-"))
       | [ $ts, .id, (.last_sync // 0), $now,
           (($now | tonumber) - (.last_sync // 0)),
-          (.state // "unknown"), (.fail_count // 0) ] | @csv' >> "$CSV"
+          (.error // "ok"), (.fail_count // 0) ] | @csv' >> "$CSV"
   echo "[$(date -u +%FT%TZ)] iter=$i ok" >> "$LOG"
   sleep 10
 done
