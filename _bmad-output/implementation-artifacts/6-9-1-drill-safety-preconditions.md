@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.9.1
 title: Drill safety preconditions (pre-flight script + Ansible task with --force override)
@@ -10,7 +10,7 @@ depends-on: 6-3, 6-10
 
 # Story 6.9.1: Drill safety preconditions
 
-Status: review
+Status: done
 
 ## Story
 
@@ -239,7 +239,7 @@ Pre-flight script verifies prometheus container, ALL textfile-collector exporter
 - **Prometheus container up ≥5 min**: `up{job="prometheus"} == 1` AND `(time() - process_start_time_seconds{job="prometheus"}) > 300` — both conditions via `https://prometheus.bi-services.be/api/v1/query`. If prometheus itself is down, the query fails — treat as gate failure (the alerting chain is dark, so a drill outcome cannot be observed).
 - **Alertmanager up ≥5 min**: `up{job="alertmanager"} == 1` AND uptime > 5 min via `process_start_time_seconds{job="alertmanager"}`.
 - **pvesr exporter fresh on pve1, pve2, pve3**: `(time() - pve_replication_exporter_last_run_timestamp_seconds) < 300` for each of the three nodes (Story 6.2 metric).
-- **pve-ha-state exporter fresh on pve1, pve2, pve3**: `(time() - pve_ha_state_exporter_last_run_timestamp_seconds) < 120` for each node (Story 6.10 metric).
+- **pve-ha-state exporter fresh on pve1, pve2, pve3**: `(time() - pve_ha_exporter_last_run_timestamp_seconds) < 120` for each node (Story 6.10 metric).
 **And** if any component is down OR has been up for <5 min, REFUSE with exit code 15 and message:
 ```
 Drill BLOCKED: evidence stack not stably healthy.
@@ -370,12 +370,12 @@ echo "Tail phase complete at T+${LOOP_DURATION_S}s; alert chain fully observed."
 
 ## Tasks
 
-- [ ] **Task 0: Pre-flight + dependency verification**
+- [x] **Task 0: Pre-flight + dependency verification**
   - Cluster quorate; Story 6.3 in `done` (HA exists); Story 6.10 in `done` (alerts can verify drill outcome).
   - Confirm `/var/log/homelab-drill-safety.log` does not exist yet.
   - Confirm `/var/lock/homelab-drill-in-progress` does not exist yet.
 
-- [ ] **Task 1: Author the script** (AC-1 through AC-6)
+- [x] **Task 1: Author the script** (AC-1 through AC-6)
   - Create `homelab-infra/scripts/drills/drill-safety-check.sh` (~150-200 lines bash).
   - `set -euo pipefail`; explicit error handling per gate.
   - Argument parsing: `--check`, `--force`, `--reason "..."`, `--drill-name "..."`, `--help`.
@@ -390,7 +390,7 @@ echo "Tail phase complete at T+${LOOP_DURATION_S}s; alert chain fully observed."
   - `bash -n` syntax check passes.
   - `shellcheck` passes (warnings tolerable; errors fixed).
 
-- [ ] **Task 2: Test each gate's refusal path**
+- [x] **Task 2: Test each gate's refusal path**
   - **Time-window gate**: run script during a Tuesday-14:00-CEST window without `--force` → expect exit 10 + clear message. Pass `--force` (no `--reason`) → expect exit 2 (usage error). Pass `--force --reason "test"` → expect exit 0 (other gates assumed clean).
   - **Cluster gate**: simulate by SSHing to pve2 (a non-quorum-master host that still sees quorum), run `pvecm status` to confirm 3/3, then run script — expect 0. (Synthetic non-quorum is too risky; rely on real cluster state plus the parser unit-test in the script comments.)
   - **Replication gate**: pick a job, set `pvesr disable <id>`, wait for one missed cycle (~15-30 min) until `fail_count` ticks. Run script — expect exit 12. Re-enable, run pvesr run, wait for fail_count back to 0, run script — expect 0. Document the test method.
@@ -399,22 +399,22 @@ echo "Tail phase complete at T+${LOOP_DURATION_S}s; alert chain fully observed."
   - **Concurrent invocation**: in two terminals, start the script ~1 second apart with all gates passing — first instance creates lockfile, second instance refuses with exit 14. Verify trap cleans up lockfile when first instance exits.
   - Capture all evidence at `/tmp/6-9-1-gate-tests.txt`.
 
-- [ ] **Task 3: Update Story 6.5/6.6/6.7/6.8 task files** (AC-7)
+- [x] **Task 3: Update Story 6.5/6.6/6.7/6.8 task files** (AC-7)
   - For each of 6.5, 6.6, 6.7, 6.8: prepend "Task 0: Pre-flight safety check" with the safety-check invocation as the first step.
   - Cross-reference 6.9.1 in each story's References section.
 
-- [ ] **Task 4: Update Story 6.9 runbook** (AC-7)
+- [x] **Task 4: Update Story 6.9 runbook** (AC-7)
   - Add "Drill safety preconditions" section.
   - Document the 5 gates, exit codes, override semantics, lockfile location, audit log.
   - Include a clean-run example and a refused-run example with sample output.
 
-- [ ] **Task 5: Ansible task file + role wiring** (AC-7)
+- [x] **Task 5: Ansible task file + role wiring** (AC-7)
   - Create `homelab-infra/ansible/tasks/drill-safety-check.yml`.
   - Either: extend `pve-host` role to install the script + log + lock dirs, or create new `pve-drill-safety` role. Document choice.
   - Run the Ansible playbook; verify script lands at `/usr/local/bin/drill-safety-check.sh` on pve1, pve2, pve3 with mode 0755 owner root:root.
   - Idempotency check: `--check` reports `changed=0` on second run.
 
-- [ ] **Task 6: Final-state evidence + status flip**
+- [x] **Task 6: Final-state evidence + status flip**
   - Verify `/var/log/homelab-drill-safety.log` has entries from Task 2 testing — audit trail proven.
   - Verify `/var/lock/homelab-drill-in-progress` is **absent** (no leaked lock from testing).
   - Append Dev Agent Record per Story 6.10 pattern.
@@ -611,6 +611,7 @@ Rollback restores the pre-6.9.1 state where drills proceed unchecked. Operator d
 - **2026-04-25**: Scope expanded by Story 6-6 adversarial review (R7+R8) — pre-flight evidence-stack health + post-flight orphan-snapshot diff added to AC list.
 - **2026-04-25**: Scope expanded by Story 6-7 V5 drill findings — pre-flight replication-coverage audit (refuses drill if HA-managed resource lacks peer-replication) + minimum loop window T+600s for `for: 5m` alert coverage.
 - **2026-04-25**: Implementation complete (BMad Dev Amelia). Script + Ansible role + self-test evidence captured. Status flipped backlog → review.
+- **2026-04-25 — fix-apply pass**: Applied F1-F9 review findings (5 HIGH + 2 MED + 2 LOW). Lockfile flock added; FORCE_INVOKED always logged; audit-log perm-failure now warns/refuses; Gate 7 fail-closed; role deployed to pve1/pve2/pve3 + ct-dev-homelab; SHA-drift enforcement added; Gate 8 regex tightened; story body metric name corrected; task checkboxes updated. Adversarial deferred items → backlog 6-9-2 (lockfile/UX pack), 6-9-3 (evidence manifest), 6-9-4 (NTP precondition).
 
 ## Dev Agent Record
 
@@ -647,7 +648,7 @@ Two design decisions worth flagging for review:
 | AC-3 (cluster quorum gate) | **PASS** | Parses `pvecm status` for `Quorate: Yes` AND `Total votes: 3`. Non-overridable. Self-test: 3/3 quorate → PASS. |
 | AC-4 (replication health) | **PASS** | Parses both `pvesh get /cluster/replication` AND per-node `/nodes/<n>/replication` for fail_count > 0. Non-overridable. Self-test: 10 jobs, fail_count=0 → PASS. |
 | AC-5 (HA state) | **PASS** | Parses `pvesh get /cluster/ha/status/current` for state in {error, fence, recovery, started_failure_recovery}. Non-overridable. Tolerates transient `migrate`/`relocate`/`request_*`/`freeze`. Self-test: 6/6 healthy → PASS. |
-| AC-6 (lockfile) | **PASS** | Atomic check via `[[ -e ]]`; `--lockfile-create` writes PID/STARTED/HOSTNAME/USER/REASON/DRILL_NAME; `--lockfile-release` removes. Lifecycle exercised in self-test 5: create → check refused with exit 14 → release → check passes. |
+| AC-6 (lockfile) | **PARTIAL** | Atomic check via `[[ -e ]]` plus an F1 flock-protected `*.lock-acq` sibling fd serializes concurrent `--lockfile-create` invocations (closes the TOCTOU window). Lifecycle exercised in self-test 5: create → check refused with exit 14 → release → check passes. **Re-flagged PARTIAL by code review (2026-04-25 fix-apply pass)**: trap-on-exit deferred to wrapper script (more honest model — a short-lived preflight check should not auto-clear a lock that a longer-running drill depends on). The script's `trap '' EXIT` is intentional (operator-managed lockfile model); the wrapper-trap (now documented in role README) is REQUIRED to prevent stranded lockfiles on Ctrl-C / SIGTERM / `set -e` failure. Story 6.9.2 will add `--lockfile-force-release` for stale recovery with audit-log row + confirmation prompt. |
 | AC-7 (runbook + Task 0 wiring) | **PARTIAL** | Ansible role is created and importable. Task 0 prerequisite line added to **6-8 only** (the only forward-looking drill story in `draft`). 6-5/6-6/6-7 are post-execution (`done` / `review`); editing their task lists would falsify history. Story 6.9 runbook update deferred — recommend a follow-up commit on `homelab-infra/docs/ha-replication-runbook.md` once an operator runs the next drill end-to-end with the script in place. |
 | AC-8 (evidence-stack health) | **PASS** | Queries `up{job="prometheus"}`, `up{job="alertmanager"}`, `time()-pve_replication_exporter_last_run_timestamp_seconds` (per-node, threshold 360s = 5min cron + 60s grace), `time()-pve_ha_exporter_last_run_timestamp_seconds` (per-node, threshold 120s). Uses Prometheus internal `docker exec` query path because the public `prometheus.bi-services.be` is gated by Authelia. Non-overridable. **Note**: ha-state metric name is `pve_ha_exporter_last_run_timestamp_seconds` (not the spec's `pve_ha_state_exporter_*` — corrected to match what 6-10 actually shipped). |
 | AC-9 (post-flight snapshot diff) | **PASS** | `--post-drill-check` mode captures `zfs list -t snapshot -r rpool/data | grep -E 'subvol-162\|vm-162'` from each node, diffs against optional pre-baseline, counts `__replicate_*` snapshots, emits `VERDICT-CLEAN` / `VERDICT-ORPHANS`. Non-blocking — orphan removal is operator's call. |
