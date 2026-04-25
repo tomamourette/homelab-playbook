@@ -198,18 +198,18 @@ development_status:
   epic-6-retrospective: done  # 2026-04-25: retro doc at epic-6-retro-2026-04-25.md
 
   # Epic 7: Reproducibility & Guardrails
-  epic-7: in-progress
+  epic-7: done  # 2026-04-25: retro closes the epic. 11 stories done + 1 done-with-finding + 1 partially-done; 2 backlog (7-13, 7-14) explicitly non-gating. See epic-7-retro-2026-04-25.md.
   7-1-author-ansible-role-pve-host-pve3-storage: done
   7-2-idempotency-test-of-ansible-role-against-fresh-state: done-with-finding  # 2026-04-24: runs 2+3 (PBS-disabled) = changed=0 CONFIRMS idempotency. Run 1 (PBS-enabled) failed on apt-cache refresh (pbs-enterprise 401 — cosmetic, PBS is already installed). Check-mode shows 3 false-positive changed (community.general.zfs check-mode limitation). Real finding: PBS apt task should precheck dpkg before update_cache (new story candidate).
   7-3-implement-ci-guardrail-preventing-ha-ct-on-non-replicable-storage: done
   7-4-update-terraform-module-defaults: done
   7-5-update-architecture-docs-to-reflect-target-state: review  # 2026-04-24: architecture doc 342→449 lines; all current-state facts (cluster HW, pve3 Option-D storage, NFS, PBS, replication + monitoring, known gaps); HA placeholder section deferred to 6-9
   7-6-enable-weekly-zfs-scrub-automation: done
-  7-7-retrospective-and-memory-updates: backlog  # POOL F — end-of-project. blocked_by: 6-9, 7-5 | blocks: nothing (terminal)
+  7-7-retrospective-and-memory-updates: done  # 2026-04-25: retro doc at epic-7-retro-2026-04-25.md (this story IS the retrospective). POOL F closed.
   7-8-dhcp-reservations-for-pve-macs-on-asus-router: done  # 2026-04-24
   7-9-ansible-pve-node-bootstrap-playbook: done  # 2026-04-24 — dev + code review (8H/14M/22L findings) + adversarial review (15 findings, 2 catastrophic) all resolved; idempotency proven on pve2 (runs: 11 → 1 → 0 changed; check mode: 0 changed); R1 used from-iso (inline not supported on PVE 9.1.7); R2 scoped bridge-ports replace with before/after anchors
   7-10-pve3-bios-fixed-vram-24gb-guide: done  # guide authored; execution pending Epic 3 Story 3.2
   7-11-alertmanager-and-ntfy-push-channel: done  # 2026-04-24 — All reviews closed + 13/13 E2E pass post-fix. R1+R2+R4+R5+R6+M1+M2+M3 landed via fix-apply. R3 (CF token rotation) resolved via vault-backed flow: token now in vault_cloudflare_api_token, synced to terraform.tfvars + CT101 .env by playbooks/sync-cloudflare-token.yml. LE certs issued for llama/ntfy/alertmanager (Let's Encrypt R12/R13). Gotcha documented: docker compose restart ≠ re-read .env (need up -d --force-recreate). Absorbed scope of 7-12 for the CF token path. blocked_by: 6-2 (done) | blocks: 6-3 (now unblocked)
   7-12-ansible-vault-secrets-rendering: partially-done  # 2026-04-24 — CF token path COMPLETE via sync-cloudflare-token.yml. Remaining scope (other secrets: pve_token_secret, PORTAINER_AGENT_SECRET, TRAEFIK_ADMIN_PASSWORD_HASH, dev_vm_password, Authelia secrets etc.) deferred until they need rotation or a new consumer. Pattern is proven; extending it is mechanical. blocked_by: none | blocks: none
   7-13-pve-ha-rules-reconcile-mode: backlog  # NEW 2026-04-25 — surfaced by 6-3 adversarial R3: pve-ha-rules role only checks resource/rule existence, does NOT reconcile field drift (nodes/strict/comment/resources/state/max_relocate). 358-line draft, 7 ACs, parse-existing-config pattern from failback.yml. NEEDS OPERATOR CONFIRMATION inline: state_managed_by_operator default-on for project CTs (151/250), default-off for always-on infra. blocked_by: 6-3 (done) | blocks: nothing
-  epic-7-retrospective: optional
+  epic-7-retrospective: done  # 2026-04-25: retro doc at epic-7-retro-2026-04-25.md
