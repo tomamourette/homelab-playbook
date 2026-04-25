@@ -46,7 +46,8 @@ epic:
   id: 9
   name: "Hybrid Gemma Serving — Dual-Backend Orchestration"
   parent_initiative: "Epic 8 (PVE3 + Local LLM)"
-  status: pending
+  status: pending  # Sprint 4 priority Story 9.22 still required for MVP feature-complete
+  mvp_status: operational  # Sprint 3 EXIT GATE closed 2026-04-25; MVP serving production traffic via OWUI + LiteLLM. KNOWN GAP: gemma4-auto tool-call agent loop non-functional (Sprint 4 priority Story 9.22). Production-reliable aliases: gemma4-26b-text, gemma4-e4b-vision. gemma4-auto works for text + passive-image (80% case).
   start_date: "2026-04-25"
   end_date: null  # BMad rule: no time estimates; sequencing only
   total_stories: 21
@@ -504,8 +505,9 @@ sprints:
   # ==========================================================================
   - id: sprint-3
     name: "Tool-call agent loop + LiteLLM gateway"
-    status: pending
+    status: completed
     sequence: 3
+    completed_at: "2026-04-25"
     goal: |
       The 26B reasoner can mid-stream emit a tool_calls for analyze_image, the
       proxy intercepts the call, executes it against E4B with the original image
@@ -717,12 +719,69 @@ sprints:
           Sprint 3 verification sub-task during 9.16 integration testing.
       - id: "9.17"
         title: "Configure clients (Open WebUI, Continue.dev, Cursor, phone) with virtual key + Prometheus + Grafana dashboard"
-        status: pending
-        owner: unassigned
+        status: completed
+        owner: claude-coder
+        completed_at: "2026-04-25"
         depends_on: ["9.16"]
         risks: ["R7"]  # Tailscale outage — LAN fallback documented
         is_exit_gate: true
         ac_coverage: ["AC-6", "AC-8", "AC-9", "AC-10"]
+        evidence: "_bmad-output/implementation-artifacts/9-17-mvp-cutover-evidence.md"
+        notes: |
+          SPRINT 3 EXIT GATE CLOSED 2026-04-25 (claude-coder). All 8 ACs PASS.
+
+          AC-1 vault enrolment: vault_litellm_master_key encrypted into
+          inventories/homelab/host_vars/ct-ai-01/vault.yml (new host_vars
+          dir for ct-ai-01); litellm-gateway role re-applied idempotently
+          (ok=15 changed=0); /tmp/litellm-master-key-9.16.txt shredded
+          after vault round-trip + auth verified.
+
+          AC-2 OWUI repointed: stopped + recreated container with
+          OPENAI_API_BASE_URLS=http://127.0.0.1:4000/v1 (was :8000) and
+          OPENAI_API_KEYS=$LITELLM_MASTER_KEY (was 'noop'). Healthy in
+          ~30 s; named volume open-webui preserved (chat history intact);
+          /v1/models through OWUI returns 3 aliases.
+
+          AC-3 Prometheus: widened litellm_listen_host 127.0.0.1 → 0.0.0.0
+          (LAN-private, bearer-auth-protected; ADR-009 still preserved
+          for inter-service, ADR-010 still preserved for public exposure).
+          Added 'litellm-gateway' scrape job in
+          homelab-apps/stacks/observability/config/prometheus.yml with
+          metrics_path: /metrics/ (trailing slash, avoids 307 hop). Target
+          shows UP after /-/reload. Live metrics show 200s for all 3
+          aliases.
+
+          AC-4 Grafana: authored
+          homelab-apps/stacks/observability/dashboards/litellm-gemma.json
+          (uid hybrid-gemma-litellm, 10 panels: req rate, error rate,
+          in-flight, 24h total, failure ratio, gateway up/down, p50/p95
+          total latency, p50/p95 TTFT, token throughput rate, cumulative
+          tokens). Auto-loaded by file provisioner; verified via
+          /api/search?query=LiteLLM (Remote-User auth-proxy header).
+
+          AC-5 5 services healthy: gemma-hybrid-proxy, llama-server,
+          llama-server-26b, litellm-gateway all systemctl-active;
+          open-webui docker container Up healthy.
+
+          AC-6 client configs documented in new
+          homelab-playbook/docs/runbooks/hybrid-gemma-clients.md
+          (Open WebUI, Continue.dev, Cursor, mobile via OWUI + direct).
+          Off-LAN access caveat: ct-ai-01 not yet in Tailscale (follow-up);
+          OWUI via chat.bi-services.be covers off-LAN chat.
+
+          AC-7 Sprint 4 9.22 limitation prominent in evidence file
+          (under TL;DR) and runbook (under Stack overview). gemma4-auto
+          tool-call agent loop ships non-functional in production;
+          gemma4-26b-text and gemma4-e4b-vision are production-reliable;
+          gemma4-auto works for text + passive image (the 80% case).
+
+          AC-8 sprint status updated this commit.
+
+          Snapshot retained: pre-9-17-mvp-cutover-20260425-2030.
+
+          MVP STATUS: operational (with documented Sprint 4 9.22 gap).
+          Sprint 4 priority track is now the next work; Sprint 4 audio
+          deferred track gated on llama.cpp #21334 trigger.
 
   # ==========================================================================
   # SPRINT 4 — Priority fix + Deferred audio/hardening
@@ -1156,7 +1215,7 @@ velocity:
       9-11-cutover-evidence.md.
   sprint_3:
     stories_total: 6
-    stories_completed: 5  # 9.12, 9.13, 9.14, 9.15, 9.16
+    stories_completed: 6  # 9.12, 9.13, 9.14, 9.15, 9.16, 9.17 — EXIT GATE CLOSED 2026-04-25
     notes: |
       9.12 completed 2026-04-25 (claude-coder). analyze_image tool definition
       locked + registry plumbing (get_tool_by_name, augment_request_with_tools,
