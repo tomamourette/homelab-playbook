@@ -1,0 +1,18 @@
+=== pve1 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_13:45:03  2026-04-25_14:00:00   3.669286          0 OK
+100-1      Yes        local/pve3            2026-04-25_13:45:07  2026-04-25_14:00:00   2.425728          0 OK
+101-0      Yes        local/pve2            2026-04-25_13:45:09  2026-04-25_14:00:00   4.119184          0 OK
+101-1      Yes        local/pve3            2026-04-25_13:45:13  2026-04-25_14:00:00   3.477307          0 OK
+
+=== pve2 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+151-0      Yes        local/pve1            2026-04-25_13:45:00  2026-04-25_14:00:00   3.357756          0 OK
+151-1      Yes        local/pve3            2026-04-25_13:45:03  2026-04-25_14:00:00   1.873034          0 OK
+
+=== pve3 ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_13:52:01  2026-04-25_13:53:00   2.579023          0 OK
+162-1      Yes        local/pve2            2026-04-25_13:52:03  2026-04-25_13:53:00   2.242151          0 OK
+250-0      Yes        local/pve1            2026-04-25_13:30:00  2026-04-25_14:00:00   5.509144          0 OK
+250-1      Yes        local/pve2            2026-04-25_13:30:05  2026-04-25_14:00:00   3.048353          0 OK

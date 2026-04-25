@@ -1,0 +1,1 @@
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"node":"pve1"},"value":[1777117955.912,"4"]},{"metric":{"node":"pve2"},"value":[1777117955.912,"2"]},{"metric":{"node":"pve3"},"value":[1777117955.912,"4"]}]}}
