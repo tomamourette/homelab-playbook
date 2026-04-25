@@ -1,0 +1,131 @@
+=== Story 6.9.1 — drill-safety-preflight self-test ===
+host: ct-dev-homelab
+user: developer
+date_utc: 2026-04-25T11:58:57Z
+date_brussels: Sat 2026-04-25 13:58 CEST
+
+--- Test 1: --help ---
+drill-safety-preflight.sh — gate HA drill execution on cluster + market-hours safety
+
+USAGE
+  drill-safety-preflight.sh [--check] [--drill-name NAME] [--drill-script PATH]
+  drill-safety-preflight.sh --force --reason "..." [--drill-name NAME] [--drill-script PATH]
+  drill-safety-preflight.sh --lockfile-create [--drill-name NAME] [--reason "..."]
+  drill-safety-preflight.sh --lockfile-release
+  drill-safety-preflight.sh --post-drill-check --drill-name NAME [--evidence-pre DIR --evidence-post DIR]
+  drill-safety-preflight.sh --help
+
+
+--- Test 2: --force without --reason (expect exit 2) ---
+Error: --force requires --reason "..." (audit-trail justification mandatory).
+       Example: --force --reason "post-incident validation; operator approved"
+exit=2
+
+--- Test 3: --check (expect exit 0; all 8 gates) ---
+
+Drill safety pre-flight: PASS
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:58 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): SKIP — no --drill-script supplied
+exit=0
+
+--- Test 4: --force --reason "test" (expect exit 0; bypass markers visible only when needed) ---
+
+Drill safety pre-flight: PASS
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:59 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): SKIP — no --drill-script supplied
+exit=0
+
+--- Test 5: lockfile create -> check refused -> release -> check passes ---
++ create
+Lockfile claimed: /tmp/test-drill-lock-469003
+exit=0
++ check (expect exit 14)
+Drill BLOCKED (Gate 1 — lockfile): another drill is in progress.
+  Lockfile: /tmp/test-drill-lock-469003
+  PID=471641
+  STARTED=1777118360
+  STARTED_HUMAN=2026-04-25T11:59:20Z
+  HOSTNAME=ct-dev-homelab
+  USER=developer
+  DRILL_NAME=lock-cycle-test
+  REASON=self-test
+
+  Wait for the drill to complete, or if stale:
+    sudo rm /tmp/test-drill-lock-469003
+
+Drill safety pre-flight: FAIL (exit 14)
+  Gate 1 (lockfile): FAIL — present
+exit=14
++ release
+Lockfile released: /tmp/test-drill-lock-469003
+exit=0
++ check (expect exit 0)
+
+Drill safety pre-flight: PASS
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:59 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): SKIP — no --drill-script supplied
+exit=0
+
+--- Test 6: Gate 8 negative — drill script lacks loop (expect exit 17) ---
+Drill BLOCKED (Gate 8 — loop window): script missing minimum-window observation tail.
+  Script: /tmp/fake-drill-bad.sh
+  Required:
+    - LOOP_DURATION_S=600 (or higher; 10-min minimum to catch for: 5m alerts)
+    - tail-phase comment marker after the inject phase
+  Override with --force --reason "..." only for drills that intentionally
+  do NOT watch for: 5m alerts.
+
+Drill safety pre-flight: FAIL (exit 17)
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:59 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): FAIL — script lacks 600s loop or tail-phase
+exit=17
+
+--- Test 7: Gate 8 positive — drill script has loop + tail-phase (expect exit 0) ---
+
+Drill safety pre-flight: PASS
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:59 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): PASS — script has LOOP_DURATION_S>=600 and tail-phase marker
+exit=0
+
+--- Test 8: Gate 8 bypass with --force --reason (expect exit 0) ---
+
+Drill safety pre-flight: PASS
+  Gate 1 (lockfile): PASS — no in-progress drill
+  Gate 2 (time window): PASS — Sat 2026-04-25 13:59 CEST (outside market hours)
+  Gate 3 (cluster quorum): PASS — 3/3 quorate
+  Gate 4 (replication): PASS — 10 jobs OK, fail_count=0
+  Gate 5 (HA state): PASS — 6/6 resources healthy
+  Gate 6 (evidence stack): PASS — prom/alertmanager up, pvesr+pve-ha exporters fresh
+  Gate 7 (coverage audit): PASS — 4 non-pinned HA resources, all >=2 peers
+  Gate 8 (loop window): BYPASS — drill script lacks LOOP_DURATION_S>=600 or tail-phase; --force reason="instant-fire alerts only"
+exit=0
