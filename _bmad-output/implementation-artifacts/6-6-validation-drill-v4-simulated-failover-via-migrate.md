@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.6
 title: Validation drill V4 — simulated failover via ha-manager migrate
@@ -9,7 +9,7 @@ author: BMad SM (via planner agent)
 
 # Story 6.6: Validation drill V4 — simulated failover via ha-manager migrate
 
-Status: review
+Status: done
 
 > **PVE 9.1+ note:** uses HA rules (node-affinity), not legacy HA groups — see Story 6.3 sprint-change note and `/home/developer/.claude/projects/-home-developer-workspace-homelab/memory/project_pve9_ha_rules_migration.md`. The `migrate` subcommand has moved to `ha-manager crm-command migrate <sid> <node>` (verified live on this cluster 2026-04-25 via `ha-manager help migrate`). The legacy form `ha-manager migrate <sid> <node>` may still work via a compatibility shim; the canonical form is the `crm-command` namespace. `nofailback` is now per-resource `failback` (inverted boolean). Terminology updated below where it appears.
 
@@ -454,14 +454,14 @@ ssh pve3 "pvesr status"
 | AC-4 Replication direction flip | PASS (Outcome: auto-flip in-place) | `during/pvesr-postfwd.txt`, `post/pvesr-post.txt` | Proxmox rewrote `source` field within one cycle. `162-0`/`162-1` source pve3 → pve2 → pve3. FailCount=0. Cosmetic stale comment on `162-1`. |
 | AC-5 ntfy notification | PASS (Outcome B documented) | `during/alertmanager-alerts-during.json`, `post/alertmanager-alerts-post.json` | Only `AlertmanagerDeadManSwitch` (info heartbeat) firing. No HA-migration alert exists; backlog note captured. Expected gap, does not block 6.7. |
 | AC-6 Migrate-back | PASS (GREEN) | `during/ha-manager-back-poll.txt`, `post/lrm-journal-back.txt` | Outage 12 s, wall-clock 26 s, round-trip 111 s — all GREEN. Heartbeat survived. |
-| AC-7 Runbook V4 section | PASS | `homelab-infra/docs/ha-replication-runbook.md` | New `### V4 Drill Results (2026-04-25)` section inserted above `### End-to-end drill status`, ~70 lines. |
+| AC-7 Runbook V4 section | PASS | `homelab-infra/docs/ha-replication-runbook.md` | New `### V4 Drill Results (2026-04-25)` section inserted above `### End-to-end drill status`, ~53 lines (verified via `git show 59396ee --stat`). |
 | AC-8 Story 6.10 alert chain | PASS | `post/ac8-prometheus.txt` | `pve_ha_resource_state` captured both transitions via `exported_node` label mutation. Honest query: `count by (exported_node) (count_over_time(...[20m]))` returns 3 distinct samples each for pve2 and pve3. `error/fence/recovery` always 0; `PVEHAResourceUnhealthy` correctly silent. |
 
 ### Files touched
 
 **Modified:**
 
-- `homelab-infra/docs/ha-replication-runbook.md` — added V4 Drill Results section (~70 lines, between V3 Drill Results and End-to-end drill status)
+- `homelab-infra/docs/ha-replication-runbook.md` — added V4 Drill Results section (~53 lines (verified via `git show 59396ee --stat`), between V3 Drill Results and End-to-end drill status)
 - `homelab-playbook/_bmad-output/implementation-artifacts/6-6-validation-drill-v4-simulated-failover-via-migrate.md` — frontmatter `status: draft → review`; this Dev Agent Record appended
 
 **Created:**
@@ -503,3 +503,6 @@ ssh pve3 "pvesr status"
 - Optional Epic 7 backlog: add a `PVEClusterCTMigrated` alert rule (would close Outcome B notification gap); not blocking.
 - Optional infra follow-up: investigate the `prometheus` container clean-exit at 09:24:30Z — likely a one-off but worth confirming no recurring pattern.
 
+## Change Log
+
+- **2026-04-25 — fix-apply pass**: Applied F1 (runbook alert filter scope + graceful-vs-fence distinction), F2 (what migration does/does not preserve section), F3 (line-count discrepancy), F4 (changes()-vs-label-mutation discoverability — moved from V4 inline to runbook §Monitoring/Alert Verification), F5 (operational guardrails: migrate spacing, flip latency, AC-8 evidence chain caveat), F6 (cosmetic 162-1 comment fix). Adversarial R2+R4 → Story 6-6-1 (drafted in parallel); R3 + code L2 → Story 6-10-3 (drafted in parallel); R7+R8 → fold into existing 6-9-1; R1 outcome-B → fold into existing 6-10-1.
