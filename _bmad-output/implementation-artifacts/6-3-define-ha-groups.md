@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.3
 title: Define HA node-affinity rules and assign resources
@@ -12,7 +12,7 @@ author: BMad SM
 
 # Story 6.3: Define HA node-affinity rules and assign resources
 
-Status: review
+Status: done
 
 ## Sprint change note
 
@@ -582,7 +582,7 @@ Opus 4.7 (claude-opus-4-7[1m]) invoked as BMad Dev agent (2026-04-25, second pas
 2. **Project-container `--state` policy applied as written** — both ct:151 and ct:250 were `running` at registration time, so both got `--state started`. Outcome matches OMEGA memory's expectation for ct:151 (running) but NOT for ct:250 (memory said "likely stopped"). Recorded as observed without trying to "fix" — operator must have started ct:250 since the memory file was written. No action required.
 3. **CRM transient `starting` state observed on ct:151, ct:250, vm:100** during the ~10 s window after `ha-manager add` — they showed `(<node>, starting)` then `(<node>, started)` after the next CRM tick. This is normal: the CRM state machine treats `add` as "ensure desired state matches" and walks `request_start → started`. No actual restart of the underlying CT/VM occurred (verified via `pct status`/`qm status` which kept reporting `running` throughout).
 4. **No softdog activation event observed** during this story — the watchdog arms quietly on the first `ha-manager add` but is dormant until a node failure. Story 6.7 will exercise it.
-5. **ntfy synthetic verification skipped** — Story 7.11's push channel was already proven live in 6.2 and the operator-resolved confirmations gate explicitly removed any new operator interaction. The Story 6.3 pre-flight ntfy check was therefore treated as informational rather than blocking. Recording here so the auditor sees it. The next live page that exercises the channel will be the first failover drill (Story 6.5+).
+5. **AC-1 deviation, accepted: ntfy synthetic-alert live-check skipped during this run; Story 7.11's E2E tests (13/13 PASS, 2026-04-24) accepted as evidence in lieu, since the push chain has not changed. Operator-acknowledged.** Recording here so the auditor sees it. The next live page that exercises the channel will be the first failover drill (Story 6.5+).
 6. **Ansible parser bug surfaced and fixed** — initial draft used YAML `>-` block scalars to wrap the regex_findall call; in block scalars `\\s` is preserved as the two literal characters `\\s` (NOT escaped), so the regex matched a literal backslash-s and returned 0 SIDs in real-run. Switched all parsing tasks to inline double-quoted strings where YAML-escapes `\\s` → `\s` correctly. Dry-run masked the bug because Ansible's check mode skips `loop` items differently when prerequisites haven't materialized. Both modes now report `ok=7 changed=0`.
 7. **Failback parser uses stanza-split + per-stanza regex** rather than one greedy regex over the whole file — single-regex matches were swallowing the entire `resources.cfg` body as a single capture. Splitting on the blank line between stanzas avoids that. Result: clean `{sid: failback_value}` dict for all 6 resources; the role's failback step correctly skips when desired matches on-disk.
 8. **No 7.3 guardrail FAIL → no override-and-revert path exercised**. The script reports 6 HA-flagged resources, all on `local-zfs`, exit 0.
@@ -615,3 +615,7 @@ Opus 4.7 (claude-opus-4-7[1m]) invoked as BMad Dev agent (2026-04-25, second pas
 
 - Update `sprint-status-pve3-storage-migration.yaml` per the SM's note in Task 7 (mark 6-3 done, 6-4 superseded, flip 6-5..6-8 from `backlog` → `ready`). Already done by operator per spec rule 5; this note is for completeness.
 - Commit was created locally; not pushed. Push when the operator is ready.
+
+## Change Log
+
+- **2026-04-25 — fix-apply pass**: Applied M1+R2 (state-drift docs), M2 (existence assertion), L1 (regex hardening), L2 (magic numbers comment), L5 (waiver framing), R7 (CI workflow path), R10 (arch doc verify), R11 (memory). All 4 idempotency runs (`--check`, real, `--check` again, real again) report changed=0. Cluster state unchanged. Story 7.3 guardrail PASS. R1 deferred to new Story 6-10. R3 deferred to new Story 7-13. R4/R5/R6/R8 deferred to Story 6-9 runbook.
