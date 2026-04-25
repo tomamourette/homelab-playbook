@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.9
 title: Document validated HA behavior in runbook (Epic 6 exit gate)
@@ -9,7 +9,7 @@ author: BMad SM (via planner agent)
 
 # Story 6.9: Document validated HA behavior in runbook (Epic 6 exit gate)
 
-Status: review
+Status: done
 
 > **PVE 9.1+ note:** uses HA rules (node-affinity), not legacy HA groups — see Story 6.3 sprint-change note and `/home/developer/.claude/projects/-home-developer-workspace-homelab/memory/project_pve9_ha_rules_migration.md`. Lookup commands: `ha-manager rules list` / `ha-manager rules config`. `nofailback` is now per-resource `failback` (inverted boolean). Migrate command moved to `ha-manager crm-command migrate <sid> <node>`. Runbook content authored under this story uses the PVE 9.1+ terminology; legacy `nofailback`/group references preserved only when documenting equivalence for cross-version operator comprehension. Drill semantics — RPO/RTO, "what happens when node X dies", recovery procedures — are unchanged.
 
@@ -420,3 +420,4 @@ homelab-playbook/_bmad-output/implementation-artifacts/
 ### Change Log
 
 - **2026-04-25 — Story executed end-to-end; runbook synthesis appended Per-Resource RPO matrix, Failover scenarios A/B/C, Recovery procedures cookbook, Audit-first principle, Two-node-loss, Pinned-node permanent failure, Empirical validation cross-links, Memory cross-links, Operator quickref sections. Architecture doc HA section updated. Status flipped `draft → review`.**
+- **2026-04-25 — fix-apply pass**: Applied F1-F12 review findings (3 HIGH + 3 MED + 6 LOW). Highlights: F2 retracted false alert-gap claim per V5 retro typo correction; F3 added PBS topology dependency warning to Scenario C; F4 added "no master" re-election window to Scenario A; F5 wrapped two-node-loss UNSAFE in callout; F7 made `mv` cookbook entry sequence prescriptive; F8 added drill-safety-preflight.sh reference; F9 reordered quickref to quorum-first. New backlog: Story 6-12 PBS topology redundancy (drafted in parallel).
