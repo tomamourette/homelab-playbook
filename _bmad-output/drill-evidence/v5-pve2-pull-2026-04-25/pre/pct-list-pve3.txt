@@ -1,0 +1,4 @@
+VMID       Status     Lock         Name                
+160        running                 ct-ai-01            
+162        running                 ct-quant-trading    
+250        running                 ct-dev-homelab      

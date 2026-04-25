@@ -1,0 +1,56 @@
+local: 100-0
+	comment smarthome HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 100-1
+	comment smarthome HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-0
+	comment ct-docker-01 HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-1
+	comment ct-docker-01 HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */1
+	source pve3
+
+local: 162-1
+	comment ct-quant-trading HA replica (target rotates with HA)
+	target pve2
+	rate 50
+	schedule */1
+	source pve3
+
+local: 250-0
+	comment ct-dev-homelab HA replica to pve1
+	target pve1
+	rate 50
+	schedule */30
+	source pve3
+
+local: 250-1
+	comment ct-dev-homelab HA replica to pve2
+	target pve2
+	rate 50
+	schedule */30
+	source pve3
+

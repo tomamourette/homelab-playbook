@@ -1,0 +1,105 @@
+=== ntfy delivery validation ===
+Receivers in alertmanager (via API)
+global:
+  resolve_timeout: 5m
+  http_config:
+    follow_redirects: true
+    enable_http2: true
+  smtp_hello: localhost
+  smtp_require_tls: true
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  opsgenie_api_url: https://api.opsgenie.com/
+  wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+  victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+  telegram_api_url: https://api.telegram.org
+  webex_api_url: https://webexapis.com/v1/messages
+route:
+  receiver: ntfy-urgent
+  group_by:
+  - alertname
+  - node
+  - jobid
+  continue: false
+  routes:
+  - receiver: ntfy-urgent
+    matchers:
+    - severity=~"^[Cc]ritical$|^CRITICAL$"
+    continue: false
+    group_wait: 10s
+    repeat_interval: 4h
+  - receiver: ntfy-default
+    matchers:
+    - severity=~"^[Ww]arning$|^WARNING$"
+    continue: false
+  - receiver: ntfy-low
+    matchers:
+    - severity=~"^[Ii]nfo$|^INFO$"
+    continue: false
+    repeat_interval: 1d
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+receivers:
+- name: ntfy-urgent
+  webhook_configs:
+  - send_resolved: true
+    http_config:
+      basic_auth:
+        username: prometheus-bot
+        password_file: /etc/alertmanager/ntfy-password
+      follow_redirects: true
+      enable_http2: true
+    url: <secret>
+    url_file: ""
+    max_alerts: 0
+- name: ntfy-default
+  webhook_configs:
+  - send_resolved: true
+    http_config:
+      basic_auth:
+        username: prometheus-bot
+        password_file: /etc/alertmanager/ntfy-password
+      follow_redirects: true
+      enable_http2: true
+    url: <secret>
+    url_file: ""
+    max_alerts: 0
+- name: ntfy-low
+  webhook_configs:
+  - send_resolved: true
+    http_config:
+      basic_auth:
+        username: prometheus-bot
+        password_file: /etc/alertmanager/ntfy-password
+      follow_redirects: true
+      enable_http2: true
+    url: <secret>
+    url_file: ""
+    max_alerts: 0
+templates: []
+
+
+=== Webhook receivers (any URL containing ntfy) ===
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  opsgenie_api_url: https://api.opsgenie.com/
+  wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+  victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+  telegram_api_url: https://api.telegram.org
+  webex_api_url: https://webexapis.com/v1/messages
+  receiver: ntfy-urgent
+  - receiver: ntfy-urgent
+  - receiver: ntfy-default
+  - receiver: ntfy-low
+
+=== Receivers list ===
+amtool: error: unexpected receivers
+
+
+=== Alert send-times (when each pve2 alert fired) ===
+  ServiceDown :: 192.168.50.151:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T10:46:07.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T09:35:22.748Z
+  PVEHAExporterMissing :: - :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T10:46:01.176Z
+  PVEHAResourceUnhealthy :: 192.168.50.201:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T10:46:31.176Z
+  PVEHAResourceUnhealthy :: 192.168.50.203:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T10:46:31.176Z
+  ServiceDown :: 192.168.50.202:9100 :: severity=critical :: receivers=['ntfy-urgent'] :: startsAt=2026-04-25T10:46:07.748Z

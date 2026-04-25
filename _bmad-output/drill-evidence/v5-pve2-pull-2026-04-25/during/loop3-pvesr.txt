@@ -1,0 +1,132 @@
+=== Loop 3: pvesr status (every 30s, 10 iters max) ===
+T_PULL_EPOCH=1777113641
+===== [T+21s iter=1 10:41:02] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+21s iter=1 10:41:03] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:41:00  2026-04-25_12:42:00   2.558905          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03  2026-04-25_12:42:00   2.363637          0 SYNCING
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+53s iter=2 10:41:34] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+53s iter=2 10:41:35] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:41:00  2026-04-25_12:42:00   2.558905          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+85s iter=3 10:42:06] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+85s iter=3 10:42:07] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:42:00  2026-04-25_12:43:00    2.33776          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+116s iter=4 10:42:37] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+116s iter=4 10:42:38] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:42:00  2026-04-25_12:43:00    2.33776          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+148s iter=5 10:43:09] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+148s iter=5 10:43:09] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:43:00  2026-04-25_12:44:00   2.330494          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+179s iter=6 10:43:40] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+179s iter=6 10:43:41] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:43:00  2026-04-25_12:44:00   2.330494          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+211s iter=7 10:44:12] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+211s iter=7 10:44:13] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:44:00  2026-04-25_12:45:00   2.387362          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+242s iter=8 10:44:43] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+===== [T+242s iter=8 10:44:44] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:44:00  2026-04-25_12:45:00   2.387362          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+274s iter=9 10:45:15] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02                    -   2.396857          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 100-0 --scan local-zfs local-zfs:vm-100-disk-0 local-zfs:vm-100-disk-1 --last_sync 1777113002' failed: exit code 255
+100-1      Yes        local/pve3            2026-04-25_12:45:05  2026-04-25_13:00:00    2.40573          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09                    -   1.608685          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 101-0 --scan local-zfs local-zfs:subvol-101-disk-0 --last_sync 1777113009' failed: exit code 255
+101-1      Yes        local/pve3            2026-04-25_12:45:09  2026-04-25_13:00:00   3.381277          0 OK
+===== [T+274s iter=9 10:45:16] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:45:00  2026-04-25_12:46:00   2.387694          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+===== [T+305s iter=10 10:45:46] PVE1 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02                    -   2.396857          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 100-0 --scan local-zfs local-zfs:vm-100-disk-0 local-zfs:vm-100-disk-1 --last_sync 1777113002' failed: exit code 255
+100-1      Yes        local/pve3            2026-04-25_12:45:05  2026-04-25_13:00:00    2.40573          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09                    -   1.608685          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 101-0 --scan local-zfs local-zfs:subvol-101-disk-0 --last_sync 1777113009' failed: exit code 255
+101-1      Yes        local/pve3            2026-04-25_12:45:09  2026-04-25_13:00:00   3.381277          0 OK
+===== [T+305s iter=10 10:45:47] PVE3 view =====
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:45:00  2026-04-25_12:46:00   2.387694          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+

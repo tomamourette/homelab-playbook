@@ -1,0 +1,782 @@
+=== Loop 2: ha-manager status (every 5s, 60 iters max) ===
+T_PULL_EPOCH=1777113641
+===== [T+21s iter=1 10:41:04] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:40:56 2026)
+lrm pve1 (active, Sat Apr 25 12:40:59 2026)
+lrm pve2 (shutdown mode, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:40:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+28s iter=2 10:41:09] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:06 2026)
+lrm pve1 (active, Sat Apr 25 12:41:09 2026)
+lrm pve2 (shutdown mode, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+33s iter=3 10:41:15] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:06 2026)
+lrm pve1 (active, Sat Apr 25 12:41:09 2026)
+lrm pve2 (shutdown mode, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+39s iter=4 10:41:21] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:16 2026)
+lrm pve1 (active, Sat Apr 25 12:41:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+45s iter=5 10:41:27] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:26 2026)
+lrm pve1 (active, Sat Apr 25 12:41:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+51s iter=6 10:41:33] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:26 2026)
+lrm pve1 (active, Sat Apr 25 12:41:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+57s iter=7 10:41:39] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:36 2026)
+lrm pve1 (active, Sat Apr 25 12:41:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+63s iter=8 10:41:45] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:36 2026)
+lrm pve1 (active, Sat Apr 25 12:41:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+69s iter=9 10:41:51] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:46 2026)
+lrm pve1 (active, Sat Apr 25 12:41:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+75s iter=10 10:41:57] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:56 2026)
+lrm pve1 (active, Sat Apr 25 12:41:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+81s iter=11 10:42:03] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:41:56 2026)
+lrm pve1 (active, Sat Apr 25 12:41:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+87s iter=12 10:42:09] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:06 2026)
+lrm pve1 (active, Sat Apr 25 12:41:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:41:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+93s iter=13 10:42:15] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:06 2026)
+lrm pve1 (active, Sat Apr 25 12:42:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+99s iter=14 10:42:20] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:16 2026)
+lrm pve1 (active, Sat Apr 25 12:42:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+104s iter=15 10:42:26] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:26 2026)
+lrm pve1 (active, Sat Apr 25 12:42:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, relocate)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+110s iter=16 10:42:32] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:26 2026)
+lrm pve1 (active, Sat Apr 25 12:42:30 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, relocate)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+116s iter=17 10:42:38] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:36 2026)
+lrm pve1 (active, Sat Apr 25 12:42:30 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+122s iter=18 10:42:44] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:36 2026)
+lrm pve1 (active, Sat Apr 25 12:42:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+128s iter=19 10:42:50] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:46 2026)
+lrm pve1 (active, Sat Apr 25 12:42:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+134s iter=20 10:42:56] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:46 2026)
+lrm pve1 (active, Sat Apr 25 12:42:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+140s iter=21 10:43:02] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:42:56 2026)
+lrm pve1 (active, Sat Apr 25 12:42:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+146s iter=22 10:43:08] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:06 2026)
+lrm pve1 (active, Sat Apr 25 12:42:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:42:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+152s iter=23 10:43:14] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:06 2026)
+lrm pve1 (active, Sat Apr 25 12:43:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, starting)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+158s iter=24 10:43:20] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:16 2026)
+lrm pve1 (active, Sat Apr 25 12:43:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+164s iter=25 10:43:26] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:16 2026)
+lrm pve1 (active, Sat Apr 25 12:43:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+170s iter=26 10:43:32] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:26 2026)
+lrm pve1 (active, Sat Apr 25 12:43:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+176s iter=27 10:43:37] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:36 2026)
+lrm pve1 (active, Sat Apr 25 12:43:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+181s iter=28 10:43:43] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:36 2026)
+lrm pve1 (active, Sat Apr 25 12:43:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+187s iter=29 10:43:49] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:46 2026)
+lrm pve1 (active, Sat Apr 25 12:43:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+193s iter=30 10:43:55] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:46 2026)
+lrm pve1 (active, Sat Apr 25 12:43:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:50 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+199s iter=31 10:44:01] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:43:56 2026)
+lrm pve1 (active, Sat Apr 25 12:43:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+205s iter=32 10:44:07] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:06 2026)
+lrm pve1 (active, Sat Apr 25 12:43:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:43:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+211s iter=33 10:44:13] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:06 2026)
+lrm pve1 (active, Sat Apr 25 12:44:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+217s iter=34 10:44:19] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:16 2026)
+lrm pve1 (active, Sat Apr 25 12:44:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+223s iter=35 10:44:25] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:16 2026)
+lrm pve1 (active, Sat Apr 25 12:44:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:20 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+229s iter=36 10:44:31] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:26 2026)
+lrm pve1 (active, Sat Apr 25 12:44:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+235s iter=37 10:44:37] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:36 2026)
+lrm pve1 (active, Sat Apr 25 12:44:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+241s iter=38 10:44:43] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:36 2026)
+lrm pve1 (active, Sat Apr 25 12:44:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+247s iter=39 10:44:49] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:46 2026)
+lrm pve1 (active, Sat Apr 25 12:44:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:39 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+253s iter=40 10:44:54] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:46 2026)
+lrm pve1 (active, Sat Apr 25 12:44:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+258s iter=41 10:45:00] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:56 2026)
+lrm pve1 (active, Sat Apr 25 12:44:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+264s iter=42 10:45:06] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:44:56 2026)
+lrm pve1 (active, Sat Apr 25 12:44:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:44:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+270s iter=43 10:45:12] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:06 2026)
+lrm pve1 (active, Sat Apr 25 12:45:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+276s iter=44 10:45:18] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:16 2026)
+lrm pve1 (active, Sat Apr 25 12:45:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+282s iter=45 10:45:24] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:16 2026)
+lrm pve1 (active, Sat Apr 25 12:45:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+288s iter=46 10:45:30] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:26 2026)
+lrm pve1 (active, Sat Apr 25 12:45:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+294s iter=47 10:45:36] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:26 2026)
+lrm pve1 (active, Sat Apr 25 12:45:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+300s iter=48 10:45:42] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:36 2026)
+lrm pve1 (active, Sat Apr 25 12:45:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:40 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+306s iter=49 10:45:48] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:46 2026)
+lrm pve1 (active, Sat Apr 25 12:45:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:40 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+312s iter=50 10:45:54] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:46 2026)
+lrm pve1 (active, Sat Apr 25 12:45:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+318s iter=51 10:46:00] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:56 2026)
+lrm pve1 (active, Sat Apr 25 12:45:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+324s iter=52 10:46:06] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:45:56 2026)
+lrm pve1 (active, Sat Apr 25 12:45:59 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:45:59 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+330s iter=53 10:46:12] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:06 2026)
+lrm pve1 (active, Sat Apr 25 12:46:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+336s iter=54 10:46:17] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:16 2026)
+lrm pve1 (active, Sat Apr 25 12:46:09 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:09 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+341s iter=55 10:46:23] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:16 2026)
+lrm pve1 (active, Sat Apr 25 12:46:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:20 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+347s iter=56 10:46:29] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:26 2026)
+lrm pve1 (active, Sat Apr 25 12:46:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+353s iter=57 10:46:35] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:26 2026)
+lrm pve1 (active, Sat Apr 25 12:46:29 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+359s iter=58 10:46:41] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:36 2026)
+lrm pve1 (active, Sat Apr 25 12:46:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:40 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+365s iter=59 10:46:47] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:46 2026)
+lrm pve1 (active, Sat Apr 25 12:46:39 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:40 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+===== [T+371s iter=60 10:46:53] =====
+quorum OK
+master pve1 (active, Sat Apr 25 12:46:46 2026)
+lrm pve1 (active, Sat Apr 25 12:46:49 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:46:49 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+

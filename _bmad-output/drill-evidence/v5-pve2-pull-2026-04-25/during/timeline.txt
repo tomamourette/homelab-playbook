@@ -1,0 +1,10 @@
+
+=== DRILL V5 TIMELINE ===
+T_PULL_ISO=2026-04-25T10:40:41Z
+T_PULL_EPOCH=1777113641
+Method: Option A — graceful shutdown -h now
+TARGET_NODE: pve2
+Issued from: jumphost (developer workstation)
+
+T+0 [10:40:41 local]: issuing 'shutdown -h now' to pve2
+T_CUT_SSH_RC=0 at T_PULL+1s

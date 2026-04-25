@@ -1,0 +1,117 @@
+=== Drill V5 POST-event snapshot ===
+TARGET_NODE: pve2 (OFFLINE — drill leaves it down for 6-8)
+Captured at (UTC): Sat Apr 25 10:48:15 UTC 2026
+T_PULL_ISO: 2026-04-25T10:40:41Z
+Delta from T+0: 454s
+
+=== pve1: pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 12:48:16 2026
+Quorum provider:  corosync_votequorum
+Nodes:            2
+Node ID:          0x00000001
+Ring ID:          1.1c4
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      2
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201 (local)
+0x00000003          1 192.168.50.203
+
+=== pve1: pvesr status ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02                    -   2.396857          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 100-0 --scan local-zfs local-zfs:vm-100-disk-0 local-zfs:vm-100-disk-1 --last_sync 1777113002' failed: exit code 255
+100-1      Yes        local/pve3            2026-04-25_12:45:05  2026-04-25_13:00:00    2.40573          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09                    -   1.608685          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 101-0 --scan local-zfs local-zfs:subvol-101-disk-0 --last_sync 1777113009' failed: exit code 255
+101-1      Yes        local/pve3            2026-04-25_12:45:09  2026-04-25_13:00:00   3.381277          0 OK
+
+=== pve1: pct list ===
+VMID       Status     Lock         Name                
+101        running                 ct-docker-01        
+102        running                 ct-media-01         
+151        stopped                 ct-sparkle-cps      
+
+=== pve1: qm list ===
+      VMID NAME                 STATUS     MEM(MB)    BOOTDISK(GB) PID       
+       100 smarthome            running    2048              32.00 11300     
+       999 ubuntu-dev-template  stopped    4096              50.00 0         
+      9000 ubuntu-22.04-cloudimg stopped    2048               2.20 0         
+
+=== pve3: pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 12:48:19 2026
+Quorum provider:  corosync_votequorum
+Nodes:            2
+Node ID:          0x00000003
+Ring ID:          1.1c4
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      2
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201
+0x00000003          1 192.168.50.203 (local)
+
+=== pve3: pvesr status ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:48:00  2026-04-25_12:49:00   2.556023          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+=== pve3: pct list ===
+VMID       Status     Lock         Name                
+160        running                 ct-ai-01            
+162        running                 ct-quant-trading    
+250        running                 ct-dev-homelab      
+
+=== pve3: qm list ===
+
+=== pve2 SSH probe (should fail) ===
+ssh: connect to host 192.168.50.202 port 22: Connection timed out
+
+=== ha-manager status (post) ===
+quorum OK
+master pve1 (active, Sat Apr 25 12:48:16 2026)
+lrm pve1 (active, Sat Apr 25 12:48:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:48:19 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)

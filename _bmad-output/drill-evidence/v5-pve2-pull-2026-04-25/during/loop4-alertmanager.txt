@@ -1,0 +1,162 @@
+=== Loop 4: Alertmanager firing (every 15s, 20 iters max) ===
+T_PULL_EPOCH=1777113641
+===== [T+21s iter=1 10:41:02] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+37s iter=2 10:41:18] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+52s iter=3 10:41:33] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+68s iter=4 10:41:49] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+83s iter=5 10:42:04] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+98s iter=6 10:42:19] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+114s iter=7 10:42:35] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+129s iter=8 10:42:50] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+144s iter=9 10:43:05] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+159s iter=10 10:43:20] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+175s iter=11 10:43:36] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+190s iter=12 10:43:51] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+205s iter=13 10:44:06] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+221s iter=14 10:44:22] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+236s iter=15 10:44:37] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+251s iter=16 10:44:52] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+267s iter=17 10:45:08] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+282s iter=18 10:45:23] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+297s iter=19 10:45:38] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+
+===== [T+313s iter=20 10:45:54] =====
+  ServiceDown :: 192.168.50.104:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.152:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:07.748Z
+  ServiceDown :: 192.168.50.150:9100 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+  ServiceDown :: 192.168.50.161:8080 :: severity=critical :: state=active :: startsAt=2026-04-25T09:34:52.748Z
+  AlertmanagerDeadManSwitch :: ? :: severity=info :: state=active :: startsAt=2026-04-25T09:30:46.791Z
+  ServiceDown :: host.docker.internal:9323 :: severity=critical :: state=active :: startsAt=2026-04-25T09:35:22.748Z
+

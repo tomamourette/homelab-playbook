@@ -1,0 +1,13 @@
+=== pvesr status pve1 (post) ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02                    -   2.396857          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 100-0 --scan local-zfs local-zfs:vm-100-disk-0 local-zfs:vm-100-disk-1 --last_sync 1777113002' failed: exit code 255
+100-1      Yes        local/pve3            2026-04-25_12:45:05  2026-04-25_13:00:00    2.40573          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09                    -   1.608685          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 101-0 --scan local-zfs local-zfs:subvol-101-disk-0 --last_sync 1777113009' failed: exit code 255
+101-1      Yes        local/pve3            2026-04-25_12:45:09  2026-04-25_13:00:00   3.381277          0 OK
+
+=== pvesr status pve3 (post) ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:47:00  2026-04-25_12:48:00   2.308204          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:40:03                    -  22.444328          1 command '/usr/bin/ssh -e none -o 'BatchMode=yes' -o 'HostKeyAlias=pve2' -o 'UserKnownHostsFile=/etc/pve/nodes/pve2/ssh_known_hosts' -o 'GlobalKnownHostsFile=none' root@192.168.50.202 -- pvesr prepare-local-job 162-1 --scan local-zfs local-zfs:subvol-162-disk-0 --last_sync 1777113603' failed: exit code 255
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK

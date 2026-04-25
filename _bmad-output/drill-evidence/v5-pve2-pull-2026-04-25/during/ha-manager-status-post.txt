@@ -1,0 +1,11 @@
+quorum OK
+master pve1 (active, Sat Apr 25 12:47:26 2026)
+lrm pve1 (active, Sat Apr 25 12:47:19 2026)
+lrm pve2 (old timestamp - dead?, Sat Apr 25 12:40:49 2026)
+lrm pve3 (active, Sat Apr 25 12:47:29 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve1, error)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)

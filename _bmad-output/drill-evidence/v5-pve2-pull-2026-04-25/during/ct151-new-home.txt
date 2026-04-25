@@ -1,0 +1,11 @@
+service ct:151 (pve1, error)
+
+=== pct status 151 on each node ===
+--- pve1 ---
+status: stopped
+--- pve3 ---
+Configuration file 'nodes/pve3/lxc/151.conf' does not exist
+
+=== zfs list 151 each peer node ===
+--- pve1 ---
+--- pve3 ---

@@ -1,0 +1,309 @@
+=== Drill V5 pre-event snapshot ===
+TARGET_NODE: pve2
+Captured at (UTC): Sat Apr 25 10:34:18 UTC 2026
+Captured at (local): Sat Apr 25 10:34:18 UTC 2026
+
+=== pve1: pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 12:34:18 2026
+Quorum provider:  corosync_votequorum
+Nodes:            3
+Node ID:          0x00000001
+Ring ID:          1.1c0
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      3
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201 (local)
+0x00000002          1 192.168.50.202
+0x00000003          1 192.168.50.203
+
+=== pve1: pvesr status ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+100-0      Yes        local/pve2            2026-04-25_12:30:02  2026-04-25_12:45:00   3.977487          0 OK
+100-1      Yes        local/pve3            2026-04-25_12:30:06  2026-04-25_12:45:00   2.897653          0 OK
+101-0      Yes        local/pve2            2026-04-25_12:30:09  2026-04-25_12:45:00   4.111454          0 OK
+101-1      Yes        local/pve3            2026-04-25_12:30:13  2026-04-25_12:45:00   3.506233          0 OK
+
+=== pve1: pct list ===
+VMID       Status     Lock         Name                
+101        running                 ct-docker-01        
+102        running                 ct-media-01         
+
+=== pve1: qm list ===
+      VMID NAME                 STATUS     MEM(MB)    BOOTDISK(GB) PID       
+       100 smarthome            running    2048              32.00 11300     
+       999 ubuntu-dev-template  stopped    4096              50.00 0         
+      9000 ubuntu-22.04-cloudimg stopped    2048               2.20 0         
+
+=== pve1: date ===
+Sat Apr 25 10:34:21 AM UTC 2026
+Sat Apr 25 12:34:21 PM CEST 2026
+
+=== pve1: zfs list (subvol-151) ===
+rpool                         68.1G   831G   104K  /rpool
+rpool/ROOT                    1.67G   831G    96K  /rpool/ROOT
+rpool/ROOT/pve-1              1.67G   831G  1.67G  /
+rpool/data                    65.9G   831G   104K  /rpool/data
+rpool/data/subvol-101-disk-0  9.22G  10.8G  9.21G  /rpool/data/subvol-101-disk-0
+rpool/data/subvol-102-disk-0  10.2G  39.8G  10.2G  /rpool/data/subvol-102-disk-0
+rpool/data/subvol-162-disk-0  3.96G  46.0G  3.96G  /rpool/data/subvol-162-disk-0
+rpool/data/subvol-250-disk-0  7.13G  42.9G  7.11G  /rpool/data/subvol-250-disk-0
+rpool/data/vm-100-disk-0      3.07M   831G    76K  -
+rpool/data/vm-100-disk-1      35.4G   864G  2.91G  -
+
+=== pve2: pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 12:34:22 2026
+Quorum provider:  corosync_votequorum
+Nodes:            3
+Node ID:          0x00000002
+Ring ID:          1.1c0
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      3
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201
+0x00000002          1 192.168.50.202 (local)
+0x00000003          1 192.168.50.203
+
+=== pve2: pvesr status ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+
+=== pve2: pct list ===
+VMID       Status     Lock         Name                
+151        running                 ct-sparkle-cps      
+
+=== pve2: qm list ===
+
+=== pve2: date ===
+Sat Apr 25 10:34:25 AM UTC 2026
+Sat Apr 25 12:34:25 PM CEST 2026
+
+=== pve2: zfs list (subvol-151) ===
+rpool                         63.8G   837G   104K  /rpool
+rpool/ROOT                    1.66G   837G    96K  /rpool/ROOT
+rpool/ROOT/pve-1              1.66G   837G  1.66G  /
+rpool/data                    58.8G   837G   120K  /rpool/data
+rpool/data/subvol-101-disk-0  9.22G  10.8G  9.21G  /rpool/data/subvol-101-disk-0
+rpool/data/subvol-151-disk-0  3.05G  16.9G  3.05G  /rpool/data/subvol-151-disk-0
+rpool/data/subvol-162-disk-0  3.96G  46.0G  3.96G  /rpool/data/subvol-162-disk-0
+rpool/data/subvol-250-disk-0  7.11G  42.9G  7.11G  /rpool/data/subvol-250-disk-0
+rpool/data/vm-100-disk-0      3.07M   837G    76K  -
+rpool/data/vm-100-disk-1      35.4G   870G  2.91G  -
+
+=== pve3: pvecm status ===
+Cluster information
+-------------------
+Name:             home-cluster
+Config Version:   10
+Transport:        knet
+Secure auth:      on
+
+Quorum information
+------------------
+Date:             Sat Apr 25 12:34:25 2026
+Quorum provider:  corosync_votequorum
+Nodes:            3
+Node ID:          0x00000003
+Ring ID:          1.1c0
+Quorate:          Yes
+
+Votequorum information
+----------------------
+Expected votes:   3
+Highest expected: 3
+Total votes:      3
+Quorum:           2  
+Flags:            Quorate 
+
+Membership information
+----------------------
+    Nodeid      Votes Name
+0x00000001          1 192.168.50.201
+0x00000002          1 192.168.50.202
+0x00000003          1 192.168.50.203 (local)
+
+=== pve3: pvesr status ===
+JobID      Enabled    Target                           LastSync             NextSync   Duration  FailCount State
+162-0      Yes        local/pve1            2026-04-25_12:34:00  2026-04-25_12:35:00    2.35757          0 OK
+162-1      Yes        local/pve2            2026-04-25_12:34:03  2026-04-25_12:35:00    2.29226          0 OK
+250-0      Yes        local/pve1            2026-04-25_12:30:00  2026-04-25_13:00:00    6.39832          0 OK
+250-1      Yes        local/pve2            2026-04-25_12:30:07  2026-04-25_13:00:00    2.84288          0 OK
+
+=== pve3: pct list ===
+VMID       Status     Lock         Name                
+160        running                 ct-ai-01            
+162        running                 ct-quant-trading    
+250        running                 ct-dev-homelab      
+
+=== pve3: qm list ===
+
+=== pve3: date ===
+Sat Apr 25 10:34:28 AM UTC 2026
+Sat Apr 25 12:34:28 PM CEST 2026
+
+=== pve3: zfs list (subvol-151) ===
+rpool                         72.6G   726G   104K  /rpool
+rpool/ROOT                    1.78G   726G    96K  /rpool/ROOT
+rpool/ROOT/pve-1              1.78G   726G  1.78G  /
+rpool/data                    70.8G   726G   120K  /rpool/data
+rpool/data/subvol-101-disk-0  9.21G  10.8G  9.21G  /rpool/data/subvol-101-disk-0
+rpool/data/subvol-160-disk-0  15.1G  34.9G  15.1G  /rpool/data/subvol-160-disk-0
+rpool/data/subvol-162-disk-0  3.96G  46.0G  3.96G  /rpool/data/subvol-162-disk-0
+rpool/data/subvol-250-disk-0  7.11G  42.9G  7.11G  /rpool/data/subvol-250-disk-0
+rpool/data/vm-100-disk-0      3.07M   726G    76K  -
+rpool/data/vm-100-disk-1      35.4G   758G  2.91G  -
+
+=== ha-manager status (from pve1) ===
+quorum OK
+master pve1 (active, Sat Apr 25 12:34:26 2026)
+lrm pve1 (active, Sat Apr 25 12:34:19 2026)
+lrm pve2 (active, Sat Apr 25 12:34:28 2026)
+lrm pve3 (active, Sat Apr 25 12:34:20 2026)
+service ct:101 (pve1, started)
+service ct:151 (pve2, started)
+service ct:160 (pve3, started)
+service ct:162 (pve3, started)
+service ct:250 (pve3, started)
+service vm:100 (pve1, started)
+
+=== ha-manager rules list (from pve1) ===
+┌─────────────┐
+│ rule        │
+╞═════════════╡
+│ critical    │
+├─────────────┤
+│ pinned-pve1 │
+├─────────────┤
+│ pinned-pve3 │
+├─────────────┤
+│ standard    │
+└─────────────┘
+
+=== ha-manager rules config (from pve1) ===
+┌─────────┬────────┬─────────────┬───────────────┬──────────────────────┬──────────────────────────────────────────────────────────┐
+│ enabled │ state  │ rule        │ type          │ resources            │ comment                                                  │
+╞═════════╪════════╪═════════════╪═══════════════╪══════════════════════╪══════════════════════════════════════════════════════════╡
+│ 1       │ in use │ critical    │ node-affinity │ ct:162               │ Epic 6 critical-tier: ct-quant-trading                   │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+│ 1       │ in use │ pinned-pve3 │ node-affinity │ ct:160               │ Epic 6 pve3-only: CT160 ct-ai-01 (iGPU passthrough)      │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+│ 1       │ in use │ pinned-pve1 │ node-affinity │ vm:100               │ Epic 6 pve1-only: VM100 smarthome (Zigbee USB 10c4:ea60) │
+├─────────┼────────┼─────────────┼───────────────┼──────────────────────┼──────────────────────────────────────────────────────────┤
+│ 1       │ in use │ standard    │ node-affinity │ ct:101,ct:151,ct:250 │ Epic 6 standard-tier                                     │
+└─────────┴────────┴─────────────┴───────────────┴──────────────────────┴──────────────────────────────────────────────────────────┘
+
+=== /etc/pve/replication.cfg ===
+local: 100-0
+	comment smarthome HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 100-1
+	comment smarthome HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-0
+	comment ct-docker-01 HA replica to pve2
+	target pve2
+	rate 50
+	schedule */15
+	source pve1
+
+local: 101-1
+	comment ct-docker-01 HA replica to pve3
+	target pve3
+	rate 50
+	schedule */15
+	source pve1
+
+local: 162-0
+	comment ct-quant-trading HA replica to pve1
+	target pve1
+	rate 50
+	schedule */1
+	source pve3
+
+local: 162-1
+	comment ct-quant-trading HA replica (target rotates with HA)
+	target pve2
+	rate 50
+	schedule */1
+	source pve3
+
+local: 250-0
+	comment ct-dev-homelab HA replica to pve1
+	target pve1
+	rate 50
+	schedule */30
+	source pve3
+
+local: 250-1
+	comment ct-dev-homelab HA replica to pve2
+	target pve2
+	rate 50
+	schedule */30
+	source pve3
+
+
+=== ct:151 config ===
+arch: amd64
+cmode: tty
+console: 1
+cores: 2
+cpulimit: 0
+cpuunits: 1024
+features: nesting=1
+hostname: ct-sparkle-cps
+memory: 4096
+nameserver: 192.168.50.194
+net0: name=eth0,bridge=vmbr0,gw=192.168.50.1,hwaddr=BC:24:11:0A:22:6F,ip=192.168.50.151/24,type=veth
+onboot: 1
+ostype: debian
+protection: 0
+rootfs: local-zfs:subvol-151-disk-0,size=20G
+searchdomain: bi-services.be
+swap: 512
+tags: homelab;project;sparkle-cps
+tty: 2
+unprivileged: 1

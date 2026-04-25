@@ -1,0 +1,4 @@
+=== ct:151 vzdump created during pre-flight (T-15min, gate #8 fallback) ===
+Source: pve2:/var/lib/vz/dump/vzdump-lxc-151-2026_04_25-12_34_51.tar.zst (2.23 GB zstd, 1m04s)
+Local copy: /tmp/vzdump-lxc-151-2026_04_25-12_34_51.tar.zst (jumphost, 2.4 GB)
+-rw-r--r-- 1 developer developer 2394473839 Apr 25 10:39 /tmp/vzdump-lxc-151-2026_04_25-12_34_51.tar.zst

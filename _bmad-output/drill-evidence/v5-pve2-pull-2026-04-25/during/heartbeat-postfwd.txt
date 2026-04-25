@@ -1,0 +1,9 @@
+=== Heartbeat post-failover check ===
+Attempting pct exec 151 on pve1 (where HA placed it)
+container '151' not running!
+
+=== Verify ZFS dataset exists on pve1 ===
+NO_DATASET
+
+=== Verify pve3 dataset ===
+NO_DATASET

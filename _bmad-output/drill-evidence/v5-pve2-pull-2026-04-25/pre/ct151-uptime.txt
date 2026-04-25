@@ -1,0 +1,12 @@
+ 10:40:23 up 1 day, 2 min,  0 user,  load average: 0.23, 0.30, 0.22
+---
+2: eth0@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether bc:24:11:0a:22:6f brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.50.151/24 brd 192.168.50.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::be24:11ff:fe0a:226f/64 scope link 
+       valid_lft forever preferred_lft forever
+---
+ct-sparkle-cps
+---
+Sat Apr 25 10:40:23 UTC 2026
