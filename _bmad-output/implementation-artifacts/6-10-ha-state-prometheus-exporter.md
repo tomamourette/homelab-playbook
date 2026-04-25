@@ -1,5 +1,5 @@
 ---
-status: review
+status: done
 epic: 6
 story: 6.10
 title: HA-state Prometheus exporter + alert rules
@@ -9,7 +9,7 @@ author: BMad SM
 
 # Story 6.10: HA-state Prometheus exporter + alert rules
 
-Status: review
+Status: done
 
 ## Story
 
@@ -166,6 +166,20 @@ ssh pve1 "ha-manager set ct:162 --state started"
 **And** `diff /tmp/ha-status-pre-6-10.txt <(ssh pve1 ha-manager status)` after the drill shows ct:162 back in its pre-drill state (`started` on home node).
 
 **Drill scope rationale:** ct:162 is the critical-tier workload, so observing it page is the most operator-meaningful proof. The rootfs-rename approach is fully reversible (no data destruction, no replication impact since ct:162 replicates `subvol-162-disk-0` and renaming a source breaks the next replication cycle — see Test strategy §"Drill side-effects" for the cleanup steps). Alternative drills (e.g. forcing fence by yanking corosync) are larger blast radius and deferred to Story 6.7's pull-plug exercise.
+
+### Correction (post-drill)
+
+The historical AC-6 rollback text above shows `ha-manager set ct:162 --state stopped` as the first rollback step. **PVE 9.x rejects this command on a resource currently in `error` state** with `service 'ct:162' in error state, must be disabled and fixed first` (discovered live during the 2026-04-25 drill, see Dev Agent Record T+348s). The canonical recovery sequence is `disabled → diagnose → started`, not `stopped → fix → started`:
+
+```bash
+# Correct rollback (replaces the AC-6 rollback block above)
+ssh pve1 "ha-manager set ct:162 --state disabled"   # NOT --state stopped
+sleep 15
+ssh $HOME "zfs rename rpool/data/subvol-162-disk-0-DRILL rpool/data/subvol-162-disk-0"
+ssh pve1 "ha-manager set ct:162 --state started"
+```
+
+Full sequence with worked example, common triggers, and alert mapping lives in `homelab-infra/docs/ha-replication-runbook.md` §"Recovering an HA resource stuck in `error` state". The `PVEHAResourceUnhealthy` rule's `runbook_url` annotation deep-links to that section so the on-phone push surfaces the right recovery path. Memory: `feedback_pve9_ha_error_recovery.md`. The original AC-6 rollback text is preserved above for historical record; treat the corrected sequence here as the authoritative one.
 
 ### AC-7: Grafana HA Replication dashboard gets a new "HA Resource States" panel
 
@@ -540,3 +554,4 @@ Opus 4.7 (`claude-opus-4-7[1m]`) invoked as BMad Dev agent on 2026-04-25 (Saturd
 ## Change Log
 
 - **2026-04-25 — first-pass dev**: implemented Tasks 0–9 inclusive. Pre-flight green; exporter live on pve1/pve2/pve3; 7 alert rules loaded `inactive`; AC-6 drill executed 09:18–09:27 CEST during operator-safe weekend window — ntfy push received on `homelab-alerts-urgent` 10 s after rule fired; clean rollback; Story 7.3 guardrail PASS unchanged; Ansible role idempotent (`changed=0`) plus drift-correction verified on pve2-only edit. Frontmatter flipped `draft → review`. No commits pushed; operator's review step.
+- **2026-04-25 — fix-apply pass**: Applied M1+R5 (error-state recovery runbook + role README + story AC-6 correction + alert annotation), M2 (PVEHAExporterMissing severity bump to critical), M3 (Grafana panel filter aggregation fix `node="pve1"` → `min by (sid, type, state)`), R12 (verified for: clauses — `PVEHAResourceUnhealthy` kept at 2m for drill repeatability, `PVEHAResourceTransientStuck` tightened 5m → 2m), R13 (amended 6.5 + 6.6 ACs to require pve_ha_resource_state assertion + Story 6.10 alert-chain end-to-end), R9 (severity case grep — all lowercase, lowercase-required comment added at file head). Memory: feedback_pve9_ha_error_recovery.md. promtool/amtool both SUCCESS post-reload; all 7 ha-alert rules `inactive` post-reload (cluster healthy). Ansible role re-run reports `changed=0` (--check + real). R1 (3-pushes-per-event), R3 (cron-daemon-death), R7 (drill-window enforcement), R8 (observer consensus) deferred to new stories 6.10.1, 6.11, 6.9.1 (parallel SM agent). Frontmatter flipped `review → done`.
