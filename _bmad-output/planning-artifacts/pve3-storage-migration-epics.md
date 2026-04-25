@@ -1206,3 +1206,136 @@ So that future related work benefits from the learnings.
 - Any new feedback memories (e.g., "always evacuate operator workbench first during node reinstalls")
 - Project memory for the post-migration state
 
+### Story 7.8: DHCP reservations for all PVE MACs on Asus router
+
+As an operator,
+I want pve1/pve2/pve3 MAC addresses bound to 192.168.50.201/202/203 respectively in the Asus router's DHCP reservation list,
+So that any future reinstall automatically receives the correct IP regardless of which port or driver order the installer chose.
+
+**Acceptance Criteria:**
+
+**Given** the Asus router at 192.168.50.1 is the authoritative DHCP server
+**When** I set `dhcp_staticlist` via nvram with the 3 PVE MACs bound to their canonical IPs:
+- pve1: `00:d0:4c:10:40:54` → 192.168.50.201
+- pve2: `00:d0:4c:10:41:d4` → 192.168.50.202
+- pve3: `38:05:25:37:3d:cd` → 192.168.50.203
+**Then** `/etc/dnsmasq.conf` on the router contains `dhcp-host=<MAC>,<IP>` lines for all 3
+**And** future DHCP requests from each MAC receive the reserved IP
+**And** the failure mode observed during Window B (install got 192.168.50.26 instead of .202 because no reservation existed) is prevented for future reinstalls
+
+**Status:** done (2026-04-24). See `implementation-artifacts/window-b-complete-2026-04-24.md` §"Prevention for Epic 3".
+
+### Story 7.9: Ansible pve-node-bootstrap playbook
+
+As an operator,
+I want a single Ansible playbook that takes a freshly-auto-installed PVE node and joins it to the existing cluster with correct /etc/hosts, SSH trust, and pvecm membership,
+So that Epic 3 (pve3 rebuild) does not repeat Window B's 2 hours of manual recovery steps.
+
+**Acceptance Criteria:**
+
+**Given** a freshly auto-installed PVE node is reachable via its DHCP-reserved IP using the Ansible controller's bootstrap SSH key (installed via answer.toml `[first-boot]`)
+**When** I run `ansible-playbook playbooks/pve-node-bootstrap.yml -l <node>`
+**Then** `/etc/hosts` on the target contains entries for all cluster nodes at their canonical IPs
+**And** `/etc/network/interfaces` has `bridge-ports` bound to the NIC with active link (auto-detected at runtime, not hardcoded)
+**And** bidirectional SSH root-key trust is established between the new node and all existing cluster members
+**And** `pvecm add --use_ssh --force <cluster-ip>` has executed and succeeded
+**And** `pvecm status` on all 3 nodes reports 3/3 quorate
+**And** the playbook is idempotent — re-running produces zero changes
+**And** the playbook is documented in `homelab-infra/ansible/playbooks/README.md`
+**And** a pve3-specific answer.toml (`pve3-answer.toml`) exists in `homelab-infra/proxmox/answer-files/` with:
+- `disk-list` referencing NVMe drives by-id (serial-based), explicitly excluding the 5 HDDs
+- `zfs.raid = "raid1"` + `zfs.hdsize = 828` to leave ~100 GB per drive for special-vdev partitions (per Story 3.2 AC)
+- `[first-boot]` section installing the Ansible controller's bootstrap pubkey
+**And** integration test: running the playbook against a test node (e.g., VM in dry-run) produces expected changes
+
+**Status:** backlog. PREREQUISITE for Epic 3 Story 3.3. Estimated effort: 2–4 hours.
+
+### Story 7.10: pve3 fixed VRAM BIOS configuration runbook
+
+As an operator,
+I want a documented runbook for configuring pve3's BIOS to allocate 24 GB fixed VRAM to the Radeon 890M iGPU,
+So that when pve3 reboots (during Epic 3 reinstall or a planned maintenance window) I can correctly apply the fixed-VRAM setting and Ollama can reliably detect the iGPU.
+
+**Acceptance Criteria:**
+
+**Given** pve3 is the MinisForum N5 Pro with AMD Ryzen AI 9 HX PRO 370 and Radeon 890M iGPU
+**When** I follow `implementation-artifacts/pve3-bios-vram-24gb-guide.md`
+**Then** BIOS UMA Frame Buffer Size is set to 24 GB Fixed (not Dynamic/Auto)
+**And** after boot, `dmesg | grep -i amdgpu` shows 24 GB allocated to the iGPU
+**And** `cat /sys/class/drm/card0/device/mem_info_vram_total` reports ~25 769 803 776 bytes (24 GB)
+**And** `free -h` reports host total ≈ 72 GB (96 minus 24 reserved)
+**And** Ollama inside ct-ai-01 detects the iGPU (relevant to known Ollama issue #11451 with gfx1150 Dynamic VRAM)
+**And** the guide covers: pre-boot checklist, BIOS key to press, exact menu path, setting name, verification commands, rollback procedure, troubleshooting
+**And** the guide is referenced from Story 3.2 (reinstall runbook) and can be executed during the same reboot
+
+**Status:** done (guide authored 2026-04-24). Execution pending — will be applied during Epic 3 Story 3.2 or a dedicated pve3 reboot window.
+
+### Story 7.11: Alertmanager + self-hosted ntfy push channel
+
+As an operator,
+I want Prometheus alerts to push to my Android phone via self-hosted ntfy (routed through Alertmanager),
+So that replication failures, zpool degradation, and other cluster incidents are seen within minutes rather than whenever I next open the Grafana dashboard.
+
+**Context:** Story 6.2 delivered monitoring (metrics + alert rules + dashboard) but the adversarial review flagged that the notification chain is polling-only — operator must manually look at the dashboard to see alerts. For Epic 6 HA activation (Story 6.3+), a broken replica becomes catastrophic rather than merely a warning; push alerts are therefore a **gate** before 6.3.
+
+**Acceptance Criteria:**
+
+**Given** the existing observability stack on ct-docker-01 (192.168.50.194) running Prometheus + Grafana via docker-compose, and Traefik reverse-proxy in place
+**When** I deploy Alertmanager + self-hosted ntfy to the observability stack
+**Then** Alertmanager is reachable at `https://alertmanager.bi-services.be` (Authelia SSO-gated, same pattern as Grafana/Prometheus)
+**And** ntfy is reachable at `https://ntfy.bi-services.be` (with an operator-auth protected topic `homelab-alerts`)
+**And** Prometheus is configured to forward alerts to Alertmanager (via `alerting.alertmanagers` in prometheus.yml)
+**And** Alertmanager has a `webhook_config` routing to ntfy with priority mapping:
+- Prometheus `severity: critical` → ntfy priority `urgent` (bypasses phone's Do Not Disturb)
+- Prometheus `severity: warning` → ntfy priority `default`
+- Prometheus `severity: info` → ntfy priority `low`
+**And** the 7 Prometheus alert rules from Story 6.2 are re-verified to emit the correct severity label (adjust if needed)
+**And** the Android ntfy app (F-Droid or Play Store) is installed on operator's phone and subscribed to the `homelab-alerts` topic
+**And** an end-to-end test fires a synthetic alert via `amtool alert add` or `curl http://alertmanager:9093/...`, phone receives the push within 60 seconds
+**And** a "silence" workflow is documented — operator can mute alerts from Alertmanager UI during planned maintenance windows
+**And** the `ha-replication-runbook.md` Monitoring section is updated: replace the "no push channel — must poll Grafana" note with "push alerts delivered via ntfy Android app on topic `homelab-alerts`"
+
+**Out of scope / deferred:**
+- Multi-device push (adding more phones/users) — future as-needed
+- Slack/email/Teams routing — ntfy-only for now
+- Alert grouping/inhibition rules beyond Alertmanager defaults — tune after first week of operation
+- Silence integration with Ansible (e.g., automatic silence during role runs) — future story if repetitive
+
+**Status:** backlog (blocks Story 6.3 HA group activation per adversarial review of Story 6.2)
+
+**Effort estimate:** ~2 hours (ntfy + Alertmanager both small deployments; Traefik labels + DNS are already-established patterns; Prometheus/Alertmanager integration is well-documented)
+
+
+### Story 7.12: Ansible-Vault secrets rendering for .env + Terraform
+
+As an operator,
+I want all cluster secrets stored once in the Ansible Vault (`group_vars/vault.yml`) and rendered into `.env` files + Terraform variables at deploy time,
+So that secret rotation (Cloudflare token, ntfy password, PBS creds, etc.) is a single-file edit + `ansible-playbook` run, not an error-prone hunt across 3+ hand-edited files.
+
+**Context:** Story 7.11 adversarial review (R4) surfaced that the Cloudflare token + ntfy password are scattered across 3 locations (infra-core/.env on CT101, terraform.tfvars, ntfy-password secret file) with no rotation playbook. When the Cloudflare token expired 2026-04-24, each consumer had to be found and updated individually. Ansible Vault already exists in the repo (`homelab-infra/ansible/inventories/homelab/group_vars/vault.yml`) but is under-used.
+
+**Acceptance Criteria:**
+
+**Given** the cluster's secrets live in multiple places (`.env` on various CTs, `terraform.tfvars`, password files)
+**When** I store all secrets in `homelab-infra/ansible/inventories/homelab/group_vars/vault.yml` (encrypted) and write an Ansible playbook `playbooks/render-secrets.yml`
+**Then** running `ansible-playbook playbooks/render-secrets.yml` (re)generates:
+- `/opt/homelab-apps/stacks/infra-core/.env` on ct-docker-01 (with `CF_DNS_API_TOKEN` from vault)
+- `/opt/homelab-apps/stacks/observability/.env` on ct-docker-01 (with ntfy password + any future secrets)
+- `/opt/homelab-apps/stacks/observability/config/alertmanager/ntfy-password` on ct-docker-01 (600 perms)
+- Optionally: `homelab-infra/terraform/envs/homelab/terraform.auto.tfvars.json` (git-ignored) with `cloudflare_api_token` from vault
+
+**And** `terraform.tfvars` is removed from git (replaced by `.tfvars.example` template) — `.gitignore` covers `*.auto.tfvars.json`
+**And** `.gitignore` also covers `**/.env`, `**/ntfy-password`, any other secret files
+**And** rotation workflow documented: (1) edit `vault.yml`, (2) run `ansible-playbook playbooks/render-secrets.yml`, (3) restart affected containers, (4) test end-to-end
+**And** an onboarding step is added to the top-level README: "To start from a fresh clone, you need the `vault_password` file (shared out-of-band) and run `render-secrets.yml` before `terraform apply`"
+**And** a CI guardrail (Story 7.3 pattern) checks PRs don't commit secrets — a `pre-commit` hook or basic grep for known token prefixes (`cfut`, `sk-`, `AKIA`, etc.)
+
+**Out of scope / deferred:**
+- Migration to SOPS (alternative to Ansible Vault) — future consideration if Ansible Vault friction mounts
+- HashiCorp Vault or other dedicated secret services — overkill for homelab scale
+- Automatic secret rotation (auto-generate + push new CF token nightly) — manual rotation with this pattern is already good
+- Secrets-at-rest encryption on the container filesystem beyond what docker-compose already does
+
+**Status:** backlog. Not blocking Story 6.3. Nice-to-have cleanup after Epic 6 closes.
+
+**Effort estimate:** ~2-3 hours — straightforward Ansible work, no new infrastructure.

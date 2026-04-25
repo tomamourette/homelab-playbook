@@ -1,0 +1,792 @@
+{
+  "summary": {
+    "target_url": "http://127.0.0.1:8000",
+    "model": "gemma4-auto (via gemma-hybrid-proxy)",
+    "total": 25,
+    "passed": 12,
+    "pass_rate_pct": 48.0,
+    "by_category": {
+      "no_image": {
+        "total": 5,
+        "passed": 5,
+        "tool_calls_sum": 0,
+        "describe_events_sum": 0,
+        "calling_events_sum": 0,
+        "max_iter_events_sum": 0
+      },
+      "passive_image": {
+        "total": 5,
+        "passed": 5,
+        "tool_calls_sum": 0,
+        "describe_events_sum": 5,
+        "calling_events_sum": 0,
+        "max_iter_events_sum": 0
+      },
+      "tool_triggering": {
+        "total": 10,
+        "passed": 0,
+        "tool_calls_sum": 0,
+        "describe_events_sum": 10,
+        "calling_events_sum": 0,
+        "max_iter_events_sum": 0
+      },
+      "multi_iteration": {
+        "total": 3,
+        "passed": 0,
+        "tool_calls_sum": 0,
+        "describe_events_sum": 3,
+        "calling_events_sum": 0,
+        "max_iter_events_sum": 0
+      },
+      "iteration_cap": {
+        "total": 2,
+        "passed": 2,
+        "tool_calls_sum": 0,
+        "describe_events_sum": 2,
+        "calling_events_sum": 0,
+        "max_iter_events_sum": 0
+      }
+    },
+    "wall_time_s": 837.6,
+    "ac_results": {
+      "AC-3_no_image_>=80pct": {
+        "passed": true,
+        "value": "5/5"
+      },
+      "AC-4_passive_image_>=80pct": {
+        "passed": true,
+        "value": "5/5"
+      },
+      "AC-5_tool_triggering_>=50pct": {
+        "passed": false,
+        "value": "0/10"
+      },
+      "AC-6_multi_iter_at_least_one_2plus": {
+        "passed": false,
+        "value": "no"
+      },
+      "AC-7_iter_cap_terminates": {
+        "passed": true,
+        "value": "2/2"
+      },
+      "AC-8_status_events_visible": {
+        "passed": true,
+        "value": "multimodal_describe=20/20; tool_call_calling_event_ok=True"
+      },
+      "AC-9_no_5xx_errors": {
+        "passed": true,
+        "value": "0 5xx error(s) observed"
+      },
+      "AC-2_25_prompts_executed": {
+        "passed": true,
+        "value": "25 prompts (limit=None)"
+      },
+      "AC-1_harness_end_to_end": {
+        "passed": true,
+        "value": "25/25 got HTTP responses"
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "noimg-01",
+      "category": "no_image",
+      "prompt": "What is the capital of France? Reply in one sentence.",
+      "include_image": false,
+      "expected": "no tool calls; reasonable text answer",
+      "elapsed_s": 3.52,
+      "http_status": 200,
+      "bytes_received": 22499,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 0,
+        "reasoning": 0,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "",
+      "notes": ""
+    },
+    {
+      "id": "noimg-02",
+      "category": "no_image",
+      "prompt": "Briefly explain what a monad is in functional programming, in two sentences.",
+      "include_image": false,
+      "expected": "no tool calls; reasonable text answer",
+      "elapsed_s": 5.14,
+      "http_status": 200,
+      "bytes_received": 33805,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 0,
+        "reasoning": 0,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "",
+      "notes": ""
+    },
+    {
+      "id": "noimg-03",
+      "category": "no_image",
+      "prompt": "List three primary colors. Just the names, comma-separated.",
+      "include_image": false,
+      "expected": "no tool calls; reasonable text answer",
+      "elapsed_s": 1.97,
+      "http_status": 200,
+      "bytes_received": 11244,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 0,
+        "reasoning": 0,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "",
+      "notes": ""
+    },
+    {
+      "id": "noimg-04",
+      "category": "no_image",
+      "prompt": "What year did World War II end? One sentence.",
+      "include_image": false,
+      "expected": "no tool calls; reasonable text answer",
+      "elapsed_s": 2.7,
+      "http_status": 200,
+      "bytes_received": 16868,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 0,
+        "reasoning": 0,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "",
+      "notes": ""
+    },
+    {
+      "id": "noimg-05",
+      "category": "no_image",
+      "prompt": "Tell me a short joke about programmers.",
+      "include_image": false,
+      "expected": "no tool calls; reasonable text answer",
+      "elapsed_s": 4.22,
+      "http_status": 200,
+      "bytes_received": 28123,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 0,
+        "reasoning": 0,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "",
+      "notes": ""
+    },
+    {
+      "id": "passive-01",
+      "category": "passive_image",
+      "prompt": "Describe this picture in one or two sentences.",
+      "include_image": true,
+      "expected": "preprocess describe; no tool call; uses description",
+      "elapsed_s": 31.98,
+      "http_status": 200,
+      "bytes_received": 34361,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": ""
+    },
+    {
+      "id": "passive-02",
+      "category": "passive_image",
+      "prompt": "What does this image generally look like?",
+      "include_image": true,
+      "expected": "preprocess describe; no tool call",
+      "elapsed_s": 31.26,
+      "http_status": 200,
+      "bytes_received": 28718,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": ""
+    },
+    {
+      "id": "passive-03",
+      "category": "passive_image",
+      "prompt": "Give me a brief overview of what's in this image.",
+      "include_image": true,
+      "expected": "preprocess describe; no tool call",
+      "elapsed_s": 30.65,
+      "http_status": 200,
+      "bytes_received": 28726,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": ""
+    },
+    {
+      "id": "passive-04",
+      "category": "passive_image",
+      "prompt": "Tell me about this picture in plain language.",
+      "include_image": true,
+      "expected": "preprocess describe; no tool call",
+      "elapsed_s": 30.8,
+      "http_status": 200,
+      "bytes_received": 28694,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": ""
+    },
+    {
+      "id": "passive-05",
+      "category": "passive_image",
+      "prompt": "Sum up what you see here in one short sentence.",
+      "include_image": true,
+      "expected": "preprocess describe; no tool call",
+      "elapsed_s": 29.35,
+      "http_status": 200,
+      "bytes_received": 17380,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": ""
+    },
+    {
+      "id": "tool-01",
+      "category": "tool_triggering",
+      "prompt": "You MUST use the analyze_image tool to inspect this image and tell me the EXACT RGB color value of the center pixel. Do not guess — call the tool with that specific question.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 34.15,
+      "http_status": 200,
+      "bytes_received": 46173,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:google:analyze_image{queries:['What is the exact RGB color value of the center pixel of this image?']}<tool_call|>",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-02",
+      "category": "tool_triggering",
+      "prompt": "Please call the analyze_image tool to look at this UI mockup and tell me the precise font size of any header text visible. Use the tool — do not guess.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 43.64,
+      "http_status": 200,
+      "bytes_received": 113407,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-03",
+      "category": "tool_triggering",
+      "prompt": "Use the analyze_image tool to count exactly how many people are visible in the third row from the top of this image.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 43.59,
+      "http_status": 200,
+      "bytes_received": 113372,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-04",
+      "category": "tool_triggering",
+      "prompt": "Call analyze_image with the question 'what is written in the top-left corner of the image?' and report back what the tool tells you.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 38.03,
+      "http_status": 200,
+      "bytes_received": 75515,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:analyze_image{question: 'what is written in the top-left corner of the image?'}<tool_call|>",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-05",
+      "category": "tool_triggering",
+      "prompt": "I need you to invoke the analyze_image tool to determine the exact pixel dimensions (width x height) of this image.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 43.57,
+      "http_status": 200,
+      "bytes_received": 113418,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-06",
+      "category": "tool_triggering",
+      "prompt": "Use analyze_image to check whether there is any text or writing in this image. Call the tool and report what it finds.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 40.75,
+      "http_status": 200,
+      "bytes_received": 98091,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:google:analyze_image{prompt='Is there any text or writing in this image? If so, please transcribe it.'}<tool_call|>",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-07",
+      "category": "tool_triggering",
+      "prompt": "Call the analyze_image tool with the question 'is there a human face visible in this image, and if so where?'",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 34.5,
+      "http_status": 200,
+      "bytes_received": 53841,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:analyze_image{question: 'is there a human face visible in this image, and if so where?'}<tool_call|>",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-08",
+      "category": "tool_triggering",
+      "prompt": "Please use the analyze_image tool to identify the dominant color in the bottom-right quadrant of this image.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 45.11,
+      "http_status": 200,
+      "bytes_received": 113326,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-09",
+      "category": "tool_triggering",
+      "prompt": "Call analyze_image with the question 'count any geometric shapes (circles, squares, triangles) visible in this image' and report the answer.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 32.9,
+      "http_status": 200,
+      "bytes_received": 44841,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:analyze_image{question: 'count any geometric shapes (circles, squares, triangles) visible in this image'}<tool_call|>",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "tool-10",
+      "category": "tool_triggering",
+      "prompt": "I need a precise answer — use the analyze_image tool to determine the brightness level (dark / medium / bright) of this image.",
+      "include_image": true,
+      "expected": "≥1 analyze_image tool call observed",
+      "elapsed_s": 42.44,
+      "http_status": 200,
+      "bytes_received": 113270,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥1 analyze_image tool call; none observed"
+    },
+    {
+      "id": "multi-01",
+      "category": "multi_iteration",
+      "prompt": "Look at this image. First, call analyze_image to determine the dominant color. Then, in a SEPARATE call, use analyze_image again to check if there is any text visible. Then, in a THIRD call, ask analyze_image to estimate the image dimensions. After all three calls, summarize what you learned.",
+      "include_image": true,
+      "expected": "≥2 analyze_image tool calls observed",
+      "elapsed_s": 51.36,
+      "http_status": 200,
+      "bytes_received": 169763,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥2 analyze_image tool calls; observed finish_reasons=0 calling_events=0"
+    },
+    {
+      "id": "multi-02",
+      "category": "multi_iteration",
+      "prompt": "Investigate this image step by step. Step 1: call analyze_image asking about color. Step 2: call analyze_image again asking about composition. Step 3: call analyze_image a final time asking about texture. Each step should be a separate tool call.",
+      "include_image": true,
+      "expected": "≥2 analyze_image tool calls observed",
+      "elapsed_s": 51.23,
+      "http_status": 200,
+      "bytes_received": 169902,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥2 analyze_image tool calls; observed finish_reasons=0 calling_events=0"
+    },
+    {
+      "id": "multi-03",
+      "category": "multi_iteration",
+      "prompt": "Perform a detailed analysis of this image with multiple tool calls: (1) call analyze_image for the foreground, (2) call analyze_image again for the background, (3) call analyze_image once more for any patterns. Use a separate tool call for each.",
+      "include_image": true,
+      "expected": "≥2 analyze_image tool calls observed",
+      "elapsed_s": 51.16,
+      "http_status": 200,
+      "bytes_received": 169869,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": false,
+      "status_events_ok": true,
+      "all_pass": false,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "length"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n",
+      "notes": "expected ≥2 analyze_image tool calls; observed finish_reasons=0 calling_events=0"
+    },
+    {
+      "id": "cap-01",
+      "category": "iteration_cap",
+      "prompt": "Look at this image and call the analyze_image tool SIX times in a row, each time asking about a different aspect: (1) color, (2) shape, (3) text, (4) people, (5) background, (6) overall mood. Make six separate tool calls in sequence.",
+      "include_image": true,
+      "expected": "terminates cleanly (with or without max-iter marker)",
+      "elapsed_s": 54.22,
+      "http_status": 200,
+      "bytes_received": 189103,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n<|tool_call>call:analyze_image(prompt=\"What are the dominant colors in this image?\")<tool_call|><|tool_call>call:analyze_image(prompt=\"What are the main shapes present in this image?\")<tool_call|><|tool_call>call:analyze_image(prompt=\"Is there any text visible in this image? If so, what does it say?\")<tool_call|><|tool_call>call:analyze_image(promp",
+      "notes": ""
+    },
+    {
+      "id": "cap-02",
+      "category": "iteration_cap",
+      "prompt": "I want you to make at least seven separate analyze_image tool calls about this image, each asking a different question (color, shape, text, mood, lighting, composition, subject). Do not combine questions — one question per tool call.",
+      "include_image": true,
+      "expected": "terminates cleanly (with or without max-iter marker)",
+      "elapsed_s": 59.4,
+      "http_status": 200,
+      "bytes_received": 221160,
+      "completed": true,
+      "no_5xx": true,
+      "behavior_ok": true,
+      "status_events_ok": true,
+      "all_pass": true,
+      "tool_call_count": 0,
+      "finish_reasons": [
+        "stop"
+      ],
+      "status_events": {
+        "describing": 1,
+        "reasoning": 1,
+        "calling": 0,
+        "continuing": 0,
+        "max_iter": 0
+      },
+      "content_excerpt": "\n_[describing image 1 of 1...]_\n\n_[reasoning...]_\n```python\nanalyze_image(question=\"What is the dominant color in this image?\")\n```\n```python\nanalyze_image(question=\"Are there any distinct shapes or geometric forms visible in this image?\")\n```\n```python\nanalyze_image(question=\"Is there any text or writing present in this image?\")\n```\n```python\nanalyze_image(question=\"What is the overall mood or at",
+      "notes": ""
+    }
+  ]
+}

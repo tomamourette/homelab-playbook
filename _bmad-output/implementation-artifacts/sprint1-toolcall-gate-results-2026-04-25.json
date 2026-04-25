@@ -1,0 +1,1361 @@
+{
+  "summary": {
+    "target_url": "http://127.0.0.1:8081",
+    "model": "gemma-4-26B-A4B-it-uncensored-Q4_K_M (TrevorJS)",
+    "total": 50,
+    "passed": 49,
+    "pass_rate_pct": 98.0,
+    "tier": "PASS",
+    "by_category": {
+      "single": {
+        "total": 20,
+        "passed": 20
+      },
+      "multi": {
+        "total": 15,
+        "passed": 15
+      },
+      "parallel": {
+        "total": 5,
+        "passed": 5
+      },
+      "error_recovery": {
+        "total": 5,
+        "passed": 5
+      },
+      "negative": {
+        "total": 5,
+        "passed": 4
+      }
+    },
+    "reasoning_content_leakage_count": 50,
+    "wall_time_s": 374.3
+  },
+  "results": [
+    {
+      "id": "single-01",
+      "category": "single",
+      "prompt": "What's the current weather in Tokyo? Use the get_weather tool.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": {
+        "city": "Tokyo"
+      },
+      "elapsed_s": 3.81,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user is asking for the current weather in Tokyo and specifically mentions using the `get_weather` tool.\\nThe `get_weather` tool requires a `city` parameter.\\nThe user provided \\\"Tokyo\\\" as the city.\\nTherefore, the model should call `get_weather(city='Tokyo')`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\":\\\"Tokyo\\\"}\"}, \"id\": \"BBzGVTpekBB5pwlt2FbAsUfe7GzKOaD5\"}]}}], \"created\": 1777113020, \"model\": \"gemma-4-26B-A4B",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "Tokyo"
+          },
+          "raw_arguments": "{\"city\":\"Tokyo\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-02",
+      "category": "single",
+      "prompt": "Look up the email address for user_id 42 using the get_user_email tool.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 42
+      },
+      "elapsed_s": 4.45,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email address for a specific user ID (42).\\nThe available tool `get_user_email` takes a `user_id` as an argument.\\nThe user has provided the `user_id` as 42.\\n\\nPlan:\\n1. Call `get_user_email` with `user_id=42`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_user_email\", \"arguments\": \"{\\\"user_id\\\":42}\"}, \"id\": \"KFKMt4ISWAVNf5pmJJY1zqqwQVIQeWXL\"}]}}], \"created\": 1777113024, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\",",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 42
+          },
+          "raw_arguments": "{\"user_id\":42}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-03",
+      "category": "single",
+      "prompt": "Calculate 17 times 23. Use the calculate tool.",
+      "expected_tool": "calculate",
+      "expected_args_subset": null,
+      "elapsed_s": 3.52,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to calculate the product of 17 and 23.\\nThe user explicitly mentions using the `calculate` tool.\\nThe `calculate` tool takes an `expression` as a parameter.\\nThe expression should be \\\"17 * 23\\\".\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"calculate\", \"arguments\": \"{\\\"expression\\\":\\\"17 * 23\\\"}\"}, \"id\": \"HhLEUvcxlaqeYfiIDt2RKQ2T9rU88uis\"}]}}], \"created\": 1777113028, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\"",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "17 * 23"
+          },
+          "raw_arguments": "{\"expression\":\"17 * 23\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-04",
+      "category": "single",
+      "prompt": "Search the web for 'best Python web framework 2025'. Use search_web.",
+      "expected_tool": "search_web",
+      "expected_args_subset": null,
+      "elapsed_s": 3.53,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to search the web for 'best Python web framework 2025'.\\nThe available tool `search_web` takes a `query` parameter.\\nThe query should be 'best Python web framework 2025'.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"search_web\", \"arguments\": \"{\\\"query\\\":\\\"best Python web framework 2025\\\"}\"}, \"id\": \"3pWfDOIvTday9bEUwa8nGDyXweNohkQz\"}]}}], \"created\": 1777113031, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "search_web",
+          "args": {
+            "query": "best Python web framework 2025"
+          },
+          "raw_arguments": "{\"query\":\"best Python web framework 2025\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-05",
+      "category": "single",
+      "prompt": "Read the file at /etc/hostname using get_file_contents.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": {
+        "path": "/etc/hostname"
+      },
+      "elapsed_s": 3.74,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to read the contents of a specific file located at `/etc/hostname`.\\nThe available tool `get_file_contents` takes a `path` argument.\\nTherefore, the model should call `get_file_contents` with `path='/etc/hostname'`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_file_contents\", \"arguments\": \"{\\\"path\\\":\\\"/etc/hostname\\\"}\"}, \"id\": \"xFlgBlAPmzc2AUiMnBXFTDD3AxO9nIli\"}]}}], \"created\": 1777113035, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/hostname"
+          },
+          "raw_arguments": "{\"path\":\"/etc/hostname\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-06",
+      "category": "single",
+      "prompt": "Translate 'Hello, world' into French. Use the translate_text tool.",
+      "expected_tool": "translate_text",
+      "expected_args_subset": {
+        "target_language": "fr"
+      },
+      "elapsed_s": 4.05,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to translate the phrase 'Hello, world' into French.\\nThe available tool `translate_text` takes `text` and `target_language` as arguments.\\nThe `text` is 'Hello, world'.\\nThe `target_language` for French is 'fr'.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"translate_text\", \"arguments\": \"{\\\"target_language\\\":\\\"fr\\\",\\\"text\\\":\\\"Hello, world\\\"}\"}, \"id\": \"hLbpdhgahZZWqf11bh5N9Ophbf6lEWOD\"}]}}], \"created\": 1777113039, \"model\": \"gemma-4-26B-A4B-i",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "translate_text",
+          "args": {
+            "target_language": "fr",
+            "text": "Hello, world"
+          },
+          "raw_arguments": "{\"target_language\":\"fr\",\"text\":\"Hello, world\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-07",
+      "category": "single",
+      "prompt": "Run a SQL query to get all users. Use query_db. The SQL should be: SELECT * FROM users",
+      "expected_tool": "query_db",
+      "expected_args_subset": null,
+      "elapsed_s": 4.96,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to run a SQL query to get all users from a database.\\nThe user has specified the tool to use: `query_db`.\\nThe user has provided the SQL statement: `SELECT * FROM users`.\\n\\nLooking at the `query_db` tool definition:\\n- `sql`: The SQL SELECT statement to run.\\n\\nSo, the call should be `query_db(sql=\\\"SELECT * FROM users\\\")`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"query_db\", \"arguments\": \"{\\\"sql\\\":\\\"SELECT * FROM users\\\"}\"}, \"id\": \"TH",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "query_db",
+          "args": {
+            "sql": "SELECT * FROM users"
+          },
+          "raw_arguments": "{\"sql\":\"SELECT * FROM users\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-08",
+      "category": "single",
+      "prompt": "Send an email to alice@example.com with subject 'Test' and body 'Hello Alice'. Use send_email.",
+      "expected_tool": "send_email",
+      "expected_args_subset": {
+        "to": "alice@example.com",
+        "subject": "Test"
+      },
+      "elapsed_s": 4.76,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to send an email.\\nThe `send_email` tool takes three arguments: `to`, `subject`, and `body`.\\nFrom the prompt:\\n- `to`: 'alice@example.com'\\n- `subject`: 'Test'\\n- `body`: 'Hello Alice'\\n\\nAll required arguments are provided.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"send_email\", \"arguments\": \"{\\\"body\\\":\\\"Hello Alice\\\",\\\"subject\\\":\\\"Test\\\",\\\"to\\\":\\\"alice@example.com\\\"}\"}, \"id\": \"U95gd71erkITfLB2aU12pDPMCxs39XbT\"}]}}], \"created\": 1777113",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "send_email",
+          "args": {
+            "body": "Hello Alice",
+            "subject": "Test",
+            "to": "alice@example.com"
+          },
+          "raw_arguments": "{\"body\":\"Hello Alice\",\"subject\":\"Test\",\"to\":\"alice@example.com\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-09",
+      "category": "single",
+      "prompt": "What's the weather in Paris in fahrenheit? Use get_weather.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": {
+        "city": "Paris",
+        "units": "fahrenheit"
+      },
+      "elapsed_s": 3.43,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to know the weather in Paris in Fahrenheit.\\nThe `get_weather` tool takes `city` and `units` as parameters.\\n`city` should be \\\"Paris\\\".\\n`units` should be \\\"fahrenheit\\\".\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\":\\\"Paris\\\",\\\"units\\\":\\\"fahrenheit\\\"}\"}, \"id\": \"K59CCG4UJV14Qm53SQfr85LaCRQLXAqs\"}]}}], \"created\": 1777113052, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "Paris",
+            "units": "fahrenheit"
+          },
+          "raw_arguments": "{\"city\":\"Paris\",\"units\":\"fahrenheit\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-10",
+      "category": "single",
+      "prompt": "Find the email for user_id 7. Use get_user_email.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 7
+      },
+      "elapsed_s": 3.68,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email address for a specific user ID (7).\\nThe available tool `get_user_email` takes a `user_id` as an argument.\\nTherefore, the model should call `get_user_email` with `user_id=7`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_user_email\", \"arguments\": \"{\\\"user_id\\\":7}\"}, \"id\": \"SxPnSToi8YkyTwfr1QnRJMtq2FpgQjQ6\"}]}}], \"created\": 1777113056, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbd",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 7
+          },
+          "raw_arguments": "{\"user_id\":7}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-11",
+      "category": "single",
+      "prompt": "Calculate the square root of 144 using the calculate tool.",
+      "expected_tool": "calculate",
+      "expected_args_subset": null,
+      "elapsed_s": 3.26,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to calculate the square root of 144.\\nThe `calculate` tool takes a mathematical expression as a string.\\nThe square root of 144 can be expressed as `sqrt(144)`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"calculate\", \"arguments\": \"{\\\"expression\\\":\\\"sqrt(144)\\\"}\"}, \"id\": \"txUqv7QrJoTGBQddf3Pjbbt1aNulPRbj\"}]}}], \"created\": 1777113059, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbdabd\", \"object\": \"chat.c",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "sqrt(144)"
+          },
+          "raw_arguments": "{\"expression\":\"sqrt(144)\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-12",
+      "category": "single",
+      "prompt": "Search for 'kubernetes operator pattern' on the web. Use search_web.",
+      "expected_tool": "search_web",
+      "expected_args_subset": null,
+      "elapsed_s": 2.99,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to search for 'kubernetes operator pattern' on the web.\\nThe `search_web` tool is available and takes a `query` parameter.\\nThe query should be 'kubernetes operator pattern'.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"search_web\", \"arguments\": \"{\\\"query\\\":\\\"kubernetes operator pattern\\\"}\"}, \"id\": \"Z4w3hWGaj8zryM8aFAevtAEfOxJDdKwJ\"}]}}], \"created\": 1777113062, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "search_web",
+          "args": {
+            "query": "kubernetes operator pattern"
+          },
+          "raw_arguments": "{\"query\":\"kubernetes operator pattern\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-13",
+      "category": "single",
+      "prompt": "Get the contents of the file /etc/os-release using get_file_contents.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": {
+        "path": "/etc/os-release"
+      },
+      "elapsed_s": 4.38,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to get the contents of a specific file `/etc/os-release`.\\nThe available tool `get_file_contents` takes a `path` argument.\\nThe path provided is `/etc/os-release`.\\n\\nTherefore, the model should call `get_file_contents(path='/etc/os-release')`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_file_contents\", \"arguments\": \"{\\\"path\\\":\\\"/etc/os-release\\\"}\"}, \"id\": \"QBJsGF6izu0roJFEsIi2SJQcaMs3Nu2y\"}]}}], \"created\": 1777113067, \"model\": \"gemma",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/os-release"
+          },
+          "raw_arguments": "{\"path\":\"/etc/os-release\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-14",
+      "category": "single",
+      "prompt": "Translate 'Good morning' to Spanish. Use translate_text.",
+      "expected_tool": "translate_text",
+      "expected_args_subset": {
+        "target_language": "es"
+      },
+      "elapsed_s": 5.66,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to translate the phrase 'Good morning' into Spanish.\\nThe user specifically requested to use the `translate_text` tool.\\nThe `translate_text` tool requires two parameters: `text` and `target_language`.\\n- `text`: 'Good morning'\\n- `target_language`: 'es' (the ISO code for Spanish)\\n\\nTherefore, the model should call `translate_text(text='Good morning', target_language='es')`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"translate_text\", \"a",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "translate_text",
+          "args": {
+            "target_language": "es",
+            "text": "Good morning"
+          },
+          "raw_arguments": "{\"target_language\":\"es\",\"text\":\"Good morning\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-15",
+      "category": "single",
+      "prompt": "Query the database with SELECT COUNT(*) FROM orders. Use query_db.",
+      "expected_tool": "query_db",
+      "expected_args_subset": null,
+      "elapsed_s": 5.39,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to execute a SQL query `SELECT COUNT(*) FROM orders` using the `query_db` tool.\\nThe `query_db` tool takes a single argument `sql`, which is the SQL SELECT statement.\\nThe provided SQL statement is `SELECT COUNT(*) FROM orders`.\\n\\nPlan:\\n1. Identify the tool: `query_db`.\\n2. Identify the argument: `sql=\\\"SELECT COUNT(*) FROM orders\\\"`.\\n3. Call the tool.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"query_db\", \"arguments\": \"{\\\"sql\\\":\\\"SELE",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "query_db",
+          "args": {
+            "sql": "SELECT COUNT(*) FROM orders"
+          },
+          "raw_arguments": "{\"sql\":\"SELECT COUNT(*) FROM orders\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-16",
+      "category": "single",
+      "prompt": "Send an email to bob@example.com saying 'Meeting at 3pm' (subject: Reminder). Use send_email.",
+      "expected_tool": "send_email",
+      "expected_args_subset": {
+        "to": "bob@example.com"
+      },
+      "elapsed_s": 5.46,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to send an email.\\nThe `send_email` tool is available and takes `to`, `subject`, and `body` as arguments.\\nFrom the prompt:\\n- `to`: 'bob@example.com'\\n- `subject`: 'Reminder'\\n- `body`: 'Meeting at 3pm'\\n\\nAll required arguments for `send_email` are provided.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"send_email\", \"arguments\": \"{\\\"body\\\":\\\"Meeting at 3pm\\\",\\\"subject\\\":\\\"Reminder\\\",\\\"to\\\":\\\"bob@example.com\\\"}\"}, \"id\": \"IV2HlAgH4Ya2ZVY15P",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "send_email",
+          "args": {
+            "body": "Meeting at 3pm",
+            "subject": "Reminder",
+            "to": "bob@example.com"
+          },
+          "raw_arguments": "{\"body\":\"Meeting at 3pm\",\"subject\":\"Reminder\",\"to\":\"bob@example.com\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-17",
+      "category": "single",
+      "prompt": "What is the weather in London right now? Use get_weather.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": {
+        "city": "London"
+      },
+      "elapsed_s": 3.87,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user is asking for the current weather in London and specifically instructs to use the `get_weather` tool.\\nThe `get_weather` tool requires a `city` parameter.\\nThe user provided \\\"London\\\" as the city.\\nTherefore, the model should call `get_weather(city='London')`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\":\\\"London\\\"}\"}, \"id\": \"pYChw880OOKF4wrDPqDxjDWfhLViVgcx\"}]}}], \"created\": 1777113087, \"model\": \"gemma-4-2",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "London"
+          },
+          "raw_arguments": "{\"city\":\"London\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-18",
+      "category": "single",
+      "prompt": "Look up user_id 1001's email with get_user_email.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 1001
+      },
+      "elapsed_s": 4.71,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email address for a specific user ID (1001).\\nThe available tool `get_user_email` takes a `user_id` as an argument.\\nThe user provided `user_id` is 1001.\\nTherefore, the model should call `get_user_email(user_id=1001)`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_user_email\", \"arguments\": \"{\\\"user_id\\\":1001}\"}, \"id\": \"jWuSvk15YfAbB8BV8E5LjEKtB55FdRfW\"}]}}], \"created\": 1777113092, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 1001
+          },
+          "raw_arguments": "{\"user_id\":1001}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-19",
+      "category": "single",
+      "prompt": "Compute 2^10 using the calculate tool.",
+      "expected_tool": "calculate",
+      "expected_args_subset": null,
+      "elapsed_s": 3.5,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to compute $2^{10}$ using the `calculate` tool.\\nThe `calculate` tool takes an `expression` as a parameter.\\nThe expression for $2^{10}$ is \\\"2^10\\\" or \\\"2**10\\\".\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"calculate\", \"arguments\": \"{\\\"expression\\\":\\\"2^10\\\"}\"}, \"id\": \"7AWwjnektiCbkGc8mrzGJ0AL7fGVk1y9\"}]}}], \"created\": 1777113095, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbdabd\", \"object\": \"chat.comp",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "2^10"
+          },
+          "raw_arguments": "{\"expression\":\"2^10\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "single-20",
+      "category": "single",
+      "prompt": "Translate 'Thank you' to Japanese using translate_text.",
+      "expected_tool": "translate_text",
+      "expected_args_subset": {
+        "target_language": "ja"
+      },
+      "elapsed_s": 3.93,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to translate the phrase 'Thank you' into Japanese.\\nThe available tool `translate_text` takes `text` and `target_language` as arguments.\\nThe `text` is 'Thank you'.\\nThe `target_language` for Japanese is 'ja'.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"translate_text\", \"arguments\": \"{\\\"target_language\\\":\\\"ja\\\",\\\"text\\\":\\\"Thank you\\\"}\"}, \"id\": \"6MY34XJV0ysf8OQtS41V2p1wj0fRgjlP\"}]}}], \"created\": 1777113099, \"model\": \"gemma-4-26B-A4B-it-unc",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "translate_text",
+          "args": {
+            "target_language": "ja",
+            "text": "Thank you"
+          },
+          "raw_arguments": "{\"target_language\":\"ja\",\"text\":\"Thank you\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-01",
+      "category": "multi",
+      "prompt": "Find user_id 42's email, then look up the weather where they live. Use get_user_email first.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 42
+      },
+      "elapsed_s": 14.95,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email of a user with `user_id` 42 and then find the weather in the city where that user lives.\\n\\nFirst, I need to call `get_user_email` with `user_id=42`.\\nThe output of `get_user_email` will likely be an email address.\\nHowever, the prompt says \\\"look up the weather where they live\\\". The `get_user_email` function only returns an email address. It doesn't return a city.\\nWait, let me re-examine the available tools.\\n`get_user_email` returns",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 42
+          },
+          "raw_arguments": "{\"user_id\":42}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-02",
+      "category": "multi",
+      "prompt": "Search the web for 'capital of Australia', then get the weather there. Use search_web first.",
+      "expected_tool": "search_web",
+      "expected_args_subset": null,
+      "elapsed_s": 4.09,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the capital of Australia and then find the weather for that city.\\nFirst, I need to use `search_web` with the query 'capital of Australia'.\\nOnce the result is returned, I will identify the capital city.\\nThen, I will use `get_weather` with the identified city.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"search_web\", \"arguments\": \"{\\\"query\\\":\\\"capital of Australia\\\"}\"}, \"id\": \"QCAcdl77i2lSeEYRjLpmoAzRTM94Xelo\"}]}}], \"created\": 177",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "search_web",
+          "args": {
+            "query": "capital of Australia"
+          },
+          "raw_arguments": "{\"query\":\"capital of Australia\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-03",
+      "category": "multi",
+      "prompt": "Read the file /etc/hostname, then send its contents in an email to ops@example.com with subject 'hostname'. Use get_file_contents first.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": {
+        "path": "/etc/hostname"
+      },
+      "elapsed_s": 7.94,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to read the contents of a specific file `/etc/hostname` and then send those contents via email to `ops@example.com` with a specific subject.\\n\\nFirst, I need to use the `get_file_contents` tool to read the file.\\nThe parameter for `get_file_contents` is `path`, which should be `/etc/hostname`.\\n\\nAfter getting the contents, I will need to use the `send_email` tool.\\nThe parameters for `send_email` are:\\n- `to`: 'ops@example.com'\\n- `subject`: 'hostname'\\",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/hostname"
+          },
+          "raw_arguments": "{\"path\":\"/etc/hostname\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-04",
+      "category": "multi",
+      "prompt": "Calculate 100 * 25, then translate the result word into German. Use the calculate tool first.",
+      "expected_tool": "calculate",
+      "expected_args_subset": null,
+      "elapsed_s": 10.45,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform two main tasks:\\n1.  Calculate the product of 100 and 25.\\n2.  Translate the word representation of the result into German.\\n\\nFirst, I need to use the `calculate` tool with the expression `100 * 25`.\\nAfter getting the result (which should be 2500), I will need to convert this number into its word form (e.g., \\\"two thousand five hundred\\\") and then use the `translate_text` tool to translate that word form into German.\\n\\nWait, the `translate_",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "100 * 25"
+          },
+          "raw_arguments": "{\"expression\":\"100 * 25\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-05",
+      "category": "multi",
+      "prompt": "Query the database with SELECT email FROM users WHERE id = 5, then send an email to that address with subject 'hi'. Use query_db first.",
+      "expected_tool": "query_db",
+      "expected_args_subset": null,
+      "elapsed_s": 14.8,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform two main actions:\\n1.  Query a database to find an email address for a specific user ID (5).\\n2.  Send an email to that retrieved email address with a specific subject ('hi').\\n\\nFirst, I need to use the `query_db` tool.\\nThe SQL query provided is `SELECT email FROM users WHERE id = 5`.\\n\\nAfter getting the result from `query_db`, which should be an email address, I will then use the `send_email` tool.\\nThe `send_email` tool requires `to`, `su",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "query_db",
+          "args": {
+            "sql": "SELECT email FROM users WHERE id = 5"
+          },
+          "raw_arguments": "{\"sql\":\"SELECT email FROM users WHERE id = 5\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-06",
+      "category": "multi",
+      "prompt": "Get the weather in Berlin, then translate the conditions to French. Use get_weather first.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": {
+        "city": "Berlin"
+      },
+      "elapsed_s": 5.24,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to get the weather for Berlin and then translate the weather conditions into French.\\nFirst, I need to call `get_weather` with `city=\\\"Berlin\\\"`.\\nAfter getting the result from `get_weather`, which will contain the weather conditions, I will then call `translate_text` with the weather condition as the `text` and `target_language=\\\"fr\\\"`.\\n\\nStep 1: Call `get_weather(city=\\\"Berlin\\\")`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weathe",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "Berlin"
+          },
+          "raw_arguments": "{\"city\":\"Berlin\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-07",
+      "category": "multi",
+      "prompt": "Find user_id 9's email, then send them a 'Welcome' message. Use get_user_email first.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 9
+      },
+      "elapsed_s": 6.21,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email address for a specific user ID (9) and then send them a 'Welcome' email.\\nFirst, I need to call `get_user_email` with `user_id=9`.\\nOnce I get the email address from the result of `get_user_email`, I will use `send_email` with the retrieved email, a subject 'Welcome', and a body (e.g., 'Welcome to our service!').\\n\\nStep 1: Call `get_user_email(user_id=9)`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_user_email\", \"ar",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 9
+          },
+          "raw_arguments": "{\"user_id\":9}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-08",
+      "category": "multi",
+      "prompt": "Search for 'current US president', then translate the name into Russian. Use search_web first.",
+      "expected_tool": "search_web",
+      "expected_args_subset": null,
+      "elapsed_s": 5.29,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the name of the current US president and then translate that name into Russian.\\nFirst, I need to use `search_web` with the query 'current US president'.\\nOnce the search results are returned, I will identify the name of the current US president.\\nThen, I will use `translate_text` to translate that name into Russian ('ru').\\n\\nStep 1: Call `search_web(query='current US president')`.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"sear",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "search_web",
+          "args": {
+            "query": "current US president"
+          },
+          "raw_arguments": "{\"query\":\"current US president\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-09",
+      "category": "multi",
+      "prompt": "Read /etc/os-release, then run a SQL query SELECT 1. Use get_file_contents first.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": {
+        "path": "/etc/os-release"
+      },
+      "elapsed_s": 12.31,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform two distinct actions:\\n1.  Read the contents of the file `/etc/os-release`.\\n2.  Run a SQL query `SELECT 1` against the database.\\n\\nThe user explicitly specifies the order: \\\"Use `get_file_contents` first.\\\"\\n\\nLooking at the available tools:\\n- `get_file_contents(path: str)`: This is perfect for reading `/etc/os-release`.\\n- `query_db(sql: str)`: This is perfect for running the SQL query `SELECT 1`.\\n\\nPlan:\\n1.  Call `get_file_contents` wit",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/os-release"
+          },
+          "raw_arguments": "{\"path\":\"/etc/os-release\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-10",
+      "category": "multi",
+      "prompt": "Calculate 365 * 24, then email the result to admin@example.com with subject 'hours per year'. Use calculate first.",
+      "expected_tool": "calculate",
+      "expected_args_subset": null,
+      "elapsed_s": 7.42,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform a calculation and then send an email with the result.\\nFirst, the calculation is `365 * 24`. The `calculate` tool should be used for this.\\nSecond, the result of the calculation needs to be sent via email to `admin@example.com` with the subject `hours per year`. The `send_email` tool should be used for this.\\n\\nStep 1: Call `calculate` with `expression=\\\"365 * 24\\\"`.\\nStep 2: Use the output of Step 1 as the `body` in `send_email`.\\n\\nLet's sta",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "365 * 24"
+          },
+          "raw_arguments": "{\"expression\":\"365 * 24\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-11",
+      "category": "multi",
+      "prompt": "Get the weather in Cairo and Sydney one after another. Start with get_weather for Cairo.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": {
+        "city": "Cairo"
+      },
+      "elapsed_s": 4.84,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to get the weather for two cities: Cairo and Sydney.\\nThe instruction specifies to do this \\\"one after another\\\" and to \\\"start with get_weather for Cairo\\\".\\nThis implies two separate tool calls to `get_weather`.\\n\\nFirst call: `get_weather(city='Cairo')`\\nSecond call: `get_weather(city='Sydney')`\\n\\nThe model should generate these calls sequentially.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"get_weather\", \"arguments\": \"{\\\"city\\\":\\\"Cai",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "Cairo"
+          },
+          "raw_arguments": "{\"city\":\"Cairo\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-12",
+      "category": "multi",
+      "prompt": "Look up user_id 12, then translate their email-localpart into Italian. Use get_user_email first.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": {
+        "user_id": 12
+      },
+      "elapsed_s": 6.18,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to find the email address for `user_id` 12 and then translate the local part of that email into Italian.\\n\\nFirst, I need to call `get_user_email` with `user_id=12`.\\nSecond, once I have the email, I'll need to extract the local part (the part before the '@' symbol).\\nThird, I'll use `translate_text` to translate that local part into Italian (`target_language='it'`).\\n\\nLet's start with the first step.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 12
+          },
+          "raw_arguments": "{\"user_id\":12}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-13",
+      "category": "multi",
+      "prompt": "Run SQL: SELECT name FROM products LIMIT 1, then search the web for that product name. Use query_db first.",
+      "expected_tool": "query_db",
+      "expected_args_subset": null,
+      "elapsed_s": 4.93,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform two main actions:\\n1.  Run a SQL query `SELECT name FROM products LIMIT 1` using the `query_db` tool.\\n2.  Take the result of that query (the product name) and use it as a search query in the `search_web` tool.\\n\\nFirst, I need to call `query_db` with the provided SQL statement.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"query_db\", \"arguments\": \"{\\\"sql\\\":\\\"SELECT name FROM products LIMIT 1\\\"}\"}, \"id\": \"n5xYZmBadza5atFfL4qWyJDt",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "query_db",
+          "args": {
+            "sql": "SELECT name FROM products LIMIT 1"
+          },
+          "raw_arguments": "{\"sql\":\"SELECT name FROM products LIMIT 1\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-14",
+      "category": "multi",
+      "prompt": "Translate 'Hello' into German, then email the translation to gretel@example.com with subject 'Greeting'. Use translate_text first.",
+      "expected_tool": "translate_text",
+      "expected_args_subset": {
+        "target_language": "de"
+      },
+      "elapsed_s": 6.14,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to translate the word 'Hello' into German and then send an email with that translation.\\nThe first step is to use `translate_text` with `text='Hello'` and `target_language='de'` (German ISO code).\\nAfter getting the result from `translate_text`, the second step is to use `send_email` with `to='gretel@example.com'`, `subject='Greeting'`, and `body` being the translated text.\\n\\nLet's start with the first tool call.\", \"tool_calls\": [{\"type\": \"function\", \"f",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "translate_text",
+          "args": {
+            "target_language": "de",
+            "text": "Hello"
+          },
+          "raw_arguments": "{\"target_language\":\"de\",\"text\":\"Hello\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "multi-15",
+      "category": "multi",
+      "prompt": "Read /etc/hostname, then look up the user_id 1's email. Use get_file_contents first.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": {
+        "path": "/etc/hostname"
+      },
+      "elapsed_s": 9.03,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform a sequence of operations.\\n1.  Read the contents of `/etc/hostname` using `get_file_contents`.\\n2.  Look up the email address for `user_id` 1 using `get_user_email`.\\n\\nThe prompt explicitly says \\\"Use get_file_contents first\\\", which implies a dependency or at least a specific order. However, the second task (looking up `user_id` 1's email) doesn't seem to depend on the content of `/etc/hostname` based on the text provided. But the instructio",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/hostname"
+          },
+          "raw_arguments": "{\"path\":\"/etc/hostname\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": ""
+    },
+    {
+      "id": "parallel-01",
+      "category": "parallel",
+      "prompt": "Tell me the weather in NYC, London, and Tokyo simultaneously. Make three parallel get_weather calls.",
+      "expected_tool": "get_weather",
+      "expected_args_subset": null,
+      "elapsed_s": 7.23,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to know the weather for three specific cities: NYC, London, and Tokyo.\\nThe user explicitly asks for \\\"three parallel get_weather calls\\\".\\nThis implies that the model should generate three separate `get_weather` tool calls in a single response.\\n\\n1.  **Identify the tool**: `get_weather`.\\n2.  **Identify the parameters**:\\n    *   Call 1: `city=\\\"New York\\\"` (or \\\"NYC\\\")\\n    *   Call 2: `city=\\\"London\\\"`\\n    *   Call 3: `city=\\\"Tokyo\\\"`\\n3.  **Format ",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_weather",
+          "args": {
+            "city": "New York"
+          },
+          "raw_arguments": "{\"city\":\"New York\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "parallel prompt: expected ≥3 calls, got 1"
+    },
+    {
+      "id": "parallel-02",
+      "category": "parallel",
+      "prompt": "Look up emails for user_id 1, user_id 2, and user_id 3 in parallel. Make three get_user_email calls.",
+      "expected_tool": "get_user_email",
+      "expected_args_subset": null,
+      "elapsed_s": 7.51,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to retrieve the email addresses for three specific user IDs: 1, 2, and 3.\\nThe instruction explicitly asks to make three `get_user_email` calls in parallel.\\nThe `get_user_email` tool takes a `user_id` (integer) as an argument.\\n\\nPlan:\\n1. Call `get_user_email` with `user_id=1`.\\n2. Call `get_user_email` with `user_id=2`.\\n3. Call `get_user_email` with `user_id=3`.\\nAll these calls can be initiated in a single response to the model to represent parallel",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_user_email",
+          "args": {
+            "user_id": 1
+          },
+          "raw_arguments": "{\"user_id\":1}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "parallel prompt: expected ≥3 calls, got 1"
+    },
+    {
+      "id": "parallel-03",
+      "category": "parallel",
+      "prompt": "Translate 'hello' into French, Spanish, and German in parallel. Make three translate_text calls.",
+      "expected_tool": "translate_text",
+      "expected_args_subset": null,
+      "elapsed_s": 8.36,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to translate the word 'hello' into three different languages: French, Spanish, and German.\\nThe user explicitly specifies to \\\"Make three translate_text calls\\\" and \\\"in parallel\\\".\\nThe `translate_text` tool takes `text` and `target_language` as arguments.\\nThe target languages are:\\n- French: 'fr'\\n- Spanish: 'es'\\n- German: 'de'\\n\\nSo, the plan is to generate three `translate_text` tool calls:\\n1. `translate_text(text='hello', target_language='fr')`\\n",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "translate_text",
+          "args": {
+            "target_language": "fr",
+            "text": "hello"
+          },
+          "raw_arguments": "{\"target_language\":\"fr\",\"text\":\"hello\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "parallel prompt: expected ≥3 calls, got 1"
+    },
+    {
+      "id": "parallel-04",
+      "category": "parallel",
+      "prompt": "Read /etc/hostname AND /etc/os-release in parallel. Make two get_file_contents calls.",
+      "expected_tool": "get_file_contents",
+      "expected_args_subset": null,
+      "elapsed_s": 7.87,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to read two specific files, `/etc/hostname` and `/etc/os-release`, using the `get_file_contents` tool.\\nThe user explicitly mentions \\\"in parallel\\\" and \\\"Make two get_file_contents calls\\\".\\nThis implies that the model should generate two separate tool calls for `get_file_contents` in a single response.\\n\\n1.  **Identify the tool**: `get_file_contents` is the correct tool.\\n2.  **Identify the arguments**:\\n    *   First call: `path=\\\"/etc/hostname\\\"`\\n ",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "get_file_contents",
+          "args": {
+            "path": "/etc/hostname"
+          },
+          "raw_arguments": "{\"path\":\"/etc/hostname\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "parallel prompt: expected ≥2 calls, got 1"
+    },
+    {
+      "id": "parallel-05",
+      "category": "parallel",
+      "prompt": "Search the web for 'python' AND 'rust' in parallel. Make two search_web calls.",
+      "expected_tool": "search_web",
+      "expected_args_subset": null,
+      "elapsed_s": 7.35,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to perform two separate web searches: one for 'python' and one for 'rust'.\\nThe user explicitly asks to \\\"Make two search_web calls\\\" and \\\"in parallel\\\".\\nWhile the model executes calls sequentially in its thought process, it can output multiple tool calls in a single response, which the underlying system can then execute in parallel.\\n\\n1.  **Identify the tool**: `search_web` is the correct tool.\\n2.  **Identify the arguments**:\\n    *   Call 1: `query",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [
+        {
+          "name": "search_web",
+          "args": {
+            "query": "python"
+          },
+          "raw_arguments": "{\"query\":\"python\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "parallel prompt: expected ≥2 calls, got 1"
+    },
+    {
+      "id": "error-01",
+      "category": "error_recovery",
+      "prompt": "What's the weather?",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 6.75,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"Which city would you like to know the weather for?\", \"reasoning_content\": \"The user is asking \\\"What's the weather?\\\".\\nTo answer this question, the `get_weather` tool is the most relevant.\\nHowever, the `get_weather` tool requires a `city` parameter.\\nThe user's prompt does not specify a city.\\nTherefore, the model should first ask the user for the city name.\\n\\nWait, looking at the available tools, `get_weather` is the only one that can provide weather information.\\nSince the `city` is a required ",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "Which city would you like to know the weather for?",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "error-02",
+      "category": "error_recovery",
+      "prompt": "Look up that user's email.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 44.71,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"length\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user says \\\"Look up that user's email.\\\"\\nTo look up an email, the `get_user_email` tool is available.\\nHowever, `get_user_email` requires a `user_id` (integer).\\nThe user's prompt \\\"that user\\\" is ambiguous because it doesn't specify which user or provide a `user_id`.\\nI need to check the conversation history to see if a user or a `user_id` was mentioned previously.\\nLooking at the current prompt, there is no context provided in the *current* turn.\\nWait, the prompt i",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "",
+      "finish_reason": "length",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "error-03",
+      "category": "error_recovery",
+      "prompt": "Send an email.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 7.88,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"To send an email, I'll need a few more details. Could you please provide:\\n\\n1.  **Recipient:** The email address you want to send it to.\\n2.  **Subject:** A short title for the email.\\n3.  **Body:** The message you want to include.\", \"reasoning_content\": \"The user wants to \\\"Send an email.\\\"\\nLooking at the available tools, there is a `send_email` function.\\nThe `send_email` function requires three arguments: `to` (recipient email), `subject`, and `body`.\\nThe user's prompt \\\"Send an email.\\\" is ve",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "To send an email, I'll need a few more details. Could you please provide:\n\n1.  **Recipient:** The email address you want to send it to.\n2.  **Subject:** A short title for the email.\n3.  **Body:** The message you want to include.",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "error-04",
+      "category": "error_recovery",
+      "prompt": "Translate this text.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 3.95,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"Please provide the text you would like to translate and the target language (e.g., \\\"Translate 'Hello' to French\\\").\", \"reasoning_content\": \"The user wants to translate a text, but they haven't provided the text or the target language.\\nThe `translate_text` tool requires `text` and `target_language`.\\n\\nTherefore, the first step is to ask the user for the text and the target language.\"}}], \"created\": 1777113321, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbdabd\"",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "Please provide the text you would like to translate and the target language (e.g., \"Translate 'Hello' to French\").",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "error-05",
+      "category": "error_recovery",
+      "prompt": "Read the file.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 44.39,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"length\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user wants to \\\"Read the file.\\\" However, the user hasn't specified *which* file to read.\\nLooking at the available tools, `get_file_contents` is the most relevant tool. It requires a `path` parameter.\\nSince the path is missing, the best course of action is to ask the user for the file path.\\n\\nWait, is there any context? The prompt is just \\\"Read the file.\\\"\\nMaybe there's a file mentioned in a previous turn? (No previous turns provided).\\nMaybe there's a way to list",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "",
+      "finish_reason": "length",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "negative-01",
+      "category": "negative",
+      "prompt": "Hello, how are you today?",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 3.27,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"I'm doing well, thank you for asking! How are you doing today?\", \"reasoning_content\": \"The user is greeting the model with \\\"Hello, how are you today?\\\".\\nThis is a conversational opening.\\nThe model should respond politely and perhaps ask how the user is doing.\\nNo tool calls are needed for this simple greeting.\"}}], \"created\": 1777113368, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbdabd\", \"object\": \"chat.completion\", \"usage\": {\"completion_tokens\": 70, \"prompt",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "I'm doing well, thank you for asking! How are you doing today?",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "negative-02",
+      "category": "negative",
+      "prompt": "What is 2 plus 2?",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 4.06,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"tool_calls\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"\", \"reasoning_content\": \"The user is asking a simple arithmetic question \\\"What is 2 plus 2?\\\".\\nThe available tools include a `calculate` function which can evaluate mathematical expressions.\\nThe expression to evaluate is \\\"2 + 2\\\".\\n\\nPlan:\\n1. Call `calculate` with `expression=\\\"2 + 2\\\"`.\\n2. Return the result.\", \"tool_calls\": [{\"type\": \"function\", \"function\": {\"name\": \"calculate\", \"arguments\": \"{\\\"expression\\\":\\\"2 + 2\\\"}\"}, \"id\": \"gF1ILtZzfn2jIVvgNW8fE7yOorhzFh4V\"}]}}], \"created\": 1777113",
+      "schema_valid": true,
+      "correct_intent": false,
+      "correct_args": true,
+      "all_pass": false,
+      "tool_calls_parsed": [
+        {
+          "name": "calculate",
+          "args": {
+            "expression": "2 + 2"
+          },
+          "raw_arguments": "{\"expression\":\"2 + 2\"}",
+          "parse_ok": true
+        }
+      ],
+      "content_text": "",
+      "finish_reason": "tool_calls",
+      "notes": "negative prompt but model emitted tool_call(s): ['calculate']"
+    },
+    {
+      "id": "negative-03",
+      "category": "negative",
+      "prompt": "Tell me a short joke.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 4.84,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"Why don't scientists trust atoms?\\n\\nBecause they make up everything!\", \"reasoning_content\": \"The user wants a short joke. This is a simple request that doesn't require any tool calls.\\n\\n1.  **Identify the user's intent:** Get a short joke.\\n2.  **Determine the complexity:** Low.\\n3.  **Select a response strategy:** Provide a classic, short joke.\\n4.  **Draft the response:** \\\"Why don't scientists trust atoms? Because they make up everything!\\\"\"}}], \"created\": 1777113377, \"model\": \"gemma-4-26B-A4B-",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "Why don't scientists trust atoms?\n\nBecause they make up everything!",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "negative-04",
+      "category": "negative",
+      "prompt": "What is the capital of France?",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 2.37,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"The capital of France is Paris.\", \"reasoning_content\": \"The user is asking a simple factual question: \\\"What is the capital of France?\\\".\\nThis is a general knowledge question that doesn't require any tool calls.\\nThe answer is \\\"Paris\\\".\"}}], \"created\": 1777113379, \"model\": \"gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf\", \"system_fingerprint\": \"b1-4fbdabd\", \"object\": \"chat.completion\", \"usage\": {\"completion_tokens\": 52, \"prompt_tokens\": 567, \"total_tokens\": 619, \"prompt_tokens_details\": {\"cached_tokens",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "The capital of France is Paris.",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    },
+    {
+      "id": "negative-05",
+      "category": "negative",
+      "prompt": "Define the word 'serendipity'.",
+      "expected_tool": null,
+      "expected_args_subset": null,
+      "elapsed_s": 10.81,
+      "reasoning_content_present": true,
+      "raw_response_excerpt": "{\"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"message\": {\"role\": \"assistant\", \"content\": \"**Serendipity** is the occurrence of an unplanned, fortunate event or the knack of finding something valuable or delightful when you are not looking for it. \\n\\nIn simpler terms, it is a \\\"happy accident\\\"\\u2014finding something good by pure chance.\\n\\n**Example:**\\n*   \\\"Finding a twenty-dollar bill in the pocket of a coat you haven't worn in months was a moment of pure **serendipity**.\\\"\\n*   \\\"The discovery of penicillin is one of history's most famous examples of **serendipity**, as Alexander Fl",
+      "schema_valid": true,
+      "correct_intent": true,
+      "correct_args": true,
+      "all_pass": true,
+      "tool_calls_parsed": [],
+      "content_text": "**Serendipity** is the occurrence of an unplanned, fortunate event or the knack of finding something valuable or delightful when you are not looking for it. \n\nIn simpler terms, it is a \"happy accident\"—finding something good by pure chance.\n\n**Example:**\n*   \"Finding a twenty-dollar bill in the pock",
+      "finish_reason": "stop",
+      "notes": "no tool_calls emitted (acceptable for None-expected)"
+    }
+  ]
+}

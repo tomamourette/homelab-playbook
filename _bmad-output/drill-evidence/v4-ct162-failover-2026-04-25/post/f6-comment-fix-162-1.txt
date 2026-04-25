@@ -1,0 +1,23 @@
+F6 cosmetic fix applied 2026-04-25 (post-fix-apply for Story 6.6)
+
+Pre-fix:
+local: 162-1
+	comment ct-quant-trading HA replica to pve2
+	target pve2
+
+Command:
+ssh pve1 "pvesr update 162-1 --comment 'ct-quant-trading HA replica (target rotates with HA)'"
+
+Post-fix (verified via `ssh pve3 "cat /etc/pve/replication.cfg"`):
+local: 162-1
+	comment ct-quant-trading HA replica (target rotates with HA)
+	target pve2
+
+pvesr status post-fix (target/state/FailCount unchanged):
+162-0      Yes        local/pve1            2026-04-25_11:46:00  ...   FailCount=0  OK
+162-1      Yes        local/pve2            2026-04-25_11:46:03  ...   FailCount=0  OK
+
+ha-manager status post-fix (cluster unchanged):
+quorum OK; ct:162 (pve3, started); all 6 services started.
+
+Only the comment field changed; target=pve2 preserved; no replication interruption.
