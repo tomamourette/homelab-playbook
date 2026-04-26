@@ -71,6 +71,12 @@ def call_gateway(base_url: str, api_key: str, model: str,
         # on the 26B MoE empirically push past the gateway's ~60s patience.
         "max_tokens": 1024,
         "temperature": 0,
+        # Disable Gemma 3's "thinking" mode (E3-S01.5b 2026-04-26). Without
+        # this, ~all completions burn the entire max_tokens budget on hidden
+        # reasoning tokens and emit empty content with finish_reason=length.
+        # Forwarded by gemma-hybrid-proxy verbatim to llama-server, which
+        # honours OpenAI's chat_template_kwargs extension.
+        "chat_template_kwargs": {"enable_thinking": False},
     }).encode("utf-8")
 
     req = urllib.request.Request(
