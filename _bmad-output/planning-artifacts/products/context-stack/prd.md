@@ -278,7 +278,7 @@ Each NFR carries an ID, measurable threshold, measurement method, and traceabili
 | ID | Threshold | Measurement | Trace |
 |---|---|---|---|
 | **NFR-FOOTPRINT-001** | FalkorDB resident memory: < 200 MB. | `docker stats graphiti-falkordb` over 24 h after week 4. | Brief §5; FR-MEM-015 |
-| **NFR-FOOTPRINT-002** | GitNexus daemon resident memory: < 500 MB. | Process RSS sample over 24 h on workstation. | Brief §5 |
+| **NFR-FOOTPRINT-002** | GitNexus daemon resident memory: **< 2 GB sustained RSS in active state (≥1 repo indexed)** with no monotonic growth trend across a ≥15 min window. Idle (zero repos) expectation: < 500 MB (informational sub-criterion, not gating). Scaling expectation: ~1 GB per 1 000 indexed files. | Process RSS sampled at 30 s intervals over ≥15 min sustained-load window with MCP request every ≤10 s. Re-baselined per ADR-016 (2026-04-26) after E2-S02 idle (80 MB) + E2-S06 active (1482 MB peak, no leak) measurements showed the original 500 MB cap was an estimation artifact. | Brief §5; ADR-016 |
 | **NFR-FOOTPRINT-003** | Combined disk footprint of stack data (FalkorDB data + GitNexus indexes + wiki tree): < 5 GB. | `du -sh /srv/graphiti/data` + GitNexus index dir + `homelab-playbook/wiki/`. | Aggregate of brief constraints; install-plan §2 (~100–200 MB Graphiti week 1) |
 
 ### 6.5 NFR-AVAIL — Availability and graceful degradation
