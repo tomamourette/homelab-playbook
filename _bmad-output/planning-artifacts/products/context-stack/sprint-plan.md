@@ -154,6 +154,8 @@ S1 is "done" when **all** of:
 
 ## 4. Sprint 2 — GitNexus Pilot (E2)
 
+> **Sprint 2 Pivot Note (2026-04-26).** Mid-sprint, E2-S01 npm install passed but the daemon failed at runtime: LadybugDB native binding (`lbugjs.node`) requires `GLIBCXX_3.4.32`; Debian 12 bookworm workstation maxes at `_3.4.30`. Operator chose **Option B: containerise** via the official `ghcr.io/abhigyanpatwari/gitnexus:1.6.3` Docker image (Debian 13 trixie base). Captured in **ADR-015**; ADR-005 amended for transport variance (HTTP/4747 instead of stdio). Inserted as **E2-S01.5** between S01 and S02; npm binary uninstalled. ½-day slip absorbed by Sprint 2's existing slack budget (~3.3 wall-clock days; see §4.2 Sprint total). E2-S02 footprint test now retries against the containerised daemon; E2-S03 MCP wiring uses `claude mcp add --transport http`. No backlog descope.
+
 ### 4.1 Sprint Goal
 
 > Install **GitNexus v1.6.3** on the workstation as MCP-native code-graph; wire PreToolUse + PostToolUse-on-commit hooks; verify parent-folder topology over `~/workspace/homelab/` (all 3 sibling repos); pass 5 smoke tests; ship `scripts/gitnexus-export.sh`; reach the **week-1 KPI gate** (4-of-5 green: K1, K2, K3, K4, K6).

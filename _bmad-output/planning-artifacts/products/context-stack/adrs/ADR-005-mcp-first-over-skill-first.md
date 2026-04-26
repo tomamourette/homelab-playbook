@@ -20,8 +20,10 @@ MCP changes that. MCP-native servers advertise tools through the standard manife
 ## Decision
 
 **All Tier-2 and Tier-3 components in the Context Stack are MCP-native.** Specifically:
-- **GitNexus** (Tier 2, code-graph) — MCP server, stdio transport, registered via `npx gitnexus setup` (ADR-004).
+- **GitNexus** (Tier 2, code-graph) — MCP server, transport varies by delivery model (see ADR-015): **HTTP transport** when delivered via the official Docker image (current canonical install — `claude mcp add --transport http gitnexus http://127.0.0.1:4747/api/mcp`); stdio transport when delivered via npm (originally implied by ADR-004, no longer the workstation install channel after E2-S01.5 pivot).
 - **Graphiti** (Tier 3, memory) — MCP server, HTTP transport, registered via `claude mcp add --transport http graphiti ...` (ADR-001 + ADR-006).
+
+**Note on transport variance (added 2026-04-26 per ADR-015):** the MCP-native architectural commitment is independent of stdio-vs-HTTP. Both are first-class MCP transports. The choice for any given tool follows its delivery model: containerised tools naturally serve HTTP on a loopback port; npm/binary tools default to stdio. Either is acceptable so long as the server is registered through `claude mcp add` and discovered by Claude Code's standard MCP manifest mechanism.
 
 The **only** skill-tier integration in this stack is **`wiki-query`** (Tier 1) — and that is intentionally a thin file-read skill with no daemon, no DB, no MCP wiring (ADR-006). Brief §10.1 R4 explicitly flags `wiki-query` as the only skill bet; ADR-009 designs it to be reversibly replaceable with a Wiki MCP server if MCP-side ergonomics improve.
 
