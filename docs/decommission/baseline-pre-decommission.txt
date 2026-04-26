@@ -1,0 +1,81 @@
+[WARNING]: skipping vars_files item due to an undefined variable
+Origin: /home/developer/workspace/homelab/homelab-infra/ansible/playbooks/deploy-ai-dev-container.yml:28:7
+
+26
+27   vars_files:
+28     - "{{ inventory_dir }}/group_vars/vault.yml"
+         ^ column 7
+
+
+PLAY [Deploy AI Dev Stack] *****************************************************
+
+TASK [PRE-CHECK | Validate pyenv Python 3.11+ is available (dev-host prerequisite)] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : Include verify health checks] *********************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-tmux/tasks/verify.yml for ct-dev-homelab
+
+TASK [../roles/ai-dev-tmux : VERIFY: rustc exists and responds] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: cargo exists and responds] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: claude-tmux binary exists] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: claude-tmux version matches pinned version] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: .tmux.conf exists] ************************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: .tmux.conf contains claude-tmux keybinding] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: loginctl linger enabled for dev user] *****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service unit file exists] *****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service is enabled] ***********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service is active] ************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux server process is running] ***********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-omega-memory : Include verify health checks] *************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-omega-memory/tasks/verify.yml for ct-dev-homelab
+
+TASK [../roles/ai-dev-omega-memory : VERIFY: omega CLI exists and responds] ****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-omega-memory : VERIFY: omega-memory version matches pinned version] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-omega-memory : VERIFY: omega doctor health check] ********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-omega-memory : VERIFY: omega doctor has no critical failures] ***
+[ERROR]: Task failed: Action failed: omega doctor reported critical failures
+Origin: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-omega-memory/tasks/verify.yml:37:3
+
+35     PATH: "/home/{{ dev_user }}/.pyenv/shims:/home/{{ dev_user }}/.pyenv/bin:/usr/local/bin:/usr/bin:/bin"
+36
+37 - name: "VERIFY: omega doctor has no critical failures"
+     ^ column 3
+
+fatal: [ct-dev-homelab]: FAILED! => {
+    "assertion": "'model.onnx present' in verify_doctor.stdout",
+    "changed": false,
+    "evaluated_to": false,
+    "msg": "omega doctor reported critical failures"
+}
+
+PLAY RECAP *********************************************************************
+ct-dev-homelab             : ok=17   changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

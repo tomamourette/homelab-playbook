@@ -1,0 +1,27 @@
+=== workstation process audit (2026-04-26) ===
+
+(self-exclusion: $$ + parent PID excluded to avoid the audit shell matching its own argv)
+
+--- pgrep -fa 'omega serve' ---
+(no processes)
+
+--- pgrep -fa 'mempalace' ---
+(no processes)
+
+--- pgrep -fa 'fast_hook' ---
+(no processes)
+
+--- pgrep -fa 'omega-memory' ---
+(no processes)
+
+--- ~/.omega/ existence ---
+ls: cannot access '/home/developer/.omega': No such file or directory
+
+--- ~/.mempalace/ existence ---
+ls: cannot access '/home/developer/.mempalace': No such file or directory
+
+--- pip list omega-memory ---
+(no omega packages)
+
+--- which omega ---
+(omega not found)

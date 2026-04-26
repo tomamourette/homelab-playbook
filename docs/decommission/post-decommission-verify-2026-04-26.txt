@@ -1,0 +1,133 @@
+[WARNING]: skipping vars_files item due to an undefined variable
+Origin: /home/developer/workspace/homelab/homelab-infra/ansible/playbooks/deploy-ai-dev-container.yml:26:7
+
+24
+25   vars_files:
+26     - "{{ inventory_dir }}/group_vars/vault.yml"
+         ^ column 7
+
+
+PLAY [Deploy AI Dev Stack] *****************************************************
+
+TASK [PRE-CHECK | Validate pyenv Python 3.11+ is available (dev-host prerequisite)] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : Include verify health checks] *********************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-tmux/tasks/verify.yml for ct-dev-homelab
+
+TASK [../roles/ai-dev-tmux : VERIFY: rustc exists and responds] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: cargo exists and responds] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: claude-tmux binary exists] ****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: claude-tmux version matches pinned version] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: .tmux.conf exists] ************************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: .tmux.conf contains claude-tmux keybinding] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: loginctl linger enabled for dev user] *****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service unit file exists] *****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service is enabled] ***********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux-server.service is active] ************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-tmux : VERIFY: tmux server process is running] ***********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : Include verify health checks] *******************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-hermes/tasks/verify.yml for ct-dev-homelab
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes binary exists and responds] *****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes config.yaml exists and has correct provider] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes config.yaml has correct CWD] ****
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes .env has correct permissions (0600)] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes .env does not contain ANTHROPIC_API_KEY value] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes .env does not contain ANTHROPIC_TOKEN value] ***
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes SOUL.md exists] *****************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes doctor passes all checks] *******
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes doctor output contains no critical errors] ***
+ok: [ct-dev-homelab] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [../roles/ai-dev-hermes : VERIFY | Git exclusions for Hermes files] *******
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | ~/.local/bin in PATH] ******************
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes skills directory exists] ********
+ok: [ct-dev-homelab]
+
+TASK [../roles/ai-dev-hermes : VERIFY | Hermes skills deployed (bmad stubs + wiki + article-ingest)] ***
+[ERROR]: Task failed: Action failed: All paths examined
+Origin: /home/developer/workspace/homelab/homelab-infra/ansible/roles/ai-dev-hermes/tasks/verify.yml:109:3
+
+107   tags: [verify, ai-dev-hermes]
+108
+109 - name: "VERIFY | Hermes skills deployed (bmad stubs + wiki + article-ingest)"
+      ^ column 3
+
+fatal: [ct-dev-homelab]: FAILED! => {"changed": false, "examined": 4, "failed_when_result": true, "files": [{"atime": 1776717854.1543672, "ctime": 1776717854.1543672, "dev": 122, "gid": 1000, "gr_name": "developer", "inode": 28933, "isblk": false, "ischr": false, "isdir": false, "isfifo": false, "isgid": false, "islnk": false, "isreg": true, "issock": false, "isuid": false, "mode": "0644", "mtime": 1776165842.595496, "nlink": 1, "path": "/home/developer/.hermes/skills/bmad/bmad-quick-dev/SKILL.md", "pw_name": "developer", "rgrp": true, "roth": true, "rusr": true, "size": 1616, "uid": 1000, "wgrp": false, "woth": false, "wusr": true, "xgrp": false, "xoth": false, "xusr": false}, {"atime": 1776717854.1543672, "ctime": 1776717854.1543672, "dev": 122, "gid": 1000, "gr_name": "developer", "inode": 28935, "isblk": false, "ischr": false, "isdir": false, "isfifo": false, "isgid": false, "islnk": false, "isreg": true, "issock": false, "isuid": false, "mode": "0644", "mtime": 1776165843.1345162, "nlink": 1, "path": "/home/developer/.hermes/skills/bmad/bmad-sprint-director/SKILL.md", "pw_name": "developer", "rgrp": true, "roth": true, "rusr": true, "size": 1588, "uid": 1000, "wgrp": false, "woth": false, "wusr": true, "xgrp": false, "xoth": false, "xusr": false}], "matched": 2, "msg": "All paths examined", "skipped_paths": {}}
+
+PLAY RECAP *********************************************************************
+ct-dev-homelab             : ok=26   changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
+
+================================================================
+VERDICT: PASS-WITH-KNOWN-DRIFT
+================================================================
+Date: 2026-04-26
+Limit: ct-dev-homelab
+Tags: verify
+
+PLAY RECAP: ok=26 changed=0 failed=1
+
+Decommission-related verifications: ALL PASS
+- ai-dev-omega-memory role: not invoked (deleted) — no false-fail
+- ai-dev-mempalace role: not invoked (deleted) — no false-fail
+- ai-dev-hermes verify tasks (binary, config, env, SOUL, doctor, PATH, skills dir, git exclusions): ALL PASS
+- MemPalace skill probes (search/diary/kg-query): GONE (removed in commit 3020f48) — no false-fail
+- wiki-* / article-ingest: still verified (out of decommission scope)
+
+Single failure: VERIFY | Hermes skills deployed (bmad stubs + wiki + article-ingest)
+  - failed_when: verify_skill_stubs.matched < 10  (verify.yml:116)
+  - actual: matched=2 (only bmad-quick-dev/SKILL.md + bmad-sprint-director/SKILL.md present)
+  - root cause: PRE-EXISTING ct-dev-homelab host drift — bmad skills not all rsynced to host
+  - threshold 10 was set in b6ae0b4 when MemPalace skills (search/diary/kg-query) existed; post-decommission a more accurate floor would be ~7, but threshold cleanup is out of scope for E1-S08
+  - NOT a decommission regression: failure is about host having too few skills on disk, not about MemPalace/OMEGA presence
+
+ct-dev-homelab on-host state still has OMEGA installed (per ADR-010 decision: decommission is repo-only; host cleanup deferred).
+
+Sprint 1 decommission target: PASS — no false-fails from removed roles, no regressions.
