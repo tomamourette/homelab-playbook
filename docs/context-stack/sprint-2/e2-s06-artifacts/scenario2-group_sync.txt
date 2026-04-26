@@ -1,0 +1,3 @@
+event: message
+data: {"result":{"content":[{"type":"text","text":"{\n  \"contracts\": 3,\n  \"crossLinks\": 0,\n  \"unmatched\": 3,\n  \"missingRepos\": []\n}"}]},"jsonrpc":"2.0","id":90}
+
