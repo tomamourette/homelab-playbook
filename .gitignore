@@ -1,2 +1,8 @@
 # Claude-flow runtime telemetry — not user work, auto-mutated by tooling
 .claude-flow/data/
+
+# GitNexus per-repo index sidecar + auto-mutations (Sprint 2 / E2-S05)
+.gitnexus/
+/AGENTS.md
+/CLAUDE.md
+/.claude/skills/gitnexus/
