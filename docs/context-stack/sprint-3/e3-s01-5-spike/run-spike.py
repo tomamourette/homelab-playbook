@@ -66,10 +66,13 @@ def call_gateway(base_url: str, api_key: str, model: str,
             {"role": "system", "content": system},
             {"role": "user", "content": user_msg},
         ],
-        # 1024 is enough for the corpus extractions (median ~300 tokens) AND
-        # keeps each call below the LiteLLM upstream timeout. Larger budgets
-        # on the 26B MoE empirically push past the gateway's ~60s patience.
-        "max_tokens": 1024,
+        # 1500 (E3-S01.5c 2026-04-26): bumped from 1024 because the director's
+        # pre-test on the first v2-failed episode emitted 668 tokens of clean
+        # JSON; longer episodes (architectural-decision, supersession-trail)
+        # may need more headroom. 1500 keeps a safety margin without becoming
+        # wasteful — early-finish completions still report completion_tokens
+        # well below the cap.
+        "max_tokens": 1500,
         "temperature": 0,
         # Disable Gemma 3's "thinking" mode (E3-S01.5b 2026-04-26). Without
         # this, ~all completions burn the entire max_tokens budget on hidden
@@ -77,6 +80,14 @@ def call_gateway(base_url: str, api_key: str, model: str,
         # Forwarded by gemma-hybrid-proxy verbatim to llama-server, which
         # honours OpenAI's chat_template_kwargs extension.
         "chat_template_kwargs": {"enable_thinking": False},
+        # Force JSON-mode at llama-server (E3-S01.5c 2026-04-26). v2 saw 8/11
+        # failures from "missing comma in long output" — a known weak point
+        # of free-form structured output. response_format=json_object engages
+        # llama.cpp's JSON-grammar constrained decoding, eliminating the
+        # syntax-error class entirely. Director's probe on the first v2-failed
+        # episode confirmed: HTTP 200, 32 s, clean parseable JSON with all 4
+        # expected keys. Proxy already accepts the field (openai_models.py L206).
+        "response_format": {"type": "json_object"},
     }).encode("utf-8")
 
     req = urllib.request.Request(
