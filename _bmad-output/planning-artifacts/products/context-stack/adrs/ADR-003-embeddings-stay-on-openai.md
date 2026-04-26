@@ -1,13 +1,66 @@
 ---
 adr: 003
-title: "Keep embeddings on OpenAI text-embedding-3-small in all phases"
-status: accepted
+title: "Embeddings — gemini-embedding-2 via LiteLLM gateway (v2 amends v1's text-embedding-3-small)"
+status: accepted-v2
 date: 2026-04-25
+last_amended: 2026-04-26
 authors: tomamourette (via BMAD director Claude)
 context_question: null
 ---
 
 # ADR-003: Keep embeddings on OpenAI text-embedding-3-small in all phases
+
+## Amendment 2026-04-26 (v2 — embedder switch to gemini-embedding-2)
+
+**Decision change:** Replace OpenAI `text-embedding-3-small` (v1 of this ADR) with
+**Google `gemini-embedding-2`** (3072 dimensions, routed through the homelab
+LiteLLM gateway alias on ct-ai-01).
+
+**Why:** Gemini Embedding 2 went GA 2026-04-22 and leads MTEB English-v2 (73.30),
+MMTEB Multilingual (68.32, +5.09 over runner-up), and MTEB Code (74.66) — three
+tracks #1 simultaneously per the e3-s04b research addendum. Cost is $0.20/M paid
+(~$0.24/month at our 1.2M tokens/mo volume) or $0 on the Gemini API free tier.
+Both within ADR-008's $1/day cap.
+
+**Correction note:** The first revision of the e3-s04b research report
+(`docs/context-stack/sprint-3/e3-s04b-embedder-research.md` main body, line 18)
+misattributed v2's MTEB score (68.32) to v1 (`gemini-embedding-001`). The
+Addendum at line 124 of that file corrects this. v1's standalone scores are not
+separately reported in v2-era benchmark recaps. Picking v1 would have meant
+paying for a worse model under a wrong benchmark.
+
+**Voyage AI revisited:** ADR-003 v1 rejected Voyage on the false premise of "no
+documented Graphiti integration path." `graphiti_core/embedder/voyage.py` is
+first-class (the source file ships with graphiti-core 0.28.2). Voyage-3-large
+remains a viable backup but loses to Gemini-2 today on benchmark lead, free-tier
+economics, and post-MongoDB-acquisition uncertainty.
+
+**Reversal trigger (revised):**
+- Back to `gemini-embedding-001` if v2 develops stability issues during Sprint 3
+  dogfood.
+- Back to `text-embedding-3-small` only if both Gemini SKUs become unviable.
+
+**Implementation:**
+- Vault: `vault_gemini_api_key` added to
+  `homelab-infra/ansible/inventories/homelab/host_vars/ct-ai-01/vault.yml`
+  (host-scoped per existing pattern; mirrors `vault_litellm_master_key`).
+- Gateway: new alias `gemini-embedding-2` in
+  `homelab-infra/ansible/roles/litellm-gateway/templates/litellm-config.yaml.j2`
+  with `model: gemini/gemini-embedding-2` and `litellm_settings.drop_params: true`
+  (drops openai-SDK's `encoding_format=base64` which Gemini rejects).
+- Stack: `homelab-apps/stacks/graphiti/docker-compose.yml` repoints
+  `EMBEDDER_BASE_URL` to the gateway and `EMBEDDER_MODEL` to
+  `gemini-embedding-2`; `OPENAI_API_KEY` env-var carries the LiteLLM master key
+  (same gateway, openai-protocol). `config-graphiti-mcp.yaml` updates
+  `embedder.dimensions` from 1536 to 3072.
+- Verified end-to-end at the Graphiti-core embedder client layer
+  (`graphiti_core.embedder.openai.OpenAIEmbedder.create()` returns 3072-dim
+  vectors via the gateway → Google path).
+- Evidence: `docs/context-stack/sprint-3/e3-s04b-evidence.md`.
+
+The original v1 Decision text below is retained for audit history.
+
+---
 
 ## Context
 
