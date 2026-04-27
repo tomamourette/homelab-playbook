@@ -100,6 +100,21 @@ enables a database, switch to `/global/spend/keys` for per-virtual-key
 spend (cleaner than the Prometheus delta). Either way, the throttle
 mechanism (sentinel block comment-out) stays — it's provider-independent.
 
+**Known limitation accepted 2026-04-27 (operator decision).** Graphiti's
+LLM extraction uses graphiti-core's native `GeminiClient` (provider=gemini),
+which talks directly to `generativelanguage.googleapis.com` and bypasses
+the LiteLLM gateway entirely. Only the embedder traffic (`gemini-embedding-2`
+via the gateway) is captured by `litellm_spend_metric_total`. At current
+projected spend (~$1-3/mo total, ~$0.01/mo embedder, ~$1-3/mo LLM), the cap
+catches roughly 1% of cost directly. A runaway scenario (e.g. unbounded
+`add_memory` loop) would still trigger the cap eventually via the proportional
+embedder calls (each `add_memory` produces ~10 embedder calls), so the cap
+remains an effective backstop against catastrophic runaway, just not a
+precise daily meter for the LLM hot path. Re-evaluate at Sprint 5 if monthly
+spend approaches $10. Three resolution paths recorded for future amendment:
+(A) accept gap [chosen 2026-04-27]; (B) route Graphiti's LLM through LiteLLM
+gateway; (C) add parallel meter via Google Cloud Billing API (24h+ delayed).
+
 
 
 ## Context
