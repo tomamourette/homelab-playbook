@@ -31,6 +31,7 @@ filename rules, and a copy-pasteable new-page template.
   - [Tailscale-only access policy](tailscale-policy) (E4-S02)
   - [Hybrid Gemma serving](hybrid-gemma-serving) (E4-S02)
 - **runbooks/** — step-by-step operator procedures (deploy, rebuild, rotate)
+  - [Test the Context Stack — operator verification runbook](test-the-stack) (post-Sprint-4)
   - [Weekly observability digest — template](weekly-observability-digest) (E4-S09)
   - [wiki-query skill](wiki-query-skill) (E4-S03)
   - [PVE 9 HA migration](pve9-ha-migration) (E4-S02)
