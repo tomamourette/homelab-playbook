@@ -140,3 +140,166 @@ A second fix, optional, makes the role *deterministic* regardless of caller's co
 * `homelab-infra/ansible/roles/compose-app/tasks/main.yml` (lines 41–73) — task ordering that produces the current ownership behaviour
 * `homelab-infra/ansible/roles/compose-app/defaults/main.yml` (lines 41–43) — the dead-code defaults
 * `homelab-playbook/docs/context-stack/sprint-5/drift-investigation-evidence.md` (lines 99–106, 188–194) — prior drift flag that triggered this investigation
+
+---
+
+## A3 Y-COMPLETE FIXED 2026-04-27
+
+Fix landed on `homelab-infra` commit `dab5d02` (branch: main): the
+operator-recommended Y-complete path — defaults flip + deterministic
+post-rsync chown — implemented and verified in --check on ct-dev-homelab.
+
+### Defaults diff (verbatim)
+
+```diff
+--- a/homelab-infra/ansible/roles/compose-app/defaults/main.yml
++++ b/homelab-infra/ansible/roles/compose-app/defaults/main.yml
+- # Ownership of the target dir tree. `0750` keeps non-root users out of
+- # any vault-derived secrets in `.env`. Override per-stack if a service
+- # account is already provisioned on the host.
+- compose_app_owner: root
+- compose_app_group: root
+- compose_app_dir_mode: "0750"
++ # Ownership of the target dir tree.
++ #
++ # Defaults flipped 2026-04-27 from root:root/0750 to 1000:1000/0755
++ # (post-A3 investigation). The previous root-default was masked by the
++ # role's `synchronize` task (rsync without --owner/--group/--chown),
++ # which silently preserved the controller-side uid (typically the
++ # operator, uid 1000) and won over the preceding `file:` task.
++ # ...
++ compose_app_owner: 1000
++ compose_app_group: 1000
++ compose_app_dir_mode: "0755"
+```
+
+### New tasks block (verbatim)
+
+The `Ensure data directory exists` task was decoupled from
+`compose_app_owner` (Docker owns the bind-mount path):
+
+```yaml
+- name: Ensure data directory exists (named-volume mount target)
+  # Intentionally NOT declaring owner/group/mode here. The data dir is
+  # Docker's territory — its bind-mount semantics set ownership on first
+  # container start (root for falkordb/gitnexus, varies per stack), and
+  # the role must not race or override that.
+  ansible.builtin.file:
+    path: "{{ compose_app_data_dir }}"
+    state: directory
+  tags: [compose-app, compose-app-deploy]
+```
+
+Three new tasks were added immediately after `synchronize` to enforce
+ownership without recursing into `data/` or `.env`:
+
+```yaml
+- name: A3 Y-complete (2026-04-27) — enumerate source-tree paths for ownership pass
+  ansible.builtin.find:
+    paths: "{{ compose_app_target_dir }}"
+    recurse: false
+    file_type: any
+    excludes:
+      - data
+      - .env
+  register: compose_app_chown_targets
+  changed_when: false
+  tags: [compose-app, compose-app-deploy]
+
+- name: A3 Y-complete (2026-04-27) — enforce ownership of top-level dir
+  ansible.builtin.file:
+    path: "{{ compose_app_target_dir }}"
+    state: directory
+    owner: "{{ compose_app_owner }}"
+    group: "{{ compose_app_group }}"
+    mode: "{{ compose_app_dir_mode }}"
+  tags: [compose-app, compose-app-deploy]
+
+- name: A3 Y-complete (2026-04-27) — enforce ownership of source tree (excl. data/, .env)
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ compose_app_owner }}"
+    group: "{{ compose_app_group }}"
+    recurse: "{{ item.isdir | default(false) }}"
+  loop: "{{ compose_app_chown_targets.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+  tags: [compose-app, compose-app-deploy]
+```
+
+The `.env` template task was hardcoded to `owner: root, group: root`
+(was `compose_app_owner`) so the secret boundary holds regardless of
+how the role's source-tree owner default is set.
+
+### --check outcome on ct-dev-homelab
+
+```
+TASK [compose-app : Ensure target directory exists] ****************************
+ok: [ct-dev-homelab]
+
+TASK [compose-app : Ensure data directory exists (named-volume mount target)] ***
+ok: [ct-dev-homelab]
+
+TASK [compose-app : Synchronize compose source from controller to target] ******
+ok: [ct-dev-homelab]                          # gitnexus: no diff
+changed: [ct-dev-homelab]                     # graphiti: timestamp ripple only
+
+TASK [compose-app : A3 Y-complete (2026-04-27) — enumerate source-tree paths for ownership pass] ***
+ok: [ct-dev-homelab]
+
+TASK [compose-app : A3 Y-complete (2026-04-27) — enforce ownership of top-level dir] ***
+ok: [ct-dev-homelab]
+
+TASK [compose-app : A3 Y-complete (2026-04-27) — enforce ownership of source tree (excl. data/, .env)] ***
+ok: [ct-dev-homelab] => (item=/srv/graphiti/docker-compose.yml)
+ok: [ct-dev-homelab] => (item=/srv/graphiti/graphiti_mcp_server.py.patched)
+ok: [ct-dev-homelab] => (item=/srv/graphiti/Dockerfile)
+ok: [ct-dev-homelab] => (item=/srv/graphiti/config-graphiti-mcp.yaml)
+ok: [ct-dev-homelab] => (item=/srv/graphiti/scripts)
+
+TASK [compose-app : Render env file from template (if provided)] ***************
+ok: [ct-dev-homelab]                          # graphiti: .env already root:root 0600
+
+PLAY RECAP
+ct-dev-homelab : ok=26   changed=1   unreachable=0   failed=0   skipped=9   rescued=0   ignored=0
+```
+
+The single `changed=1` is the rsync `synchronize` task on graphiti
+reporting a timestamp-only `.d..t......` ripple — pre-existing behaviour,
+not new with this fix. All ownership-related tasks land at `ok` because
+host reality (1000:1000/0755 for source tree, root:root/0750 for data/,
+root:root/0600 for .env) now matches role intent on every line.
+
+The earlier --check pass (before the data/ exclusion fix) showed the
+recurse pass attempting to chown `/srv/{graphiti,gitnexus}/data` from
+0:0/0750 → 1000:1000/0755, which would have broken Docker's bind-mount
+ownership on Falkordb. That regression was caught in the first --check
+and corrected before the commit.
+
+### Files touched
+
+* `ansible/roles/compose-app/defaults/main.yml` — defaults + comment
+* `ansible/roles/compose-app/tasks/main.yml` — data-dir decoupling, three new chown tasks, .env hardcoded to root
+* `ansible/roles/compose-app/meta/argument_specs.yml` — typed defaults updated
+* `ansible/roles/compose-app/README.md` — variable table + ownership-behaviour section
+
+### Anything unexpected (from the fix run)
+
+* First --check pass surfaced a regression risk: the naive `recurse: yes`
+  on `compose_app_target_dir` would have chowned Docker's `data/` bind-mount
+  on every run. Caught and corrected by switching to a `find`-based
+  enumeration with `excludes: [data, .env]`. The investigation file's
+  recommendation ("recurse: yes file: task") was directionally right but
+  needed the exclusion guard the operator should be aware of.
+* The `.env` template task previously used `{{ compose_app_owner }}` not
+  literal `root`. The investigation prose described it as "owner: root"
+  which was slightly imprecise. Hardcoding it to `root` in this fix is
+  what makes the secret boundary independent of `compose_app_owner` —
+  defensive but matches stated intent.
+
+### Closing
+
+Verdict from the original investigation (Option Y) is now actioned:
+role is deterministic, host state and role intent agree, and a future
+controller running with a different uid (CI runner, root-only deploys)
+will produce the same on-disk reality.
