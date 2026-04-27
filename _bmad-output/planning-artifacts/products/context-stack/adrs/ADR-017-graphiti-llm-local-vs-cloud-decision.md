@@ -15,6 +15,18 @@ revisions:
 
 # ADR-017: Graphiti extraction LLM: ADOPT-LOCAL Gemma 4 26B-MoE
 
+## Amendment 2026-04-27 (ADOPT-LOCAL reversed for Graphiti, retained for other workloads)
+
+**Decision change:** v3's ADOPT-LOCAL verdict (Gemma 4 26B-MoE for Graphiti's LLM extraction) is **reversed for Graphiti specifically**. Graphiti now uses **cloud `gemini-2.5-flash-lite`** (see ADR-002 amendment 2026-04-27).
+
+**Scope of reversal:** Graphiti only. Local Gemma 4 26B-MoE serving (via gemma-hybrid-proxy on ct-ai-01, exposed through LiteLLM gateway as `gemma4-26b-json` / `gemma4-26b-text` aliases) is **retained** for non-Graphiti consumers (Hermes, OWUI, ad-hoc developer queries).
+
+**Why:** v3's spike validated parse rate but not the full Graphiti extraction → graphiti-core Pydantic chain. Sprint 3 reached the integration-test layer that the spike didn't, and surfaced ≥6 architectural impedance issues between Graphiti's `OpenAIClient` (which uses `responses.parse()`) and the local Gemma stack via LiteLLM (which only proxies `chat.completions`). Each individual issue was workable; the cumulative weight made Graphiti specifically a bad fit for the local stack despite the spike's parse-quality verdict.
+
+**What this does NOT mean:** ADOPT-LOCAL is not abandoned wholesale. The spike's parse-quality finding stands. Local Gemma works fine for Hermes (currently the only confirmed consumer) and is the right choice when full local sovereignty is the goal. The reversal is narrow: Graphiti's specific extraction-→Pydantic-validation-→graph-write chain is too tight a fit with the local stack's edges right now.
+
+**Reversal-of-reversal trigger:** Re-evaluate local Gemma for Graphiti when (a) graphiti-core ships an `openai_generic` provider arm in factories.py (PR #1437 or successor), (b) local llama.cpp grows reliable JSON-schema enforcement (Vulkan or GPU-CUDA), AND (c) a parse-then-Pydantic-validate smoke test of the full chain produces clean results equivalent to the cloud path.
+
 ## Revision notes (top-of-document)
 
 This ADR has been revised once. Both versions ran the same 50-fact corpus through the same gateway URL with the same model alias (`gemma4-26b-text`); the difference is in two infrastructure fixes that were not yet in place during v1:
