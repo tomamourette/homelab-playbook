@@ -15,7 +15,7 @@
 | # | Check | Status | Notes |
 |---|---|---|---|
 | 1 | E1 (Decommission) closed | PASS | Tagged `phase-1-decommission-complete` 2026-04-26. **Not merged to `main` yet** — FR-DEC-009 forward-protection hook flagged this when pushing E3 work. Acceptable for E4-S01 because the wiki tier lives entirely under `homelab-playbook/wiki/` with no dependency on the decommissioned `ai-dev-omega-memory` / MemPalace roles. |
-| 2 | E2 (GitNexus Pilot) closed | DEFERRED | Sprint 2 was never executed; GitNexus MCP is `Connected` per E3-S03 evidence but no week-1 KPI scorecard exists. Carry-forward addressed in §3 below. Does not block E4-S01. |
+| 2 | E2 (GitNexus Pilot) closed | PASS (with evidence-pack gap) | Sprint 2 ran 2026-04-26: E2-S01..S08 + E2-S01.5 pivot + E2-S06 followup, 11 commits across 3 repos, GitNexus MCP `Connected` per E3-S03. The K1/K2/K4-GitNexus evidence pack at `docs/context-stack/sprint-2/` was never assembled — that's the gap, not the work. Carry-forward in §3 below. Does not block E4-S01. |
 | 3 | E3 (Graphiti Pilot) closed | PASS (CONDITIONAL) | Sprint 3 closed 2026-04-27 with `e3-retro` (commit `03ad119`). Exit Gate verdict CONDITIONAL-PASS: 5/9 clean PASS, 2 PARTIAL, 2 operator-pending, 1 substantively-met. Zero FAIL. |
 | 4 | `down -v` guard spec re-read (S3-prep / Mandatory Fix #2) | NOT SHIPPED | Per E3-retro §3 and §8 (S3-prep #2): the spec for E4-S07's rollback playbook did not ship visibly in Sprint 3. **Action: re-draft the AC text + the `cp -a` pre-step OR `--force-data-loss` guard before E4-S07 starts (week 2 of this sprint).** Spec lands inline in E4-S07 PR; no separate prep commit. |
 
