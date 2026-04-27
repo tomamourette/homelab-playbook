@@ -31,8 +31,10 @@ filename rules, and a copy-pasteable new-page template.
   - _(seeds added in E4-S02)_
 - **runbooks/** — step-by-step operator procedures (deploy, rebuild, rotate)
   - _(seeds added in E4-S02)_
+  - [Weekly observability digest — template](weekly-observability-digest) (E4-S09)
 - **decisions/** — distilled prior decisions (Graphiti-overlap is acceptable)
   - _(seeds added in E4-S02)_
+  - [Weekly digest — 2026-W18](weekly-digest-2026-w18) (E4-S09 first instance)
 - **glossary/** — term definitions
   - _(seeds added in E4-S02)_
 - **projects/** — per-project pointers (cross-link only; do NOT duplicate `_bmad-output/`)
