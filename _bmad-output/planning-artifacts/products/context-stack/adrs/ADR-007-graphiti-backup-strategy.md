@@ -9,6 +9,18 @@ context_question: Q2
 
 # ADR-007: Graphiti backup cadence — daily AOF rewrite + weekly RDB snapshot + monthly export
 
+## Amendment 2026-04-27b (deployment-side `down -v` guard)
+
+**E4-S07 (Sprint 4)** introduced a generic, parametric `compose-app` Ansible role at `homelab-infra/ansible/roles/compose-app/` for compose-stack deployments (graphiti, gitnexus, future stacks). The role bakes in a hard guard that refuses `docker compose down -v` unless TWO opt-in flags are set explicitly at invocation time: a per-call `down_destructive=true` AND a per-stack/per-environment `compose_app_force_data_loss=true`. When both are set, the role first takes a `cp -a` snapshot of the data dir into `<data_dir>.bak.<TS>` (controlled by `compose_app_backup_before_destructive`, default true) so a misclick is recoverable from on-host state.
+
+**Why this lives in the deployment layer, not just at the cron-backup layer:** the AOF + RDB persistence the original ADR-007 mandates is co-located with the stack on the same host. If Ansible (or any other tool) issues `docker compose down -v` against the stack, it removes the named volumes — including the backup artefacts that share the data-dir tree (`backup-{aof,rdb}-snapshot.sh` writes to `~/.local/state/graphiti-backup/` on the workstation but the on-host equivalent on a deploy target like ct-dev-homelab will live under the data dir). The 2026-04-27a per-group amendment covered RESTORE correctness; this 2026-04-27b sub-amendment covers PRE-RESTORE deletion safety.
+
+**Test:** `homelab-infra/ansible/roles/compose-app/tests/test-down-guard.yml` exercises the guard across three scenarios (destructive+no-force = MUST fail, destructive+force = MUST pass-through, non-destructive default = MUST take the safe branch). Runs against localhost in `--check` mode; replayable as part of any future role-edit regression check.
+
+**Reversal trigger:** if `down -v` ever needs to be the default Ansible path (it shouldn't), document the regression on this ADR and remove the guard. Until then it stays as authored.
+
+References: E4-S07 evidence at `homelab-playbook/docs/context-stack/sprint-4/e4-s07-evidence.md`; role README at `homelab-infra/ansible/roles/compose-app/README.md`.
+
 ## Amendment 2026-04-27 (per-group graph reality)
 
 **Discovery during E3-S06 functional smoke tests:** Graphiti creates one FalkorDB graph per `group_id` lazily. As of E3-S07 implementation there are 13 such graphs in `GRAPH.LIST` (`default_db`, plus per-test/per-feature namespaces); the count grows whenever a new `group_id` is used. The original ADR-007 design implicitly assumed a single canonical graph (`default_db`).
