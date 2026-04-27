@@ -1,0 +1,8 @@
+=== /home/developer/workspace/homelab ===
+(no hits)
+=== /home/developer/workspace/homelab/homelab-infra ===
+(no hits)
+=== /home/developer/workspace/homelab/homelab-playbook ===
+(no hits)
+=== /home/developer/workspace/homelab/homelab-apps ===
+(no hits)

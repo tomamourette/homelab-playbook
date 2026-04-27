@@ -1,0 +1,51 @@
+Pre-push hook self-test record
+==============================
+Story:  E1-S09 (Context Stack Sprint 1 / Epic E1, FR-DEC-009 forward protection)
+Date:   2026-04-26
+Hook:   homelab-playbook/docs/decommission/pre-push-hook.sh (35 lines, canonical)
+        Installed at .git/hooks/pre-push in 3 repos: homelab (parent), homelab-infra, homelab-playbook
+
+Test 1 — Clean-state pass
+-------------------------
+Repos tested at HEAD of decommission/context-stack-phase-1 branch:
+  - /home/developer/workspace/homelab            HEAD = b617c7d
+  - /home/developer/workspace/homelab/homelab-infra    HEAD = 1442225
+  - /home/developer/workspace/homelab/homelab-playbook HEAD = 4b5539e
+
+Command: cd <repo> && bash .git/hooks/pre-push
+Result : exit 0 (no output) for all three repos.
+Outcome: PASS — clean state does not block. Documented historical-record paths
+         (.claude-flow/, _bmad-output/, fix/260415, docs/decommission/, pending-insights.jsonl)
+         are correctly excluded.
+
+Test 2 — Poison-state block
+---------------------------
+Setup:   Created docs/_hook-self-test-poison.txt in homelab-playbook with the literal
+         string "test omega-memory poison line — simulating future regression",
+         then `git add` to make it visible to git grep.
+Command: bash .git/hooks/pre-push
+Result : exit 1 with stderr:
+           pre-push: FR-DEC-009 forward-protection hook BLOCKED push.
+             Forbidden OMEGA/MemPalace references found in:
+               - docs/_hook-self-test-poison.txt
+             See homelab-playbook/docs/decommission/sprint-1-verify-report.md
+             To override (retro/archive only, NOT recommended): git push --no-verify
+Outcome: EXPECTED BLOCK — hook correctly catches forbidden patterns in newly
+         tracked files outside the exclusion list.
+
+Cleanup
+-------
+- git restore --staged docs/_hook-self-test-poison.txt
+- rm -f docs/_hook-self-test-poison.txt
+- Re-ran bash .git/hooks/pre-push → exit 0 (PASS) confirming repo returns to clean state.
+
+Conclusion
+----------
+The forward-protection pre-push hook is operational in all three repos. It blocks
+re-introduction of OMEGA/MemPalace identifier patterns while preserving the
+documented historical-record exclusions per FR-DEC-009.
+
+Override path (documented in hook source): `git push --no-verify` — only for
+retro / decommission-archive commits, per E1-S09 implementation notes.
+
+Sprint 1 / Epic E1 forward-protection requirement satisfied.
