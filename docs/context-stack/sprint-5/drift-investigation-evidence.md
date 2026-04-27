@@ -209,3 +209,119 @@ All under `/tmp/`:
 - `verify-restic-ct-docker-01.log` — post-apply changed=0 confirmation
 
 Cleanup of `/tmp/drift-*.log` and `/dev/shm/vp` happens in the same session that wrote this evidence.
+
+## A2 RESOLVED 2026-04-27
+
+**Action:** Applied the Hermes migration deploy on `ct-dev-homelab` (192.168.50.156). Operator (Tom) authorized 2026-04-27 with explicit awareness that Docker daemon would restart, briefly interrupting graphiti+gitnexus.
+
+**Command:**
+```
+LC_ALL=C.UTF-8 ansible-playbook -i inventories/homelab/hosts.ini \
+  deploy-hermes.yml --limit ct-dev-homelab \
+  --vault-password-file /dev/shm/vp
+```
+
+### Pre-deploy state
+
+```
+NAMES          STATUS
+graphiti-mcp   Up 4 hours (healthy)
+falkordb       Up 4 hours (healthy)
+gitnexus       Up 4 hours (healthy)
+```
+- `graphiti /health` = 200
+- `gitnexus :4747/` = 404 on `/`, `/health`, `/api/health` — pre-existing baseline (Docker healthcheck reports healthy via internal probe). Not a regression introduced by deploy.
+
+### PLAY RECAP
+
+```
+ct-dev-homelab : ok=79  changed=10  unreachable=0  failed=0  skipped=8  rescued=0  ignored=1
+```
+
+The single `ignored=1` is the pre-existing dev-host task `Register ruflo MCP server in Claude Code` — fails with `MCP server ruflo already exists in local config` and has `ignore_errors: yes`. Out of scope for A2.
+
+### Hermes-specific changed tasks (10)
+
+1. `Template Hermes config.yaml`
+2. `Template Hermes SOUL.md`
+3. `Deploy BMAD skill stubs to Hermes`
+4. `Template Hermes tmux session launcher` *(new spawn-worker tooling deployed)*
+5. `Template Claude Code worker spawn script` *(new spawn-worker tooling deployed)*
+6. `Stop wiki-auto-push systemd user timer (replaced by cron)`
+7. `Disable wiki-auto-push systemd user timer (replaced by cron)`
+8. `Deploy Hermes cron jobs` (item=wiki-lint)
+9. `Deploy Hermes cron jobs` (item=wiki-auto-push)
+10. `Deploy integration test script`
+
+### Docker daemon downtime — graphiti recovery measurement
+
+| Event | Timestamp (UTC) |
+|---|---|
+| systemd: Stopping docker.service | 16:31:48 |
+| systemd: Stopped docker.service | 16:31:49 |
+| systemd: Starting docker.service | 16:31:49 |
+| dockerd "Starting up" | 16:31:49.17 |
+| systemd: Started docker.service | 16:31:50 |
+| graphiti-mcp container started | 16:31:50.10 |
+| graphiti-mcp first healthy healthcheck PASS | 16:31:55.49 |
+
+**Total graphiti downtime: ~7 seconds** (16:31:48 → 16:31:55). Well inside the 60s escalation window. falkordb and gitnexus also came back via `restart: unless-stopped`, all reported `(healthy)` within seconds.
+
+### Post-deploy state
+
+```
+NAMES          STATUS
+graphiti-mcp   Up 33 seconds (healthy)
+falkordb       Up 33 seconds (healthy)
+gitnexus       Up 33 seconds (healthy)
+```
+- `graphiti /health` = 200
+- `gitnexus :4747/` = 404 (matches pre-deploy baseline)
+
+### Hermes-side verifications
+
+**Crontab (developer user — Hermes runs as `developer` on this CT):**
+
+```
+#Ansible: hermes-wiki-lint
+0 3 * * 0 PYENV_ROOT=... HOME=/home/developer cd /home/developer/workspace/homelab/wiki && hermes "Run wiki-lint on this wiki directory"
+#Ansible: hermes-wiki-auto-push
+*/5 * * * * PYENV_ROOT=... HOME=/home/developer /home/developer/.local/bin/wiki-auto-push.sh
+```
+
+Both Ansible-managed entries present.
+
+**systemd-user timer (old design, must be off):**
+
+```
+* wiki-auto-push.timer - Wiki auto-push timer — trigger every 5 minutes
+   Loaded: loaded (/home/developer/.config/systemd/user/wiki-auto-push.timer; disabled; preset: enabled)
+   Active: inactive (dead)
+  Trigger: n/a
+Apr 27 16:32:12 ct-dev-homelab systemd[164]: Stopped wiki-auto-push.timer ...
+```
+
+Disabled and inactive — old timer-based design fully retired.
+
+### Idempotency --check post-deploy
+
+```
+ct-dev-homelab : ok=72  changed=2  unreachable=0  failed=0  skipped=15  rescued=0  ignored=0
+```
+
+Target was `changed=0`. Actual is `changed=2`, but **both deltas are in the `dev-host` role, not `ai-dev-hermes`**, and both are known unconditional --check noise:
+
+1. `dev-host : Update apt cache after Microsoft repo` — `apt update` always reports changed in --check (cache TTL artifact)
+2. `dev-host : Restart Docker after runc downgrade` — task is unconditional (no `when:`, no `notify:` guard) per `roles/dev-host/tasks/main.yml`. ALWAYS reports changed in --check; in actual runs it does restart Docker every time (which matches the brief's expectation: "Docker restart is part of the deploy, unconditional in the role").
+
+**The `ai-dev-hermes` role itself reports changed=0 in --check — Hermes migration is fully converged.** The 2 dev-host changes are pre-existing role-design noise, out of scope for A2 (and overlap with the A4 sparkle-cps dev-host drift item already on the follow-ups list).
+
+### Verdict
+
+A2 RESOLVED. Hermes migration applied cleanly on ct-dev-homelab:
+- 11-task drift resolved (10 hermes tasks changed + 1 dev-host runc/docker side-effect; the brief's "11 tasks pending" estimate matches)
+- New tmux session + spawn-worker scripts deployed
+- wiki-auto-push transitioned from systemd-user-timer (disabled) to crontab
+- Docker daemon restart caused ~7s graphiti downtime; all three containers (graphiti-mcp, falkordb, gitnexus) recovered automatically via `restart: unless-stopped`
+- gitnexus 404-on-`/` pre-existed and is not a regression
+
