@@ -28,40 +28,55 @@ filename rules, and a copy-pasteable new-page template.
 ## By category
 
 - **architecture/** — cross-product architectural decisions (network, cluster, storage)
-  - _(seeds added in E4-S02)_
+  - [Tailscale-only access policy](tailscale-policy) (E4-S02)
+  - [Hybrid Gemma serving](hybrid-gemma-serving) (E4-S02)
 - **runbooks/** — step-by-step operator procedures (deploy, rebuild, rotate)
-  - _(seeds added in E4-S02)_
   - [Weekly observability digest — template](weekly-observability-digest) (E4-S09)
+  - [wiki-query skill](wiki-query-skill) (E4-S03)
+  - [PVE 9 HA migration](pve9-ha-migration) (E4-S02)
+  - **runbooks/exit-ramps/** — per-tier portability runbooks (E4-S10)
+    - [Wiki tier — exit ramp](wiki-exit-ramp)
+    - [GitNexus tier — exit ramp](gitnexus-exit-ramp)
+    - [Graphiti tier — exit ramp](graphiti-exit-ramp)
+    - [Auto-memory tier — exit ramp](auto-memory-exit-ramp)
 - **decisions/** — distilled prior decisions (Graphiti-overlap is acceptable)
-  - _(seeds added in E4-S02)_
+  - [Context Stack query hierarchy](query-hierarchy) (E4-S10, canonical
+    routing table per ADR-013)
   - [Weekly digest — 2026-W18](weekly-digest-2026-w18) (E4-S09 first instance)
 - **glossary/** — term definitions
-  - _(seeds added in E4-S02)_
+  - _(seeds added in E4-S02; none yet)_
 - **projects/** — per-project pointers (cross-link only; do NOT duplicate `_bmad-output/`)
-  - _(seeds added in E4-S02)_
+  - _(seeds added in E4-S02; none yet)_
 - **meta** (root-level) — wiki self-description
   - [Wiki page schema](_schema)
 
 ## Recently updated
 
+- `decisions/query-hierarchy.md` — 2026-04-27 (E4-S10)
+- `runbooks/exit-ramps/*.md` — 2026-04-27 (E4-S10, four pages)
+- `decisions/weekly-digest-2026-w18.md` — 2026-04-27 (E4-S09)
+- `runbooks/weekly-observability-digest.md` — 2026-04-27 (E4-S09)
+- `runbooks/wiki-query-skill.md` — 2026-04-27 (E4-S03)
+- `architecture/{tailscale-policy,hybrid-gemma-serving}.md` — 2026-04-27 (E4-S02)
+- `runbooks/pve9-ha-migration.md` — 2026-04-27 (E4-S02)
 - `_schema.md` — 2026-04-27 (E4-S01 bootstrap)
-- `index.md` — 2026-04-27 (E4-S01 bootstrap)
 
 _(Section will be auto-populated by `scripts/wiki-lint.sh --regen` once the
-lint script ships per the deferred-items note in [Wiki page schema](_schema).)_
+regen mode ships; until then it is hand-maintained per story.)_
 
 ## Bootstrap status
 
-This is the E4-S01 bootstrap landing. Currently shipped:
+E4-S01/S02/S03/S09/S10 have shipped. Currently populated:
 
-- `index.md` (this file)
-- `_schema.md` (frontmatter + body conventions per ADR-006)
+- `_schema.md` + `index.md` (E4-S01).
+- `architecture/` — 2 seeds (E4-S02).
+- `runbooks/` — 3 seeds (E4-S02 + S03 + S09).
+- `runbooks/exit-ramps/` — 4 per-tier exit-ramp runbooks (E4-S10).
+- `decisions/` — query-hierarchy canonical routing table (E4-S10) +
+  weekly digest 2026-W18 (E4-S09).
+- `scripts/wiki-lint.sh` — shipped and passing.
 
-Deferred to follow-up (per the Sprint 4 kickoff scope decision):
+Still empty (seeds welcomed when content emerges):
 
-- Five category subdirectories (`architecture/`, `runbooks/`, `decisions/`,
-  `glossary/`, `projects/`) with `.gitkeep` placeholders.
-- `scripts/wiki-lint.sh` link checker.
-- Pre-commit hook wiring.
-
-Seed entries land in E4-S02 (operator picks content).
+- `glossary/` — term definitions.
+- `projects/` — per-project pointer pages.
