@@ -191,3 +191,17 @@ Mitigation:
 ## One-line summary for the parent ticket
 
 Verdict α: re-run `docker-setup.yml --limit ct-docker-01` to flip both parent dirs `0:0 → 1000:1000`; ~2-3 min, negligible risk, apps stay healthy because they already own their subdirs.
+
+---
+
+## APPLIED 2026-04-27
+
+`docker-setup.yml` re-deployed against ct-docker-01.
+
+- `PLAY RECAP: ok=11 changed=5 failed=0`
+- The 2 expected changes for `/opt/appdata/automations-n8n` + `/opt/appdata/organizr` (owner 0:0 → 1000:1000) landed
+- Three other unrelated drift tasks also re-applied during the same play (traefik/portainer dirs from the same docker-host loop) — those were already scheduled drift, not new
+- Post-apply stat: `/opt/appdata/{automations-n8n,organizr}` owner UID 1000 mode 0755 (UID 1000 has no `/etc/passwd` entry on ct-docker-01, hence stat shows `UNKNOWN:UNKNOWN`; numeric ownership is what containers care about)
+- All 5 affected containers (n8n, n8n-db, n8n-redis, organizr, organizr-db) **`Up 29 hours (healthy)` — uptime unchanged** confirms no FD invalidation, no container restart, no disruption
+
+Verdict α fix complete. Closes the pre-existing drift item carried over from Phase 1.
