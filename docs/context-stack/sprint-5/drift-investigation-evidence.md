@@ -325,3 +325,73 @@ A2 RESOLVED. Hermes migration applied cleanly on ct-dev-homelab:
 - Docker daemon restart caused ~7s graphiti downtime; all three containers (graphiti-mcp, falkordb, gitnexus) recovered automatically via `restart: unless-stopped`
 - gitnexus 404-on-`/` pre-existed and is not a regression
 
+## A4 RESOLVED 2026-04-27 (v2 — role pin updated)
+
+Earlier A4 attempt halted at pre-flight because the `dev-host` role pinned `runc 1.1.15` while ct-sparkle-cps host empirically ran `runc 1.3.4` on `Docker 29.3.1` for an extended period without LXC issues. Operator authorized the safer-direction fix: update the role default to match the working empirical state rather than downgrade a healthy host.
+
+### Investigation findings
+
+- Role uses runc only via `get_url` of the release binary + `/usr/bin/runc` symlink + Docker restart — no `1.1.x`-specific CLI flags or apt-pin semantics. Safe to bump.
+- No `defaults/main.yml` variable for runc; version is inline in `tasks/main.yml:414`. Updated inline (option (a) in brief) for minimal blast radius.
+- The pin was introduced in commit `38eba72` (2026-03-30, "feat: add ct-dev-homelab dev container") and never revisited; comment "runc 1.2+ fails in LXC" was a defensive guess that proved stale on PVE 9.x kernel `6.17.2-1-pve` + Debian 12 LXC + Docker 29.
+- Pre-update host state: `runc 1.3.4` (commit `v1.3.4-0-gd6d73eb8`, go1.25.8), Docker 29.3.1 active, 0 containers running.
+
+### Role update
+
+File: `homelab-infra/ansible/roles/dev-host/tasks/main.yml:414-432`
+
+Diff summary: `1.1.15 → 1.3.4` (URL + task name + comment); `+7 −4` lines. Comment expanded to record empirical justification + 2026-04-27 verification date.
+
+Commit: `0adff00 fix(dev-host): bump runc pin from 1.1.15 to 1.3.4 — LXC compat fixed in newer runc; matches host empirical state (drift A4)` (homelab-infra)
+
+### Pre-deploy `--check` (post role update)
+
+`PLAY RECAP: ok=45 changed=10 failed=0 skipped=7 ignored=1`
+
+10 changed broken down:
+- 4 Claude/dev drift (Claude install, wrapper, PATH precedence, aliases)
+- 2 apt cache refresh (expected noise)
+- 3 runc tasks (URL changed → `force: yes` re-fetches; Ansible reports `changed` even though end-state binary is identical version)
+- 1 unconditional Docker restart
+
+No HALT condition surfaced.
+
+### Deploy
+
+`PLAY RECAP: ok=50 changed=10 failed=0 skipped=2 ignored=2`
+
+Two ignored failures, both expected:
+1. **CPS-Fabric.playbook clone** — `Permission denied (publickey)`. Per Phase 1 Fix 4, deploy-key for the tomamourette/CPS-Fabric.playbook repo is still pending; operator UI action.
+2. **Register ruflo MCP server** — `MCP server ruflo already exists in local config`. Pre-existing concern, not A4 scope.
+
+### Post-deploy verification (ct-sparkle-cps, 192.168.50.151)
+
+```
+runc:    1.3.4 (commit v1.3.4-0-gd6d73eb8, go1.24.10)
+docker:  29.3.1 (active)
+claude:  2.1.119 (Claude Code)
+docker ps: (empty — 0 containers)
+```
+
+The runc binary was replaced (Go toolchain version differs `go1.25.8 → go1.24.10` — confirms the URL fetch happened) but the resulting `runc --version` is unchanged at `1.3.4`. End-state alignment with role.
+
+### Final `--check` (post-deploy convergence)
+
+`PLAY RECAP: ok=45 changed=2 failed=0 skipped=7 ignored=1`
+
+`changed=2` are both known-noise tasks:
+- `Update apt cache after Microsoft repo` (re-runs cache module by design)
+- `Restart Docker after runc update` (unconditional `state: restarted`, no `when:` guard)
+
+Convergence achieved on the runc + Claude drift; role and host now match.
+
+### Operator review flag
+
+**Zero containers on ct-sparkle-cps.** `docker ps` returned empty both before and after the deploy, so the unconditional Docker restart was risk-free for this host (no recovery needed). Flagging for operator: is `0 containers running` on the sparkle-cps dev host intentional (workers stopped between sessions) or unexpected (a CPS-Fabric stack should be up)? The CPS-Fabric.playbook deploy-key is still pending, which would explain why `~/workspace/sparkle-cps-playbook` may be empty/incomplete and any docker-compose pulls from there can't run.
+
+### Outstanding
+
+- Deploy-key for `tomamourette/CPS-Fabric.playbook` still pending (operator UI follow-up — Phase 1 Fix 4).
+- `Register ruflo MCP server` task should ideally be made idempotent (currently `failed_when` swallows the "already exists" error).
+- Role's `Restart Docker after runc update` could gain a `when:` guard tied to a `runc_changed` register so it stops being unconditional changed-noise on every run.
+
