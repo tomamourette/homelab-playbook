@@ -16,8 +16,10 @@ PATTERNS='mempalace|MemPalace|omega-memory|omega_memory|ai-dev-omega-memory|ai-d
 # Documented historical-record exclusions (per FR-DEC-009 + sprint-1-verify-report.md).
 # git grep -l returns paths relative to repo root (no leading /), so we anchor with ^ or
 # match path segments. Exclusions: .claude-flow/, _bmad-output/, fix/260415*, docs/decommission/,
+# docs/context-stack/ (BMAD product evidence + retros + scorecards reference decommissioned
+# components in prose, not as re-introductions), wiki/ (knowledge base documents the same),
 # any pending-insights.jsonl.
-EXCLUDE_REGEX='(^|/)\.claude-flow/|(^|/)_bmad-output/|(^|/)fix/260415|(^|/)docs/decommission/|(^|/)pending-insights\.jsonl$'
+EXCLUDE_REGEX='(^|/)\.claude-flow/|(^|/)_bmad-output/|(^|/)fix/260415|(^|/)docs/decommission/|(^|/)docs/context-stack/|(^|/)wiki/|(^|/)pending-insights\.jsonl$'
 
 # Run from repo root
 REPO_ROOT="$(git rev-parse --show-toplevel)"
