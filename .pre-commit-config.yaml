@@ -1,0 +1,15 @@
+# Pre-commit hooks for homelab-playbook.
+#
+# Install with:  scripts/install-git-hooks.sh
+# Run manually:  pre-commit run --all-files
+#
+# See https://pre-commit.com for hook framework docs.
+repos:
+  - repo: local
+    hooks:
+      - id: wiki-lint
+        name: Wiki schema lint (ADR-006 / wiki/_schema.md)
+        entry: scripts/wiki-lint.sh
+        language: script
+        files: ^wiki/.*\.md$
+        pass_filenames: true

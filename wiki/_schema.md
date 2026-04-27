@@ -1,7 +1,7 @@
 ---
 title: "Wiki page schema"
 slug: _schema
-category: glossary
+category: meta
 last_reviewed: 2026-04-27
 owner: tomamourette
 related_pages: []
@@ -52,7 +52,12 @@ slug: kebab-case-slug                          # required, unique across the tre
                                                # matches filename without .md
 category: architecture                         # required, one of:
                                                # architecture | runbooks | decisions
-                                               # | glossary | projects
+                                               # | glossary | projects | meta
+                                               # (`meta` is reserved for the wiki's
+                                               # own meta pages: `_schema.md`,
+                                               # `index.md`. Operator-authored
+                                               # pages SHOULD pick one of the
+                                               # five content categories.)
 last_reviewed: 2026-04-27                      # required, ISO date (YYYY-MM-DD)
                                                # WARN if > 6 months stale (not fail)
 owner: tomamourette                            # required, single string

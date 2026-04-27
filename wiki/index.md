@@ -1,7 +1,7 @@
 ---
 title: "Homelab wiki — index"
 slug: index
-category: glossary
+category: meta
 last_reviewed: 2026-04-27
 owner: tomamourette
 related_pages: []
@@ -34,9 +34,11 @@ filename rules, and a copy-pasteable new-page template.
 - **decisions/** — distilled prior decisions (Graphiti-overlap is acceptable)
   - _(seeds added in E4-S02)_
 - **glossary/** — term definitions
-  - [Wiki page schema](_schema)
+  - _(seeds added in E4-S02)_
 - **projects/** — per-project pointers (cross-link only; do NOT duplicate `_bmad-output/`)
   - _(seeds added in E4-S02)_
+- **meta** (root-level) — wiki self-description
+  - [Wiki page schema](_schema)
 
 ## Recently updated
 
