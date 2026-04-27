@@ -4,7 +4,7 @@
 |--|--|
 | Date          | 2026-04-27 |
 | Story         | E4-S07 (Sprint 4, Context Stack product) |
-| Branches      | `homelab-infra` `feature/context-stack-e3-graphiti`; `homelab-playbook` `decommission/context-stack-phase-1` |
+| Branches      | `feature/context-stack-e3-graphiti` (both `homelab-infra` and `homelab-playbook`) |
 | Status        | READY for E4-S08 |
 
 ## Summary
@@ -106,7 +106,7 @@ Added "Amendment 2026-04-27b (deployment-side `down -v` guard)" to `_bmad-output
 
 ## Anything unexpected
 
-1. **Branch divergence:** the brief expected `homelab-playbook` to be on `feature/context-stack-e3-graphiti` but the repo was on `decommission/context-stack-phase-1` at session start. Both `homelab-infra` and `homelab-apps` are on the e3-graphiti branch as expected. I did not change branches; the operator manages the branching strategy. The role + playbook commits land on `feature/context-stack-e3-graphiti` in homelab-infra; the ADR amendment + evidence doc land on `decommission/context-stack-phase-1` in homelab-playbook.
+1. **Branch reading at session start:** the session-start git status surfaced `decommission/context-stack-phase-1` as the active branch in homelab-playbook, but commits landed on `feature/context-stack-e3-graphiti` (matching the brief). Likely a stale snapshot in the session prelude — verified post-commit, all three repos are aligned on `feature/context-stack-e3-graphiti`. No action required.
 2. **Vault gap for ct-dev-homelab:** the existing host_vars/vault for ct-dev-homelab doesn't carry `vault_litellm_master_key` (it's currently only on ct-ai-01's vault). E4-S08 needs to re-export that secret into ct-dev-homelab's vault, or the playbook needs to load ct-ai-01's vault explicitly. Recorded in the E4-S08 gap section below.
 3. **ansible-lint locale issue:** invocation requires `LC_ALL=C.UTF-8 LANG=C.UTF-8` shell prefix (system locale is the default minimal one). Documented in evidence + suggested as a one-line shell wrapper for future authoring sessions if the friction surfaces again.
 4. **Compose stack header comments still say "workstation only":** the existing `homelab-apps/stacks/{graphiti,gitnexus}/docker-compose.yml` header comments describe these stacks as workstation-only. They function fine on any Docker host (it's a comment, not behaviour), but for consistency with the new deployment story the comments should be tweaked when E4-S08 lands the actual deploy. Out of scope for E4-S07 (no homelab-apps changes per brief).
