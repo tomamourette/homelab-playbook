@@ -9,6 +9,24 @@ context_question: Q2
 
 # ADR-007: Graphiti backup cadence — daily AOF rewrite + weekly RDB snapshot + monthly export
 
+## Amendment 2026-04-27 (per-group graph reality)
+
+**Discovery during E3-S06 functional smoke tests:** Graphiti creates one FalkorDB graph per `group_id` lazily. As of E3-S07 implementation there are 13 such graphs in `GRAPH.LIST` (`default_db`, plus per-test/per-feature namespaces); the count grows whenever a new `group_id` is used. The original ADR-007 design implicitly assumed a single canonical graph (`default_db`).
+
+**What changed:**
+
+- **Layer 1 (in-process AOF):** unchanged. AOF is FalkorDB-server-level and captures writes to every graph in the instance.
+- **Layer 2 (daily AOF rewrite + weekly RDB snapshot):** unchanged in intent. AOF rewrite (`BGREWRITEAOF`) and RDB snapshot (`BGSAVE`) are both server-level — they cover all graphs in one operation. Implementation in `homelab-apps/stacks/graphiti/scripts/backup-aof-rewrite.sh` and `backup-rdb-snapshot.sh`.
+- **Layer 3 (monthly Cypher export):** must enumerate `GRAPH.LIST` dynamically and emit one export per graph, not one global export against a hardcoded `default_db`. Implementation in `homelab-apps/stacks/graphiti/scripts/backup-cypher-export.sh`.
+
+**Caveat surfaced during implementation:** FalkorDB's `GRAPH.QUERY` output is the canonical query response format, NOT directly Cypher-import compatible. The Cypher export is best understood as a per-graph audit/portability/exit-ramp artifact, not the primary recovery path. The RDB snapshot (Layer 2) remains the actual point-in-time-restoration mechanism. Building a Cypher-replay tool that round-trips through the response format is deferred to E3-S08 (restore drill); for the drill, restore from the RDB snapshot, validate via Graphiti search queries, treat the Cypher export as a parallel audit signal.
+
+**Operational paths:** logs at `~/.local/state/graphiti-backup/logs/{aof,rdb,cypher}.log`; artifacts at `~/.local/state/graphiti-backup/{rdb,cypher}/`. `/var/log` and `/var/backups` were rejected because the cron-running user (`developer`) is unprivileged on the workstation; XDG state-dir convention sidesteps the sudo requirement and keeps artifacts in a directory the operator's existing host-level backup sweep can capture.
+
+**Reversal trigger:** if FalkorDB ever ships a native `GRAPH.EXPORT` / `GRAPH.IMPORT` Cypher round-trip, replace the script's `.raw` capture with that and demote the response-format dump.
+
+The original Decision text below stands; this amendment supersedes the assumption of a single `default_db` graph.
+
 ## Context
 
 PRD FR-MEM-014 and brief Q5 ask the architecture phase to recommend a Graphiti backup cadence and retention. FalkorDB is a Redis module; its persistence model is the standard Redis dual mechanism:
