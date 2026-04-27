@@ -9,6 +9,20 @@ context_question: null
 
 # ADR-002: Use gpt-4o-mini for Graphiti extraction in Phase 1
 
+## Amendment 2026-04-27 (LLM provider switch — gpt-4o-mini → gemini-2.5-flash-lite)
+
+**Decision change:** Replace OpenAI `gpt-4o-mini` (v1 of this ADR) with **Google `gemini-2.5-flash-lite`** for Graphiti's LLM extraction. The local-Gemma alternative validated under ADR-017 v3 was reversed (see ADR-017 amendment 2026-04-27).
+
+**Why:** ADR-017 v3's ADOPT-LOCAL spike validated parse rate (100% / 98% schema) but did not exercise the full extraction → Pydantic chain that Sprint 3 surfaced. After 5 iterations of debugging (E3-S04a..E3-S04e), the local-Gemma path was found to require ≥6 stacked workarounds (gemma-hybrid-proxy passthrough, json-mode injection alias, OPENAI_BASE_URL env, factories.py bind-mount, response-format/schema mismatch). E3-S04f-retry validated `gemini-2.5-flash-lite` end-to-end on the first real attempt: 10 entities + 10 edges + temporal facts, 7.5s extraction wall-clock, no Pydantic validation errors, no schema mismatch.
+
+**Cost:** Gemini 2.5 Flash-Lite at $0.10/M input + $0.40/M output. At ~6-10M tokens/month extraction volume: $1-3/month. Well under ADR-008's $1/day cap.
+
+**Privacy:** Episode contents already cross to Google for embedding (ADR-003 v2). Privacy envelope unchanged.
+
+**Reversal trigger:** Reverse to local Gemma (or another local model) if Gemini Flash-Lite quality degrades, Google deprecates without same-quality successor, or operator chooses to run fully air-gapped.
+
+**Implementation:** see commit history on branch feature/context-stack-e3-graphiti, especially d77c64f (config switch) + e3-s04g.* (cleanup).
+
 ## Context
 
 Graphiti runs an LLM at ingest time to extract entities and relations from each episode. The brief's $20/month NFR-COST-001 leaves little room for an expensive primary model, and Graphiti's prompts are demanding — small/local models are documented as producing malformed JSON that breaks ingestion.

@@ -9,6 +9,114 @@ context_question: Q6
 
 # ADR-008: Daily $1 hard-cap implementation via OpenAI Usage API + ct-ai-01 cron throttle
 
+## Amendment 2026-04-27 (E4-S04 — cost source: OpenAI Usage API → LiteLLM /metrics, throttle: docker SEMAPHORE_LIMIT → LiteLLM model_list deactivation)
+
+**Decision change.** Replace "OpenAI Usage API" as the cost source with the
+**LiteLLM gateway's Prometheus `/metrics` endpoint** — specifically the
+`litellm_spend_metric_total` counter, filtered by `api_provider="gemini"`.
+Replace the `SEMAPHORE_LIMIT 5→1 + docker compose up -d --no-deps graphiti-mcp`
+throttle with **YAML comment-out (`#@COSTCAP-OFF# `) of the listed Gemini
+aliases inside sentinel-marked blocks in `/opt/litellm-gateway/config.yaml`**,
+followed by a `systemctl reload-or-restart litellm-gateway`. Calls to
+throttled aliases return HTTP 400 ("Invalid model name") which is the
+effective rejection. Restore strips the prefix and restarts.
+
+**Why.**
+1. **Gemini, not OpenAI.** ADR-002 was amended in E3-S04g to use Gemini
+   2.5 Flash-Lite for Graphiti's LLM extraction (instead of gpt-4o-mini);
+   ADR-003 v2 already moved embeddings to Gemini Embedding 2 in E3-S04b.
+   No OpenAI traffic flows on the Graphiti hot path anymore. The cost
+   source must follow.
+2. **LiteLLM is stateless (Story 9.16).** `/spend/*`, `/global/spend/*`,
+   `/spend/calculate`, and `/model/update` all return 500 "No db connected"
+   in stateless mode. Enabling the database adds a Prisma+SQLite migration
+   to the role for one feature, with cascading complexity (schema migrations,
+   per-key budget enforcement, virtual-key persistence). Out of proportion
+   for a $1/day cap. The Prometheus counter is exposed unconditionally and
+   has the labels we need (`api_provider`, `model`).
+3. **Per-model `rpm`/`tpm`/`max_parallel_requests` are router hints, NOT
+   request rejecters.** Verified empirically by reading
+   `litellm/proxy/hooks/parallel_request_limiter.py`: enforcement only fires
+   when a virtual-key/team budget is in play (which requires a DB). A live
+   throttle test with `rpm: 1` on `gemini-embedding-2` allowed three
+   back-to-back embeddings to all return 200. Comment-out is the most
+   reliable knob without a DB.
+4. **No Graphiti container restart (vs ADR-008 v1).** The throttle now
+   targets LiteLLM (~3 s downtime, only the Gemini path) rather than
+   Graphiti-MCP. Other LiteLLM consumers (Hermes, OWUI, Continue) keep
+   working unchanged. `gemma4-*` aliases (local Gemma, $0 cost) are
+   explicitly left alone — `cost-cap.sh` filters by `api_provider="gemini"`
+   for the spend signal AND only edits the `COST-CAP-START gemini-throttle-target`
+   sentinel blocks, not the Gemma blocks.
+
+**Implementation surface.**
+- Script: `/usr/local/bin/cost-cap.sh` (deployed by the `litellm-gateway`
+  Ansible role, `homelab-infra/ansible/roles/litellm-gateway/files/cost-cap.sh`).
+- Cron: `/etc/cron.d/cost-cap` running every 30 min (template
+  `templates/cost-cap.cron.j2`).
+- Env file: `/etc/cost-cap.env` mode 600, holding budget, alias list,
+  ntfy URLs, and base64'd ntfy basic auth (vault-encrypted as
+  `vault_cost_cap_ntfy_basic_auth` in `host_vars/ct-ai-01/vault.yml`).
+- State: `/var/lib/cost-cap/state.json` — daily baseline + throttled flag.
+- Log: `/var/log/cost-cap.log` (mode 0640).
+- Sentinel markers in `templates/litellm-config.yaml.j2` around each
+  throttleable alias, with the `gemini-2.5-flash-lite` block as a forward-
+  compat placeholder for when ADR-002's Flash-Lite extraction lands.
+
+**Spend computation.** `litellm_spend_metric_total` is a lifetime
+cumulative counter that resets when the gateway process restarts. The
+script snapshots it at the first cron tick of each UTC day and stores
+the value as `baseline_spend`; `today_spend = current_total - baseline_spend`.
+Counter regression (gateway restart mid-day) triggers a re-baseline so
+`today_spend` is never negative. The 30-min cadence accepts ~0.5 USD of
+"miss-window" exposure on the worst-case burst — acceptable at $20/mo budget
+(NFR-COST-001).
+
+**Throttle mechanism (verified breach test 2026-04-27):**
+- BREACH: ntfy "Cost-cap BREACH" → `homelab-alerts-urgent` (urgent priority,
+  DND-bypass on phone), 200 OK delivery.
+- Throttled alias `/v1/models` → no longer listed; direct call → HTTP 400
+  `Invalid model name passed in model=gemini-embedding-2`.
+- Control alias `gemma4-26b-text` chat completion → HTTP 200 (no regression).
+- RESTORE: ntfy "Cost-cap RESTORED" → `homelab-alerts-default` (warning
+  tier), 200 OK. Alias re-listed and HTTP 200 on subsequent embedding
+  request.
+- Idempotence: 5x back-to-back invocations under budget → 5 logged
+  no-op lines, zero gateway restarts, zero ntfy POSTs.
+
+**ntfy delivery channel.** ADR-008 v1 named `http://ct101.tail-scale.ts.net/graphiti-alerts`
+as a Tailscale-only path. The actual homelab ntfy server is on
+ct-docker-01 (192.168.50.194) per Story 7.11, with a public-DNS HTTPS
+endpoint at `https://ntfy.bi-services.be/`. The amendment uses the
+existing `homelab-alerts-urgent` (breach) and `homelab-alerts-default`
+(restore) topics with the `prometheus-bot` write-credential (basic auth,
+60 chars base64) reused from the Alertmanager → ntfy path. No new ntfy
+topics or auth surface added.
+
+**Reversal trigger.** If Graphiti ever moves back to OpenAI (unlikely
+post-ADR-002 amendment), revisit the cost source — `litellm_spend_metric_total`
+will continue to track the new provider tag. If LiteLLM Story 9.18+
+enables a database, switch to `/global/spend/keys` for per-virtual-key
+spend (cleaner than the Prometheus delta). Either way, the throttle
+mechanism (sentinel block comment-out) stays — it's provider-independent.
+
+**Known limitation accepted 2026-04-27 (operator decision).** Graphiti's
+LLM extraction uses graphiti-core's native `GeminiClient` (provider=gemini),
+which talks directly to `generativelanguage.googleapis.com` and bypasses
+the LiteLLM gateway entirely. Only the embedder traffic (`gemini-embedding-2`
+via the gateway) is captured by `litellm_spend_metric_total`. At current
+projected spend (~$1-3/mo total, ~$0.01/mo embedder, ~$1-3/mo LLM), the cap
+catches roughly 1% of cost directly. A runaway scenario (e.g. unbounded
+`add_memory` loop) would still trigger the cap eventually via the proportional
+embedder calls (each `add_memory` produces ~10 embedder calls), so the cap
+remains an effective backstop against catastrophic runaway, just not a
+precise daily meter for the LLM hot path. Re-evaluate at Sprint 5 if monthly
+spend approaches $10. Three resolution paths recorded for future amendment:
+(A) accept gap [chosen 2026-04-27]; (B) route Graphiti's LLM through LiteLLM
+gateway; (C) add parallel meter via Google Cloud Billing API (24h+ delayed).
+
+
+
 ## Context
 
 PRD FR-OBS-002 / NFR-COST-002 mandate a daily hard-cap: if combined Graphiti-induced spend exceeds $1 in any 24-hour window, ingestion auto-throttles (drop `SEMAPHORE_LIMIT` to 1) and the operator is alerted. PRD Q6 asks the architecture phase to choose between three implementation surfaces:

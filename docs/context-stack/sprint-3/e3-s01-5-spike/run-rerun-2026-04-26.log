@@ -1,0 +1,110 @@
+API key sourced from: file /home/developer/.litellm-spike-key
+Loaded 50 episodes from corpus-50-facts.jsonl
+Calling http://192.168.50.160:4000 model=gemma4-26b-text ...
+
+[ 1/50] FAIL ..  43.63s architectural-decision   adr-001
+[ 2/50] OK  S.  34.90s architectural-decision   adr-002
+[ 3/50] OK  S.  28.55s architectural-decision   adr-003
+[ 4/50] OK  S.  37.69s architectural-decision   adr-004
+[ 5/50] OK  ..  46.35s architectural-decision   adr-005
+[ 6/50] FAIL ..  25.99s architectural-decision   adr-006
+[ 7/50] OK  S.  39.40s architectural-decision   adr-007
+[ 8/50] OK  S.  34.00s architectural-decision   adr-008
+[ 9/50] FAIL ..  29.09s architectural-decision   adr-009
+[10/50] OK  S.  13.95s architectural-decision   adr-010
+[11/50] OK  S.  22.53s architectural-decision   adr-011
+[12/50] OK  S.  19.85s architectural-decision   adr-012
+[13/50] OK  S.  20.86s architectural-decision   adr-013
+[14/50] OK  S.  12.18s architectural-decision   adr-014
+[15/50] OK  ..  12.56s architectural-decision   adr-mock-15
+[16/50] OK  ..  21.61s dated-decision           temporal-01
+[17/50] OK  S.  13.18s dated-decision           temporal-02
+[18/50] OK  S.  15.33s dated-decision           temporal-03
+[19/50] OK  S.  21.74s dated-decision           temporal-04
+[20/50] OK  S.  15.97s dated-decision           temporal-05
+[21/50] OK  S.  12.68s dated-decision           temporal-06
+[22/50] FAIL ..  15.68s dated-decision           temporal-07
+[23/50] OK  S.  10.28s dated-decision           temporal-08
+[24/50] OK  S.  15.50s dated-decision           temporal-09
+[25/50] OK  S.  13.20s dated-decision           temporal-10
+[26/50] OK  S.  11.48s lesson-learned           lesson-01
+[27/50] OK  S.  19.00s lesson-learned           lesson-02
+[28/50] OK  S.  19.60s lesson-learned           lesson-03
+[29/50] OK  S.  15.30s lesson-learned           lesson-04
+[30/50] FAIL ..  13.13s lesson-learned           lesson-05
+[31/50] OK  S.  13.97s lesson-learned           lesson-06
+[32/50] OK  S.  15.09s lesson-learned           lesson-07
+[33/50] OK  S.  13.37s lesson-learned           lesson-08
+[34/50] OK  S.  13.80s lesson-learned           lesson-09
+[35/50] OK  S.  19.69s lesson-learned           lesson-10
+[36/50] OK  S.  15.80s supersession-trail       supersession-01
+[37/50] OK  S.  17.36s supersession-trail       supersession-02
+[38/50] FAIL ..  15.28s supersession-trail       supersession-03
+[39/50] OK  S.  18.68s supersession-trail       supersession-04
+[40/50] OK  S.  12.20s supersession-trail       supersession-05
+[41/50] FAIL ..  16.78s supersession-trail       supersession-06
+[42/50] OK  S.  19.41s supersession-trail       supersession-07
+[43/50] OK  S.  12.40s supersession-trail       supersession-08
+[44/50] OK  S.  11.10s supersession-trail       supersession-09
+[45/50] FAIL ..  24.81s supersession-trail       supersession-10
+[46/50] OK  S.  26.46s entity-rich-vignette     vignette-01
+[47/50] OK  S.  32.21s entity-rich-vignette     vignette-02
+[48/50] OK  S.  16.42s entity-rich-vignette     vignette-03
+[49/50] OK  S.  17.54s entity-rich-vignette     vignette-04
+[50/50] OK  S.  20.18s entity-rich-vignette     vignette-05
+
+============================================================
+AGGREGATE METRICS
+============================================================
+{
+  "total_episodes": 50,
+  "parse_ok": 42,
+  "parse_ok_pct": 84.0,
+  "schema_pass": 39,
+  "schema_pass_pct": 78.0,
+  "had_markdown_fences": 0,
+  "had_prose_around_json": 0,
+  "mean_latency_ms": 20155.2,
+  "p95_latency_ms": 37691,
+  "max_latency_ms": 46350,
+  "total_runtime_s": 1007.8,
+  "by_category": {
+    "architectural-decision": {
+      "n": 15,
+      "parse_ok": 12,
+      "schema_pass": 10
+    },
+    "dated-decision": {
+      "n": 10,
+      "parse_ok": 9,
+      "schema_pass": 8
+    },
+    "lesson-learned": {
+      "n": 10,
+      "parse_ok": 9,
+      "schema_pass": 9
+    },
+    "supersession-trail": {
+      "n": 10,
+      "parse_ok": 7,
+      "schema_pass": 7
+    },
+    "entity-rich-vignette": {
+      "n": 5,
+      "parse_ok": 5,
+      "schema_pass": 5
+    }
+  },
+  "failure_modes": {
+    "markdown_fence_unstripped": 0,
+    "truncated_json": 0,
+    "missing_schema_field": 3,
+    "empty_response": 0,
+    "http_error": 0,
+    "timeout": 0,
+    "regex_grabbed_json_block": 0,
+    "schema_pass_after_postprocess": 0
+  }
+}
+
+VERDICT: ADOPT-WITH-CAVEATS — parse 84.0% in 80-94% band (or schema below 90%)
