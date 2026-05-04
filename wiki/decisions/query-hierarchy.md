@@ -50,8 +50,11 @@ homelab session. Each tier has a real comparative advantage:
   AST graph over `~/workspace/homelab/`. Holds **code structure** — what
   is defined, what calls what, what imports what.
 - **Tier 3 — Graphiti** (MCP at port 8000, FalkorDB-backed): bi-temporal
-  graph keyed on `group_id=tom-personal`. Holds **dated decisions** — when
+  graph keyed on `group_id=tom_personal`. Holds **dated decisions** — when
   did X happen, what superseded what, what was the lesson learned.
+  Note: underscore not hyphen — FalkorDB's RediSearch backend treats `-`
+  as the NOT operator and silently fails ingestion of group_ids
+  containing hyphens (confirmed 2026-04-28 during seed batch).
 - **Tier 4 — Auto-memory** (`~/.claude/projects/-home-developer-workspace-homelab/memory/`):
   markdown files with a `MEMORY.md` index. Holds **one-line stable facts /
   preferences / pointers**. Loaded passively at session start.
@@ -74,7 +77,7 @@ order in under a minute.
 | "What changed in repo Z this week?" | GitNexus `detect_changes` | git log → fail-open | Don't rely on auto-memory for repo state |
 | "When did Tom set up X?" / "When did X migrate?" | Graphiti `search_facts` (filtered by date) | git log → operator journal | Don't ask the wiki "when" — wiki holds *current* state, not the trail |
 | "Why did we supersede X with Y?" | Graphiti `search_facts` (supersession edges) | Wiki frontmatter `superseded_by` field → ADR file | Don't infer supersession from wiki diff; the *reason* lives in Graphiti, the *fact* lives in wiki frontmatter |
-| "What was discussed in last session?" | Auto-memory (passive context) | Graphiti recent episodes (`group_id=tom-personal`) | Don't ask the wiki for session content — wiki is durable, sessions are not |
+| "What was discussed in last session?" | Auto-memory (passive context) | Graphiti recent episodes (`group_id=tom_personal`) | Don't ask the wiki for session content — wiki is durable, sessions are not |
 | "What's Tom's preference for X?" | Auto-memory (`feedback_*.md`, `user_*.md`) | Graphiti episodes tagged `user_preference` | Don't bury preferences in Graphiti when they fit a one-liner |
 | "What's the IP / VMID / path of CT-X?" | Auto-memory (`project_*.md` pointers) | Wiki `projects/` if the page exists → terraform inventory | Don't promote a one-liner to wiki; promote only when sub-bullets emerge |
 | "What does function F do?" (semantic) | Read source (via Claude Code Read tool, often via GitNexus locating it first) | Wiki if a runbook documents it | LLM-only summarisation without grounding is hallucination-prone |
@@ -112,7 +115,7 @@ file-tier misses. The current implementation surfaces:
    structural questions. Cache by query shape; tool calls are sub-second
    but not free.
 3. **Graphiti MCP tools** (Tier 3): invoke `search_facts` with a
-   `group_id=tom-personal` filter for dated/conversational questions.
+   `group_id=tom_personal` filter for dated/conversational questions.
    Graphiti is the only tier that answers "when" cleanly.
 4. **Auto-memory** (Tier 4): loaded passively at session start; not
    queried-on-demand. The session prelude includes `MEMORY.md` content;
