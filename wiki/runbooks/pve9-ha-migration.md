@@ -62,7 +62,7 @@ This cluster's four named rules:
 | Name | strict | nodes | resources |
 |---|---|---|---|
 | `critical` | 0 | pve1,pve2,pve3 | ct:162 |
-| `standard` | 0 | pve1,pve2,pve3 | ct:101, ct:151, ct:250 (and others as designed) |
+| `standard` | 0 | pve1,pve2,pve3 | ct:101, ct:151, ct:163, ct:250 (and others as designed) |
 | `pinned-pve1` | 1 | pve1 | vm:100 |
 | `pinned-pve3` | 1 | pve3 | ct:160 |
 
@@ -75,7 +75,7 @@ Set `--state` at `ha-manager add` time per the operator's policy:
 
 | Resource class | `--state` at registration |
 |---|---|
-| Always-on infra (ct:162, ct:101, ct:160, vm:100) | `started` unconditionally |
+| Always-on infra (ct:162, ct:101, ct:160, ct:163, vm:100) | `started` unconditionally |
 | Project containers (ct:151 sparkle-cps, ct:250 dev-homelab) | matches `pct status` at registration time |
 
 After registration, state is operator-controlled day-to-day via
