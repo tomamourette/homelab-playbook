@@ -2,7 +2,7 @@
 title: "Homelab wiki — index"
 slug: index
 category: meta
-last_reviewed: 2026-04-27
+last_reviewed: 2026-07-28
 owner: tomamourette
 related_pages: []
 related_frs: [FR-WIKI-002, FR-WIKI-003, FR-WIKI-004, FR-WIKI-007, FR-WIKI-008]
@@ -28,9 +28,14 @@ filename rules, and a copy-pasteable new-page template.
 ## By category
 
 - **architecture/** — cross-product architectural decisions (network, cluster, storage)
-  - [Tailscale-only access policy](tailscale-policy) (E4-S02)
+  - [Tailscale access policy](tailscale-policy) (E4-S02; widened 2026-07-28
+    to cover Tailscale SSH)
+  - [Remote access topology](remote-access-topology) (2026-07-28)
   - [Hybrid Gemma serving](hybrid-gemma-serving) (E4-S02)
 - **runbooks/** — step-by-step operator procedures (deploy, rebuild, rotate)
+  - [Create a new project container](create-project-container) (2026-05-09;
+    step 8 updated 2026-07-28)
+  - [Remote access recovery](remote-access-recovery) (2026-07-28)
   - [Test the Context Stack — operator verification runbook](test-the-stack) (post-Sprint-4)
   - [Weekly observability digest — template](weekly-observability-digest) (E4-S09)
   - [wiki-query skill](wiki-query-skill) (E4-S03)
@@ -53,6 +58,14 @@ filename rules, and a copy-pasteable new-page template.
 
 ## Recently updated
 
+- `runbooks/remote-access-recovery.md` — 2026-07-28 (new; keyless
+  remote-access design)
+- `architecture/remote-access-topology.md` — 2026-07-28 (new)
+- `architecture/tailscale-policy.md` — 2026-07-28 (widened to cover
+  Tailscale SSH; added out-of-repo ACL section)
+- `runbooks/create-project-container.md` — 2026-07-28 (step 8 rewritten
+  to stop redistributing SSH private keys; previously 2026-05-09 post
+  ct-saply-ai create)
 - `decisions/query-hierarchy.md` — 2026-04-27 (E4-S10)
 - `runbooks/exit-ramps/*.md` — 2026-04-27 (E4-S10, four pages)
 - `decisions/weekly-digest-2026-w18.md` — 2026-04-27 (E4-S09)
