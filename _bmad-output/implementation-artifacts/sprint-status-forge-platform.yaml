@@ -1,0 +1,368 @@
+# generated: 2026-09-09
+# last_updated: 2026-09-09
+# 2026-09-09 FE4 blocked solely on operator GitHub external-auth consent at https://forge.bi-services.be/external-auth/github (forge-admin)
+# project: forge-platform - self-hosted PoC on Proxmox
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: homelab-playbook/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - This file tracks the Forge Platform PoC ONLY. It is deliberately SEPARATE from
+#   implementation-artifacts/sprint-status.yaml, whose header declares
+#   'project: homelab - AI Dev Container'. Mixing a second product into that file would repeat the
+#   'environments/-means-tenant' overloading identified as finding A7 in the prior findings
+#   document. See sprint-change-proposal-2026-09-09.md section 6.1 (preferred) vs 6.2 (fallback,
+#   NOT taken).
+# - Epics FE0-FE4 have a STRICT LINEAR dependency chain: FE0 -> FE1 -> FE2 -> FE3 -> FE4.
+#   FE1 creates the host that FE2's Ansible role targets; FE3 builds an image on that host;
+#   FE4 exercises what FE3 pushed. There is no parallel path.
+# - Within each epic, stories are broadly sequential. FE0-S03/S04/S05 are repo edits that could be
+#   done in any order, but FE0-S04 (comment drift) SHOULD land first so nobody ports the wrong
+#   architecture.
+# - SM typically creates the next story after the previous one is 'done' to incorporate learnings.
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended).
+#
+# BLOCKING PREREQUISITES (proposal section 5.4):
+# ==============================================
+# NOTHING IN FE1-FE4 STARTS BEFORE BOTH OF THESE EXIST. Neither can be delivered by code.
+#   1. A GitHub OAuth App -> CODER_EXTERNAL_AUTH_0_ID/TYPE/CLIENT_ID/CLIENT_SECRET (fe0-s01).
+#      The ONLY non-optional external credential in the whole PoC. data "coder_external_auth"
+#      "github" (coder/templates/forge/main.tf:25-27) lacks optional = true, so the workspace build
+#      FAILS without it; and even if it passed, forge-sync.sh sources its token from
+#      'coder external-auth access-token github' and SILENTLY SKIPS its entire clone block when the
+#      token is absent, so agentic-ai never lands and gates (b)-(e) are untestable.
+#   2. A Cloudflare API token, DNS-edit scope, zone bi-services.be (fe0-s02).
+#      Required for ANY browser-trusted certificate: the homelab has no inbound :80/:443, so
+#      HTTP-01 is impossible, not merely inconvenient. Wildcard scope is optional
+#      (coder_app "code_server" is subdomain = false); the token is not.
+#      CORRECTION 2026-09-09: the wildcard half of that sentence is REVERSED - see
+#      WILDCARD DECISION below. The token half is unchanged, and the token itself needs no
+#      re-scoping: one Zone.DNS Edit grant already covers issuing a wildcard.
+#
+# OPEN DECISION THAT BLOCKS fe1-s01 (risk register R4; called "R1" in the proposal's Approval note):
+# ==================================================================================================
+# The workspace template's coder_parameter defaults are 12288 MB RAM
+# (coder/templates/forge/main.tf:62) and 20480 MB swap (main.tf:77). These are coder_parameter, NOT
+# variable, so a --variables-file CANNOT lower them. min = 2048 and mutable = true mean an operator
+# CAN choose smaller - but only by remembering to, every time. Swap has no answer inside an
+# unprivileged LXC: you cannot create a swapfile, and the CT gets whatever swap_mb Terraform set,
+# which modules/ct-debian defaults to 512 MB
+# (homelab-infra/terraform/modules/ct-debian/variables.tf:30-33).
+# Two candidate resolutions, NEITHER CHOSEN:
+#   (a) four real Terraform variables driving both the coder_parameter defaults and their validation
+#       maxima (fe3-s01) PLUS swap_mb = 8192 on the CT (fe1-s01); or
+#   (b) size CT 167 at 4C/12GB instead of 4C/8GB.
+# This is an OPERATOR CAPACITY CALL against pve3 and must be resolved before fe1-s01 starts.
+# Approval of the proposal explicitly did NOT settle it.
+#
+# OTHER OPEN OPERATOR DECISIONS (record, do not resolve silently):
+# ===============================================================
+# - fe0-s05: the fate of the uncommitted ct_sparkle_vlabel (VMID 166) block. Stashing/excluding is
+#   required; deletion vs retention is the operator's call.
+# - fe1-s03: whether ct:167 registers 'started' or 'stopped' under the Project-CT HA Policy (R6 -
+#   pve1 has a recorded hard-hang cycle; pve2 measured ~12 GB free on 2026-07-30). Replication to
+#   BOTH peers is NOT open - it is required (the ct:151 lesson: one job means data is safe but
+#   failover lands in 'error').
+# - fe3-s05: keep module "intellij_gateway" (registry.coder.com egress on every workspace build) or
+#   remove it. 'terraform validate' in that directory FAILS while this is undecided.
+#
+# UNTESTED, CARRIED AS A RISK (R5):   -- CLOSED 2026-09-09, DISPROVEN. See fe1-s05.
+# =================================================================================
+# RESOLVED: fe1-s05 ran it on CT 167. Double-nested Docker WORKS, and the inner daemon's
+# overlayfs came up DIRECTLY on the ZFS dataset - no vfs fallback, no loopback image. The risk
+# is closed as DISPROVEN, not merely mitigated. Gate (g) stays non-gating per ADR-003.
+# The original text is retained below for the record.
+# - Double-nested Docker - the workspace's inner dockerd writing to docker_volume.dockerd, which on
+#   CT 167 lives on the OUTER Docker's data root on the LXC's ZFS rootfs - is untested in this
+#   estate. One nesting level is proven (every project CT runs Docker on ZFS via dev-host); two
+#   levels is not. Mitigated but not removed by ADR-003: acceptance gate (g) is NON-GATING, so a
+#   failure degrades the PoC rather than ending it. Surfaces at fe4-s02.
+#
+# WILDCARD DECISION (2026-09-09, DIRECTOR - REVERSES THE PRIOR POSITION):
+# =======================================================================
+# THE WILDCARD IS REQUIRED. *.forge.bi-services.be IS SERVED.
+# fe2-s05 (lines 43, 67-70), ADR-005 and fe0-s02 AC3 all said a wildcard was NOT required, on
+# the grounds that coder_app "code_server" sets subdomain = false and is path-proxied. That is
+# true of code-server and false of the PoC: CODER PREVIEW URLS ARE SUBDOMAIN-BASED
+# (agentic-ai/scripts/forge-preview-url), and CODER_WILDCARD_ACCESS_URL=*.forge.bi-services.be
+# is already set in /etc/coder.d/coder.env on CT 167.
+# Consequences, with their state MEASURED 2026-09-09 17:23 UTC:
+#   - BOTH forge.bi-services.be AND *.forge.bi-services.be present a browser-trusted certificate.
+#     [DONE] But NOT the way this file first described it. The original wording said the single-SAN
+#     certificate must be REISSUED with two SANs. That is wrong about the mechanism and the work
+#     never happened: Caddy issues ONE CERTIFICATE PER NAME for a two-name site block, so CT 167
+#     serves two separate Let's Encrypt certificates -
+#       SNI forge.bi-services.be    -> CN=forge.bi-services.be    SAN: forge.bi-services.be    (YE2)
+#       SNI zz.forge.bi-services.be -> CN=*.forge.bi-services.be  SAN: *.forge.bi-services.be  (YE1)
+#     each with ONE SAN, both "Verify return code: 0 (ok)", no -k. The apex certificate still has
+#     its original notBefore (13:54 UTC); the wildcard is a separate later issuance (16:09 UTC).
+#     DO NOT WRITE A SAN-COUNT CHECK. Counting SANs on the apex returns 1 on a fully correct
+#     deployment, so "exactly two SANs" fails the working system exactly as "no wildcard SAN" did.
+#     The correct check is coverage: curl both names, expect ssl_verify=0 on each.
+#   - public Cloudflare wildcard record for *.forge.bi-services.be: [DONE, and it IS in Terraform]
+#     terraform/envs/homelab/cloudflare-dns.tf declares local.wildcard_dns_records["*.forge"], and
+#     `terraform state list` shows cloudflare_record.homelab["*.forge"]. Verified against the zone's
+#     own authority: dig zz.forge.bi-services.be @anuj.ns.cloudflare.com -> 192.168.50.167.
+#     (An earlier note in this file saying the record "does NOT exist yet" is superseded.)
+#   - internal wildcard answer via the additive dnsmasq address= line: [DONE] see INTERNAL DNS below.
+#   - forge_caddy_wildcard in forge-coder-host/defaults/main.yml: [DONE] now `true` (defaults line
+#     643); the "OPERATOR DECISION OUTSTANDING" comment is gone with it.
+# UNCHANGED AND STILL BINDING: a wildcard must NEVER enter Terraform's fqdn_dns_records. That
+# map renders hosts-format lines and dnsmasq rejects '*' outright - a '*' there yields a broken
+# file, not a wildcard answer. fe2-s05 AC5 stands as written; do not "fix" it.
+# The Cloudflare token needs no change: one Zone.DNS Edit grant already permits a wildcard.
+# WRITE-BACK, PASS 1 (3 files): stories/FE2-S05 (Background + AC5), adrs/ADR-005 (amendment at
+# top), stories/FE0-S02 (AC3).
+# WRITE-BACK, PASS 2 - REPO-WIDE SWEEP (2026-09-09). Pass 1 was too narrow: 30 unqualified
+# "wildcard is not required" statements survived across 25 files, including TWO unamended copies
+# of acceptance gate (a) - prd.md and product-brief.md - which would have failed the CORRECT
+# two-SAN configuration at fe4-s02. All now carry a dated reversal marker:
+#   - the §5.4 boilerplate banner in 20 story files (FE1-S01..S05, FE2-S01/S02/S04/S05,
+#     FE3-S01..S06, FE4-S01..S05) and tests/e2e-deployment.md;
+#   - gate (a) in prd.md, product-brief.md and epics.md (acceptance.md was already amended);
+#   - prd.md §9.1, epics.md §2, README.md (blocker table + ADR index), product-brief.md §4,
+#     architecture.md (§4.4 + ADR index);
+#   - stories/FE0-S02's Background paragraph, which contradicted its own AC3 note;
+#   - adrs/ADR-005 frontmatter title: - the prose amendment does not reach anything that
+#     indexes frontmatter, so the field itself was flipped.
+# stories/FE2-S06's copy sits inside a RETAINED HISTORICAL QUOTE and was annotated in the
+# surrounding banner instead of inside the quote, so the quoted record stays byte-exact.
+# Original text retained everywhere (struck, not deleted); nothing removed.
+# DO NOT SWEEP: the fqdn_dns_records no-wildcard rule (prd.md FR-SUB-003, epics.md,
+# FE1-S01-AC4, FE2-S05-AC5, architecture.md §4.4). It is correct and unaffected.
+#
+# BANNERS: the "BLOCKED - do not start" §5.4 banner was lifted (struck, text retained) on all 15
+# stories that are done or in-progress here, matching the treatment fe2-s06 already had. The 6
+# backlog stories keep the banner standing.
+#
+# ACCEPTANCE INDEX REGENERATED (2026-09-09): tests/acceptance.md §3 is now read entirely from the
+# story files - 141 ACs across 27 stories, ZERO derived. §1.1 moved 132 -> 141. Two errors were
+# behind that: the derived placeholders undercounted by exactly one AC per story (9 stories), and
+# the FE2 authored summand was already stale (FE2-S05 has six ACs, §1.1 counted five). §1.1 is now
+# reproducible from §3 - the two grep commands are recorded in the document.
+# NOTE: acceptance.md's Status column tracks EVIDENCE, not delivery. Eight stories are done here
+# with no per-AC verdict in their own files, so their rows read pending. That is deliberate and is
+# tracked as follow-ups.md item 11 - do not "fix" it by flipping rows to pass.
+#
+# STORY FRONTMATTER RECONCILED (2026-09-09): 12 story files read status: draft while this file
+# marked them done (fe0-s01..s05, fe1-s01..s04, fe3-s01/s03/s05). Flipped to match THIS FILE,
+# which is the authority for delivery state. Recurrence check recorded in follow-ups.md item 12.
+#
+# INTERNAL DNS - HOW forge.bi-services.be WAS LANDED (2026-09-09), AND WHAT IS OWED:
+# =================================================================================
+# THE BLOCKER: Pi-hole on ct-docker-01 (192.168.50.194) ships local=/bi-services.be/ in its
+# container's /etc/dnsmasq.d/02-homelab.conf, so it is AUTHORITATIVE for the zone and returned an
+# authoritative NXDOMAIN for forge.bi-services.be. The tailnet Split DNS route sends
+# bi-services.be to that same Pi-hole, so an OFF-LAN tailnet client saw the same NXDOMAIN. The
+# public Cloudflare A record was correct and could not, on its own, satisfy fe2-s05 AC4.
+# WHY THE OBVIOUS FIX WAS REJECTED: the Terraform-generated
+# terraform/envs/homelab/generated/pihole-custom.list already contains forge, but landing it
+# DELETES the live hand-added line "192.168.50.194 hermes.bi-services.be" - a running Traefik
+# router for the Linear->Hermes webhook that was never entered into Terraform. (The live file is
+# bind-mounted from the on-host clone /opt/homelab-apps/stacks/dns-pihole/config/, whose working
+# tree is dirty: 45 files.)
+# THE MECHANISM USED: an ADDITIVE, Ansible-managed dnsmasq drop-in (05-forge.conf) carrying
+#   address=/forge.bi-services.be/192.168.50.167
+# delivered into the Pi-hole container, then a DNS reload. The address= form covers the apex AND
+# every subdomain in one line, so it satisfies the wildcard decision above at the same time.
+# custom.list is NOT touched; hermes is NOT deleted or altered.
+# IaC: homelab-infra/ansible/roles/forge-dns + playbooks/forge-dns.yml.
+#
+# VERIFIED WORKING 2026-09-09 17:16 UTC - and it was NOT working ten minutes earlier, which is the
+# part worth carrying forward. At 17:06 UTC the drop-in was on disk (mtime 16:44 UTC) while
+# `dig forge.bi-services.be @192.168.50.194` still returned status: NXDOMAIN, because pihole-FTL
+# had not restarted since six days BEFORE the file was written. Delivering the file is not the same
+# as landing the record: dnsmasq re-reads hosts files on SIGHUP but NEVER re-reads its config
+# files, and address= lives in a config file, so only an FTL restart applies this drop-in.
+# THE CHECK THAT TELLS THE TWO STATES APART (use this, not the file's existence):
+#   docker exec pihole stat -c %y /etc/dnsmasq.d/05-forge.conf          # config written
+#   docker exec pihole sh -c 'stat -c %y /proc/$(pidof pihole-FTL)'     # resolver last started
+# FTL must have started AFTER the config was written. Current state:
+#   conf mtime  2026-09-09 19:09:18 +0200
+#   FTL start   2026-09-09 19:09:19 +0200   (1.2 s later - the reload took)
+# MEASURED ANSWERS (from the Ansible control host 192.168.50.156):
+#   dig +short forge.bi-services.be    @192.168.50.194 -> 192.168.50.167
+#   dig +short zz.forge.bi-services.be @192.168.50.194 -> 192.168.50.167  (wildcard, any subdomain)
+#   dig +short hermes.bi-services.be   @192.168.50.194 -> 192.168.50.194  (untouched, still live)
+#   dig        forge.bi-services.be    @192.168.50.194 -> NOERROR, flags qr aa   (was NXDOMAIN)
+# IDEMPOTENT: two consecutive forge-dns.yml runs at 17:16 UTC both reported
+#   ct-docker-01 : ok=6 changed=0 unreachable=0 failed=0 skipped=4 rescued=0 ignored=0
+# with conf mtime and FTL start unchanged across both - a converged host re-asserts the invariant
+# without restarting DNS, because the role's reload trigger probes the RUNNING FTL, not the file.
+# SCOPE: this proves internal resolution only. It does NOT prove the certificate covers
+# *.forge.bi-services.be - that is the separate wildcard slice, still open.
+# OWED, DEFERRED ON PURPOSE: reconcile hermes.bi-services.be into Terraform. It is live and
+# untracked. It must NOT be done as a side effect of fe2-s05. Tracked in
+# planning-artifacts/products/forge-platform/follow-ups.md.
+# CAVEAT: the role task named "Assert AC4 Part A - the name reaches this host over a trusted
+# chain" OVERSTATES what it proves - it falls back to curl --resolve when the host resolver has
+# no record, and --resolve bypasses DNS entirely. A green line from that task is not proof of
+# resolution; check which branch it took.
+#
+# CREDENTIAL ROTATION OWED BY THE OPERATOR (3 items, NOT code work, NOT done):
+# ===========================================================================
+# Raised as blockers on fe2-s05. None can be closed by an agent; all three were exposed during
+# the FE1/FE2 work and should be rotated before the PoC is considered closed:
+#   1. the Proxmox API token used by Terraform;
+#   2. dev_vm_password (terraform/envs/homelab/terraform.tfvars);
+#   3. the Cloudflare API token (vault_cloudflare_api_token).
+# Rotation is an operator action against the issuing systems (PVE, Cloudflare) followed by an
+# ansible-vault re-encrypt / tfvars update. NO SECRET VALUE IS EVER PRINTED OR RECORDED IN THIS
+# ARTIFACT SET - length is the only property any document here may state, and lengths are of the
+# UNQUOTED value (see FE2-S06's dated correction: the earlier 22/42 figures counted the YAML
+# quotes; the real lengths are 20/40, cloudflare 53).
+#
+# CODER VERSION PIN:
+# ==================
+# coder is PINNED at 2.36.4 - installed from the upstream .deb with its published SHA-256
+# verified before dpkg unpacks it, NOT from coder.com/install.sh (which resolves whatever
+# upstream serves that day and verifies nothing). 2.36.4 is the STABLE channel release of
+# 2026-09-01; 2.37.x exist and are newer but are MAINLINE. Bump coder_version and
+# coder_deb_sha256 TOGETHER, never one alone (forge-coder-host/defaults/main.yml).
+#
+# ESTIMATES:
+# ==========
+# T-shirt sizes only. NO story points are asserted anywhere in this product.
+# Whole PoC: M-L, two to four working sessions - IF the operator prerequisites land first.
+
+generated: 2026-09-09
+last_updated: 2026-09-09
+project: forge-platform - self-hosted PoC on Proxmox
+project_key: NOKEY
+tracking_system: file-system
+story_location: homelab-playbook/_bmad-output/implementation-artifacts
+source_proposal: planning-artifacts/sprint-change-proposal-2026-09-09.md
+product_artifacts: planning-artifacts/products/forge-platform
+
+# OPERATOR DECISIONS RECORDED:
+#   2026-09-09 ct:167 HA state = started (FE1-S03 AC3, revised same day). First recorded as
+#   stopped on a wrong description; Proxmox `stopped` ACTIVELY shuts the CT down and blocked
+#   FE1-S04. Replication to BOTH peers unaffected. Final state revisited at FE4.
+#   2026-09-09 R4 sizing = CT 6C/12GB/4GB swap/80GB; workspace defaults 6144/10240.
+#   2026-09-09 ct_sparkle_vlabel phantom = remove (FE0-S05).
+#   2026-09-09 intellij_gateway = REMOVE for the PoC (FE3-S05); impl deferred until FE3-S01..S04 release main.tf.
+#   2026-09-09 WILDCARD = TRUE (reverses fe2-s05 / ADR-005 / fe0-s02-AC3). Coder preview URLs are
+#   subdomain-based; cert SANs = forge + *.forge; public + Pi-hole wildcard records. Full text
+#   in the WILDCARD DECISION block in this file's header.
+#   2026-09-09 forge DNS lands ADDITIVELY (dnsmasq address= drop-in on Pi-hole); custom.list
+#   untouched, hermes neither deleted nor reconciled. Full text in the INTERNAL DNS block in
+#   this file's header.
+#   2026-09-09 workspace_privileged STAYS true for the PoC. fe1-s05 recommends
+#   set-privileged-false (nothing needs nesting), but privileged works, is measured, and the
+#   delta for one operator is ~zero against the passwordless sudo the template already requires.
+#   set-privileged-false is recorded as the AVAILABLE FLIP (a poc.variables.yaml value change),
+#   not as pending work. Revisit at ADR-002's trigger: a second, less-trusted user on this host.
+#   2026-09-09 FE3 design calls: all template variables flattened to scalars (Coder's --variables-file is
+#   YAML->map[string]string; objects/bools cannot pass) with the repo catalogue as a JSON string + jsondecode();
+#   sizing maxima stay at upstream (15360/32768), only defaults change (6144/10240);
+#   FORGE_AGENTIC_AI_REF is a variable defaulting to origin/main, PoC pins the tag via poc.variables.yaml;
+#   FE3 items deferred to FE4-S02 as D1 (multi-line env propagation) and D2 (live deny-list/clone behaviour).
+development_status:
+  # FE0: Prerequisites and truth (BLOCKING - two operator credentials)
+  epic-fe0: done
+  fe0-s01-github-oauth-app: done            # OPERATOR, BLOCKING
+  fe0-s02-cloudflare-dns-token: done        # OPERATOR, BLOCKING
+  fe0-s03-pin-forge-agentic-ai-ref: done
+  fe0-s04-fix-sysbox-comment-drift: done
+  fe0-s05-resolve-ct-sparkle-vlabel-phantom: done
+
+  # FE1: Substrate - CT 167 ct-forge-01 on pve3
+  # BLOCKED on fe0-s01 + fe0-s02 AND on the R4 sizing decision above.
+  epic-fe1: done          # all five FE1 stories done 2026-09-09
+  fe1-s01-terraform-module-and-outputs: done     # CT 167 created 2026-09-09
+  fe1-s02-targeted-plan-and-apply: done
+  fe1-s03-ha-replication-both-peers-and-rule: done
+  fe1-s04-inventory-host-vars-and-dev-host: done     # 2026-09-09 ok=52/changed=43, idempotent run changed=1 (docker restart task)
+  fe1-s05-verify-privileged-docker-in-lxc: done     # 2026-09-09 privileged DinD WORKS on CT 167; R5 disproven; ADR-002 [I]->[V]
+
+  # FE2: Control plane - Coder + Postgres 16 + TLS
+  epic-fe2: done          # all six FE2 stories done 2026-09-09 (S05 closed with the wildcard slice)
+  fe2-s01-forge-coder-host-role-coderd: done     # coder 2.36.4 .deb, SHA-pinned; active+enabled on 127.0.0.1:3000
+  fe2-s02-postgres-16-local: done     # postgresql@16-main, localhost:5432, db+role coder, PGDG repo pinned
+  fe2-s03-opt-coder-secrets-six-empty-files: done     # /opt/coder/secrets, six empty 0600 root files
+  fe2-s04-coder-env-password-auth: done     # /etc/coder.d/coder.env root:root 0600; password auth on; one GitHub external-auth provider
+  # DONE 2026-09-09. Caddy (custom SHA-pinned build with the Cloudflare DNS module) is
+  # active+enabled on :80/:443 and serves BOTH forge.bi-services.be and *.forge.bi-services.be over
+  # GENUINE Let's Encrypt certificates issued via DNS-01 (journal shows challenge_type dns-01).
+  # NOT "one certificate with two SANs" - Caddy/CertMagic manages ONE CERTIFICATE PER SUBJECT, so
+  # the host carries TWO single-SAN certificates: the apex (notBefore Sep 9 13:54:39 2026 GMT,
+  # NEVER reissued) and the wildcard (notBefore Sep 9 16:09:35 2026 GMT, a separate later
+  # issuance). Each verifies with no -k. A SAN-COUNT CHECK FAILS THE CORRECT DEPLOYMENT - read
+  # AC1/AC4 as "every SNI name presents a browser-trusted certificate covering that name".
+  # DNS SLICE: DONE and verified - the additive drop-in is delivered AND the reload has taken
+  # effect; forge.bi-services.be and every subdomain resolve to 192.168.50.167 from the
+  # authoritative Pi-hole, hermes is untouched, custom.list untouched, and two consecutive playbook
+  # runs are changed=0 (measured 2026-09-09 17:16 UTC; see INTERNAL DNS above for exact output).
+  # Public wildcard DNS resolves on 4 independent resolvers for never-before-seen labels.
+  # WILDCARD SLICE: CLOSED, measured green 2026-09-09 17:23 UTC - forge_caddy_wildcard: true in
+  # roles/forge-coder-host/defaults/main.yml (no "OPERATOR DECISION OUTSTANDING" text remains), the
+  # Caddyfile site block carries both names, both names present a browser-trusted certificate
+  # (ssl_verify=0 each, no -k), the public Cloudflare *.forge record exists AND is in Terraform
+  # state, and Pi-hole answers every subdomain. See WILDCARD DECISION above.
+  # AC1/AC4 evidence is now recorded in stories/FE2-S05 against the per-name-certificate
+  # expectation (the earlier "reissue with two SANs" wording was corrected in place, struck not
+  # deleted), which was the single reason this was previously held at in-progress.
+  # NOTE the subdomain returns HTTP 400 from CODERD (via: 1.1 Caddy, x-coder-build-version
+  # v2.36.4+10fd510), not a TLS failure - expected until fe4-s01 creates a workspace.
+  fe2-s05-caddy-static-block-dns01: done   # 2026-09-09 both names served, two single-SAN LE certs
+  fe2-s06-docker-daemon-time-namespaces-off-and-pin: done     # daemon.json time-namespaces=false; Docker pinned 29.8.0 (already PAST the 29.5.0 flip)
+
+  # FE3: Workspace - template de-Azured
+  epic-fe3: done          # all six FE3 stories done 2026-09-09
+  fe3-s01-template-variables-image-and-sizing: done     # 2026-09-09 verified by 5 adversarial groups, 0 open
+  fe3-s02-replace-saply-heredocs-and-repo-deny: done     # 2026-09-09 verified by 5 adversarial groups, 0 open
+  fe3-s03-parameterise-forge-sync: done     # 2026-09-09 verified by 5 adversarial groups, 0 open
+  fe3-s04-gate-azure-blocks-in-forge-onboard: done     # 2026-09-09 verified by 5 adversarial groups, 0 open
+  fe3-s05-decide-intellij-gateway: done     # 2026-09-09 verified by 5 adversarial groups, 0 open
+  # DONE 2026-09-09: image forge-workspace:latest (4.33 GB) built on CT 167; template 'forge' pushed
+  # and ACTIVE in Coder (version created by forge-admin, status Succeeded); BOOT_PASS across reboot;
+  # e2e run reports READY_FOR_FE4.
+  fe3-s06-build-image-and-template-push: done   # image built, template pushed; FE4 readiness gate awaits operator OAuth consent
+
+  # FE4: Toolkit and acceptance
+  # BLOCKED 2026-09-09 on ONE thing only, and it is not code: the operator's one-time GitHub OAuth
+  # consent at https://forge.bi-services.be/external-auth/github (as forge-admin).
+  # data "coder_external_auth" "github" (coder/templates/forge/main.tf:25-27) has no
+  # optional = true, so the workspace build FAILS until that consent exists. Everything fe4-s01
+  # depends on - CT 167, coderd, TLS on both names, the image, the active template - is green.
+  epic-fe4: backlog
+  fe4-s01-first-workspace-create: backlog
+  fe4-s02-run-acceptance-gates-a-to-k: backlog
+  fe4-s03-pbs-backup-ct167: backlog
+  fe4-s04-poc-verdict: backlog
+  fe4-s05-retrospective-and-next-phase-decision: backlog
+  epic-fe4-retrospective: optional
+
+# PoC VERDICT (recorded by fe4-s04 - a single explicit call, no hedging):
+#   PORTS | PORTS-WITH-CAVEATS | DOES-NOT-PORT
+# Anything less than an explicit verdict means the PoC did not do its job.
+# A DOES-NOT-PORT verdict backed by evidence is a SUCCESSFUL outcome of this PoC, not a failure of
+# it: the exit is one destroyed CT, one stashed Terraform block, and a documented negative result.
+poc_verdict: not-yet-recorded
+
+# fe4-s05 is the ONLY gate at which productisation (tenancy cut, OpenMemory, Hermes) may be opened
+# (R8 - the failure mode most likely to actually occur). Not before.
+productisation_phase: not-opened
