@@ -331,9 +331,24 @@ The MARGINAL tier preserves the user's uncensored-chat choice while routing the 
   - (−) Status text appears in transcript; clients that want to strip it must do so themselves (acceptable trade-off).
 - **References:** [OpenAI streaming events](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events), research §Tool-Call Orchestration Pattern.
 
+### ADR-013 — Publish LiteLLM gateway via Traefik at `gemma.bi-services.be` (amends ADR-005, ADR-010)
+
+- **Status:** Accepted (2026-05-06)
+- **Context:** ADR-010 originally constrained external exposure to "Tailscale-only, no public DNS record". In practice, the homelab convention for *all* internal services (chat, ollama, llama, n8n, grafana, …) is split-horizon DNS via Pi-hole + Traefik on `*.bi-services.be` — a stable hostname that follows the host across IP/migration events, with TLS terminated at Traefik. Pinning hermes (and any future agent client) to the raw container IP `192.168.50.160:4000` reproduces the same fragility ADR-010 was trying to avoid. The original "no public DNS" goal was about *internet exposure*, not about *naming*.
+- **Decision:** Publish the LiteLLM gateway through the existing Traefik stack on ct-docker-01 at `gemma.bi-services.be`, using the same `letsencrypt` cert resolver and `websecure` entrypoint as `chat`/`ollama`/`llama`. Naming is intentionally `gemma.` (the model contract) rather than `litellm.` (the implementation) so the URL survives a future gateway swap. The route is configured **without Authelia middleware**: bearer-token auth (LiteLLM master key) remains the sole gate. LiteLLM's `:4000` listener stays unchanged (`0.0.0.0`, vault-protected master key, ADR-005 unchanged at the listener level).
+- **Consequences:**
+  - (+) Clients consume a stable hostname; container migrations and IP changes don't break agent configs.
+  - (+) Pattern-matches every other AI subdomain — zero new convention to learn.
+  - (+) TLS for free via the existing cert chain.
+  - (+) Adding new agent clients (hermes, future bots) is a one-line config change.
+  - (−) Cloudflare DNS publishes a public A record for `gemma.bi-services.be` → `192.168.50.194` (LAN IP, RFC1918, unroutable from internet). Same posture as `chat`/`ollama`/`llama` already have; informational leak only.
+  - (−) Amends the ADR-010 "no public DNS record" wording — corrected interpretation captured in this ADR.
+- **Auth posture:** Authelia is deliberately NOT chained in front of the route. Authelia is a browser-SSO gate; chaining it in front of an API endpoint breaks `Authorization: Bearer` clients. LiteLLM's master/virtual key system already provides per-client revocable auth.
+- **References:** `homelab-apps/stacks/infra-core/config/ai-services.yml` (route definition), `homelab-infra/terraform/envs/homelab/outputs.tf` (`ai_service_ip_map`), this document's ADR-005/ADR-009/ADR-010.
+
 ### ADR coherence note
 
-ADRs 001–012 are mutually reinforcing: 001 (Vulkan) enables 002 (TrevorJS) via 003 (template fix); 004 (hybrid loop) drives 007 (hexagonal layout); 005 (two-layer proxy) is enforced by 009 (loopback) and 010 (tailscale); 006 (stateless) and 012 (stream-only) preserve the OpenAI contract; 008 (defer audio) reduces v1 risk; 011 (LiteLLM pinning) hardens the supply chain. No two ADRs contradict; see §Architecture Validation for the explicit coherence check.
+ADRs 001–013 are mutually reinforcing: 001 (Vulkan) enables 002 (TrevorJS) via 003 (template fix); 004 (hybrid loop) drives 007 (hexagonal layout); 005 (two-layer proxy) is enforced by 009 (loopback) and 010 (tailscale); 006 (stateless) and 012 (stream-only) preserve the OpenAI contract; 008 (defer audio) reduces v1 risk; 011 (LiteLLM pinning) hardens the supply chain; 013 publishes the gateway at a stable Traefik hostname (amending ADR-010's literal "no public DNS" reading) without weakening the bearer-auth boundary established in 005. No two ADRs contradict; see §Architecture Validation for the explicit coherence check.
 
 ---
 

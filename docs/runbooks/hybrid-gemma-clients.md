@@ -13,7 +13,9 @@ Client ──► LiteLLM :4000 ──► gemma-hybrid-proxy :8000 ──► llam
                                                        └► llama-server 26B :8081
 ```
 
-- LiteLLM listens on `192.168.50.160:4000` (LAN-private).
+- LiteLLM listens on `192.168.50.160:4000` (LAN-private), published via
+  Traefik at **`https://gemma.bi-services.be`** (ADR-013). Off-host clients
+  should use the FQDN; OWUI on ct-ai-01 itself uses loopback `127.0.0.1:4000`.
 - Bearer-token auth — every `/v1/*` path requires `Authorization: Bearer $LITELLM_MASTER_KEY`.
 - Master key stored in Ansible Vault at
   `homelab-infra/ansible/inventories/homelab/host_vars/ct-ai-01/vault.yml`
@@ -72,21 +74,21 @@ models:
   - name: Gemma 4 26B (text)
     provider: openai
     model: gemma4-26b-text
-    apiBase: http://192.168.50.160:4000/v1
+    apiBase: https://gemma.bi-services.be/v1
     apiKey: <paste-litellm-master-key-here>
     contextLength: 32000
 
   - name: Gemma 4 E4B (vision)
     provider: openai
     model: gemma4-e4b-vision
-    apiBase: http://192.168.50.160:4000/v1
+    apiBase: https://gemma.bi-services.be/v1
     apiKey: <paste-litellm-master-key-here>
     contextLength: 8000
 
   - name: Gemma 4 auto-route
     provider: openai
     model: gemma4-auto
-    apiBase: http://192.168.50.160:4000/v1
+    apiBase: https://gemma.bi-services.be/v1
     apiKey: <paste-litellm-master-key-here>
     contextLength: 32000
 ```
@@ -99,9 +101,10 @@ ansible -i inventories/homelab/hosts.ini ct-ai-01 -m debug \
   -a 'msg={{ vault_litellm_master_key }}'
 ```
 
-If the workstation is off the LAN, replace the IP with the ct-ai-01
-Tailscale hostname (Tailscale not yet installed on ct-ai-01 at MVP gate;
-pending follow-up — see "Off-LAN access" below).
+The FQDN resolves via Pi-hole on the LAN (split-horizon DNS) and via
+public Cloudflare DNS off-LAN. Off-LAN clients still need to be on the
+tailnet to actually reach the LAN IP — DNS resolves but the IP is
+RFC1918 (see "Off-LAN access" below).
 
 ## Cursor (IDE)
 
@@ -110,7 +113,7 @@ Cursor → Settings → Models → Add custom OpenAI-compatible model:
 | Field | Value |
 |-------|-------|
 | Model name | `gemma4-26b-text` (or `gemma4-auto`, `gemma4-e4b-vision`) |
-| API endpoint | `http://192.168.50.160:4000/v1` |
+| API endpoint | `https://gemma.bi-services.be/v1` |
 | API key | (vault-stored master key) |
 
 Same off-LAN caveat as Continue.dev.
@@ -132,7 +135,7 @@ Useful for Mac/iOS apps like *Pal* or *ChatBox*:
 
 | Setting | Value |
 |---------|-------|
-| Endpoint | `http://192.168.50.160:4000/v1` |
+| Endpoint | `https://gemma.bi-services.be/v1` |
 | API key | (vault-stored master key) |
 | Model | `gemma4-26b-text` |
 
@@ -178,11 +181,11 @@ KEY=$(ansible -i ~/workspace/homelab/homelab-infra/ansible/inventories/homelab/h
 
 # Models
 curl -s -H "Authorization: Bearer $KEY" \
-  http://192.168.50.160:4000/v1/models | jq '.data[].id'
+  https://gemma.bi-services.be/v1/models | jq '.data[].id'
 # → "gemma4-auto" "gemma4-26b-text" "gemma4-e4b-vision"
 
 # Text chat
-curl -fsS -X POST http://192.168.50.160:4000/v1/chat/completions \
+curl -fsS -X POST https://gemma.bi-services.be/v1/chat/completions \
   -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' \
   -d '{"model":"gemma4-26b-text","messages":[{"role":"user","content":"Reply: ok"}],"max_tokens":256,"temperature":0}' \
   | jq -r '.choices[0].message.content'
