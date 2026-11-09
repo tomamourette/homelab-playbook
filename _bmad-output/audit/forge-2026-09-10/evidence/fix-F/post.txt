@@ -1,0 +1,39 @@
+/opt/appdata/dns-pihole/dnsmasq.d/:
+total 36
+drwxr-xr-x 3 root root    8 Sep 11 11:49 .
+drwxr-xr-x 5 root root    6 Sep 11 11:49 ..
+-rw-r--r-- 1 root root 3224 Sep 11 11:49 00-forge-hosts.conf
+-rw-r--r-- 1 root root 1357 Feb  9  2026 01-pihole.conf
+-rwxr-xr-x 1 root root    0 Sep 27  2025 02-homelab.conf
+-rw-r--r-- 1 root root 6327 Sep 11 11:49 05-forge.conf
+-rw-r--r-- 1 root root 2190 Feb  9  2026 06-rfc6761.conf
+drwxr-xr-x 2 root root    3 Sep 11 11:49 forge
+
+/opt/appdata/dns-pihole/dnsmasq.d/forge:
+total 14
+drwxr-xr-x 2 root root    3 Sep 11 11:49 .
+drwxr-xr-x 3 root root    8 Sep 11 11:49 ..
+-rw-r--r-- 1 root root 3762 Sep 11 11:49 05-forge.hosts
+
+/opt/appdata/dns-pihole/forge-dns-prev:
+total 14
+drwxr-xr-x 2 root root    3 Sep 11 11:49 .
+drwxr-xr-x 5 root root    6 Sep 11 11:49 ..
+-rw-r--r-- 1 root root 1257 Sep  9 17:09 05-forge.conf
+d16c37cca2f1bb0c8627ca63927d4a81  /opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf
+ec0c36c93960f743a4a6bd743515320e  /opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf
+9c1fcdb0429a83f78cc59107a384aeda  /opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts
+/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf:addn-hosts=/etc/dnsmasq.d/forge/05-forge.hosts
+/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf:address=/forge.bi-services.be/192.168.50.167
+/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf:address=/forge.bi-services.be/
+/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts:192.168.50.167 forge.bi-services.be
+/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts:192.168.50.194 gemma.bi-services.be
+/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts:192.168.50.167 ct-forge-01.bi-services.be
+/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts:192.168.50.164 ct-saply-ai.bi-services.be
+/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts:192.168.50.165 ct-crypto-quant.bi-services.be
+FTL pid: 327686
+dnsmasq: syntax check OK.
+40
+[2026-09-11 13:49:16.496 327686M] Reloading DNS cache
+[2026-09-11 13:49:16.597 327686/T327697] Compiled 0 whitelist and 0 blacklist regex filters for 32 clients in 0.1 msec
+[2026-09-11 13:49:16.597 327686/T327697] Blocking status is enabled

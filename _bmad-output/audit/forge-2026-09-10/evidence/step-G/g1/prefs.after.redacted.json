@@ -1,0 +1,48 @@
+{
+	"ControlURL": "https://controlplane.tailscale.com",
+	"RouteAll": false,
+	"ExitNodeID": "",
+	"ExitNodeIP": "",
+	"InternalExitNodePrior": "",
+	"ExitNodeAllowLANAccess": false,
+	"CorpDNS": true,
+	"RunSSH": false,
+	"RunWebClient": false,
+	"WantRunning": true,
+	"LoggedOut": false,
+	"ShieldsUp": false,
+	"AdvertiseTags": null,
+	"Hostname": "homelab-gateway",
+	"NotepadURLs": false,
+	"AdvertiseRoutes": [
+		"192.168.50.0/24"
+	],
+	"AdvertiseServices": null,
+	"Sync": null,
+	"NoSNAT": false,
+	"NoStatefulFiltering": true,
+	"NetfilterMode": 2,
+	"AutoUpdate": {
+		"Check": true,
+		"Apply": null
+	},
+	"AppConnector": {
+		"Advertise": false
+	},
+	"PostureChecking": false,
+	"NetfilterKind": "",
+	"DriveShares": null,
+	"AllowSingleHosts": true,
+	"Config": {
+		"PrivateNodeKey": "<REDACTED>",
+		"OldPrivateNodeKey": "<REDACTED>",
+		"UserProfile": {
+			"ID": 6035293782264875,
+			"LoginName": "tom.amourette@gmail.com",
+			"DisplayName": "Tom Amourette",
+			"ProfilePicURL": "https://lh3.googleusercontent.com/a/ACg8ocKpOvWtzQabc8GNCIoamVfMf0UsuCAgbAJqrhrUcXA5Y_M=s96-c"
+		},
+		"NetworkLockKey": "<REDACTED>",
+		"NodeID": "nPAJk7MPvq11CNTRL"
+	}
+}

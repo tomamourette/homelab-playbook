@@ -1,0 +1,49 @@
+BACKUP_DIR=/home/developer/g-backup-20260911T115353Z
+=== CMD: tar ts-state ===
+rc=0
+=== CMD: tar opt-homelab-apps ===
+rc=0
+=== CMD: tailscale debug prefs ===
+rc=0
+=== CMD: tailscale status --json ===
+rc=0
+=== CMD: ip route / link ===
+rc=1
+=== CMD: dig ===
+rc=0
+=== CMD: docker ps ===
+rc=0
+=== GATE: tarball sizes ===
+total 13
+drwxr-xr-x  2 developer developer      9 Sep 11 11:53 .
+drwxr-xr-x 33 developer developer     48 Sep 11 11:53 ..
+-rw-r--r--  1 developer developer     30 Sep 11 11:53 dns.before.txt
+-rw-r--r--  1 developer developer 619288 Sep 11 11:53 opt-homelab-apps.tgz
+-rw-r--r--  1 developer developer   1382 Sep 11 11:53 prefs.before.json
+-rw-r--r--  1 developer developer    923 Sep 11 11:53 ps.before.txt
+-rw-r--r--  1 developer developer   1045 Sep 11 11:53 routes.before.txt
+-rw-r--r--  1 developer developer  11691 Sep 11 11:53 status.before.json
+-rw-r--r--  1 developer developer   5221 Sep 11 11:53 ts-state.tgz
+=== GATE: tar -tzf ts-state.tgz (head) ===
+tailscale/
+tailscale/tailscaled.state
+tailscale/tailscaled.log2.txt
+tailscale/tailscaled.log.conf
+tailscale/tailscaled.log1.txt
+tailscale/files/
+tailscale/files/tom.amourette-gmail.com-uid-6035293782264875/
+tailscale/derpmap.cached.json
+ts-state entries: 8
+=== GATE: tar -tzf opt-homelab-apps.tgz (head) ===
+homelab-apps/
+homelab-apps/homelab-apps-engineer-guide.md
+homelab-apps/plan-apps.md
+homelab-apps/global.env.sample
+homelab-apps/.git/
+homelab-apps/.git/packed-refs
+homelab-apps/.git/branches/
+homelab-apps/.git/COMMIT_EDITMSG
+homelab-apps/.git/AUTO_MERGE
+homelab-apps/.git/objects/
+clone entries: 756
+BACKUP_DIR=/home/developer/g-backup-20260911T115353Z

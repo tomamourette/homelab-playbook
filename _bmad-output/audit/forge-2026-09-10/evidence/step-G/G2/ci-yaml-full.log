@@ -1,0 +1,322 @@
+Validate YAML Files	Set up job	﻿2026-09-11T12:02:06.4236547Z Current runner version: '2.337.0'
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4327131Z ##[group]Runner Image Provisioner
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4328440Z Hosted Compute Agent
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4329382Z Version: 20260828.587
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4330976Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4332150Z Build Date: 2026-08-28T16:44:25Z
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4333207Z Worker ID: {883ac2c4-3381-4d77-9f4d-6fa0fb67d579}
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4334549Z Azure Region: northcentralus
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4335597Z ##[endgroup]
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4338125Z ##[group]Operating System
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4339251Z Ubuntu
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4340257Z 24.04.5
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4341217Z LTS
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4342083Z ##[endgroup]
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4343118Z ##[group]Runner Image
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4344178Z Image: ubuntu-24.04
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4345134Z Version: 20260907.300.1
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4346897Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4368252Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4370219Z ##[endgroup]
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4372243Z ##[group]GITHUB_TOKEN Permissions
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4375223Z Contents: read
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4376141Z Metadata: read
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4377128Z Packages: read
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4378027Z ##[endgroup]
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4381558Z Secret source: Actions
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4383067Z Cache mode: write
+Validate YAML Files	Set up job	2026-09-11T12:02:06.4384201Z Prepare workflow directory
+Validate YAML Files	Set up job	2026-09-11T12:02:06.5339242Z Prepare all required actions
+Validate YAML Files	Set up job	2026-09-11T12:02:06.5469647Z Getting action download info
+Validate YAML Files	Set up job	2026-09-11T12:02:06.9294627Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+Validate YAML Files	Set up job	2026-09-11T12:02:07.1164816Z Complete job name: Validate YAML Files
+Validate YAML Files	Checkout repository	﻿2026-09-11T12:02:07.1923594Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1932365Z ##[group]Run actions/checkout@v4
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1933082Z with:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1933550Z   repository: tomamourette/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1937390Z   token: ***
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1937843Z   ssh-strict: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1938298Z   ssh-user: git
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1938753Z   persist-credentials: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1939254Z   clean: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1939710Z   sparse-checkout-cone-mode: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1940621Z   fetch-depth: 1
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1941068Z   fetch-tags: false
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1941519Z   show-progress: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1941979Z   lfs: false
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1942401Z   submodules: false
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1942911Z   set-safe-directory: true
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1943424Z   allow-unsafe-pr-checkout: false
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.1944205Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3078521Z Syncing repository: tomamourette/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3080869Z ##[group]Getting Git version info
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3081884Z Working directory is '/home/runner/work/homelab-apps/homelab-apps'
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3084292Z [command]/usr/bin/git version
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3116055Z git version 2.55.0
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3141778Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3154502Z Temporarily overriding HOME='/home/runner/work/_temp/183badad-b184-4fae-9b1a-a1ee1b019693' before making global git config changes
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3158857Z Adding repository directory to the temporary git global config as a safe directory
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3161958Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/homelab-apps/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3209259Z Deleting the contents of '/home/runner/work/homelab-apps/homelab-apps'
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3216000Z ##[group]Initializing the repository
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3219664Z [command]/usr/bin/git init /home/runner/work/homelab-apps/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3298590Z hint: Using 'master' as the name for the initial branch. This default branch name
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3305571Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3309574Z hint: to use in all of your new repositories, which will suppress this warning,
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3311442Z hint: call:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3312735Z hint:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3315103Z hint: 	git config --global init.defaultBranch <name>
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3316935Z hint:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3318235Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3320567Z hint: 'development'. The just-created branch can be renamed via this command:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3322232Z hint:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3323469Z hint: 	git branch -m <name>
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3324543Z hint:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3326132Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3330113Z Initialized empty Git repository in /home/runner/work/homelab-apps/homelab-apps/.git/
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3335934Z [command]/usr/bin/git remote add origin https://github.com/tomamourette/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3369233Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3371413Z ##[group]Disabling automatic garbage collection
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3372971Z [command]/usr/bin/git config --local gc.auto 0
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3404989Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3406805Z ##[group]Setting up auth
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3411722Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3447474Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3928463Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.3935169Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4110373Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4146077Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4940868Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4943662Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4944901Z ##[group]Fetching the repository
+Validate YAML Files	Checkout repository	2026-09-11T12:02:07.4947141Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0277b864db6e037da061cca59732cf7fd45b93bf:refs/remotes/pull/1/merge
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1491127Z From https://github.com/tomamourette/homelab-apps
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1492515Z  * [new ref]         0277b864db6e037da061cca59732cf7fd45b93bf -> pull/1/merge
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1496913Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1521218Z ##[group]Determining the checkout info
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1541185Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1549044Z [command]/usr/bin/git sparse-checkout disable
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1587668Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1634093Z ##[group]Checking out the ref
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1636102Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/1/merge
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1828647Z Note: switching to 'refs/remotes/pull/1/merge'.
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1830523Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1832137Z You are in 'detached HEAD' state. You can look around, make experimental
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1834946Z changes and commit them, and you can discard any commits you make in this
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1837687Z state without impacting any branches by switching back to a branch.
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1845381Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1847431Z If you want to create a new branch to retain commits you create, you may
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1849725Z do so (now or later) by using -c with the switch command. Example:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1851399Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1852291Z   git switch -c <new-branch-name>
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1859111Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1860234Z Or undo this operation with:
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1862169Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1863019Z   git switch -
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1864493Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1865819Z Turn off this advice by setting config variable advice.detachedHead to false
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1868014Z 
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1870289Z HEAD is now at 0277b86 Merge 714b7377217fcd8817e2bb4af38f640655b2f3f5 into dd96ed4e0fc0f3f7621475a6d38fd6f3e2e49ec7
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1877263Z ##[endgroup]
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1881571Z [command]/usr/bin/git log -1 --format=%H
+Validate YAML Files	Checkout repository	2026-09-11T12:02:08.1899265Z 0277b864db6e037da061cca59732cf7fd45b93bf
+Validate YAML Files	Install yamllint	﻿2026-09-11T12:02:08.2176233Z ##[group]Run pip install yamllint
+Validate YAML Files	Install yamllint	2026-09-11T12:02:08.2177486Z [36;1mpip install yamllint[0m
+Validate YAML Files	Install yamllint	2026-09-11T12:02:08.2221696Z shell: /usr/bin/bash -e {0}
+Validate YAML Files	Install yamllint	2026-09-11T12:02:08.2222793Z ##[endgroup]
+Validate YAML Files	Install yamllint	2026-09-11T12:02:08.6590943Z Defaulting to user installation because normal site-packages is not writeable
+Validate YAML Files	Install yamllint	2026-09-11T12:02:08.9922768Z Collecting yamllint
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0175184Z   Downloading yamllint-1.38.0-py3-none-any.whl.metadata (4.2 kB)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0552197Z Collecting pathspec>=1.0.0 (from yamllint)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0567287Z   Downloading pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0646246Z Requirement already satisfied: pyyaml in /usr/lib/python3/dist-packages (from yamllint) (6.0.1)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0696891Z Downloading yamllint-1.38.0-py3-none-any.whl (68 kB)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0789464Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.9/68.9 kB 8.7 MB/s eta 0:00:00
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0826922Z Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.0865607Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.3/57.3 kB 23.6 MB/s eta 0:00:00
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.3390660Z Installing collected packages: pathspec, yamllint
+Validate YAML Files	Install yamllint	2026-09-11T12:02:09.4023406Z Successfully installed pathspec-1.1.1 yamllint-1.38.0
+Validate YAML Files	Create yamllint config	﻿2026-09-11T12:02:09.4717785Z ##[group]Run cat > .yamllint.yml << 'EOF'
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4718260Z [36;1mcat > .yamllint.yml << 'EOF'[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4718614Z [36;1mextends: default[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4718940Z [36;1mrules:[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4719210Z [36;1m  line-length:[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4719504Z [36;1m    max: 120[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4720011Z [36;1m  indentation:[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4720356Z [36;1m    spaces: 2[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4720664Z [36;1m  comments-indentation: disable[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4720994Z [36;1m  comments:[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4721285Z [36;1m    min-spaces-from-content: 1[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4721612Z [36;1mEOF[0m
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4762215Z shell: /usr/bin/bash -e {0}
+Validate YAML Files	Create yamllint config	2026-09-11T12:02:09.4762564Z ##[endgroup]
+Validate YAML Files	Lint YAML files	﻿2026-09-11T12:02:09.4954312Z ##[group]Run # Lint all YAML files in the repository
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.4954829Z [36;1m# Lint all YAML files in the repository[0m
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.4955500Z [36;1mfind . -name "*.yml" -o -name "*.yaml" | grep -E "(docker-compose|stack-targets|\.github)" | xargs yamllint -c .yamllint.yml[0m
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.4993059Z shell: /usr/bin/bash -e {0}
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.4993407Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9576615Z ##[group]./stack-targets.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9635532Z ##[warning]4:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9650792Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9651089Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9651534Z ##[group]./stacks/gitnexus/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9652886Z ##[warning]22:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9653923Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9654053Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9654368Z ##[group]./stacks/productivity-obsidian/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9655232Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9656642Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9656774Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9657068Z ##[group]./stacks/observability/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9657903Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9658732Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9658848Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9659102Z ##[group]./stacks/organizr/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9660255Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9662316Z ##[error]6:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9663569Z ##[error]13:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9664678Z ##[error]16:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9665783Z ##[error]42:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9666854Z ##[error]66:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9667927Z ##[error]73:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9668994Z ##[error]77:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9673079Z ##[error]96:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9675006Z ##[error]117:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9676285Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9676460Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9676840Z ##[group]./stacks/update-checks/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9678030Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9679337Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9679511Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9680122Z ##[group]./stacks/media-overseerr/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9681271Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9682610Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9682778Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9683584Z ##[group]./stacks/graphiti/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9685390Z ##[warning]53:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9687792Z ##[error]243:121 [line-length] line too long (169 > 120 characters)
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9689549Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9690184Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9690803Z ##[group]./stacks/authelia/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9692209Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9693936Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9694366Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9695005Z ##[group]./stacks/automations-n8n/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9696470Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9698648Z ##[error]6:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9700969Z ##[error]12:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9703087Z ##[error]20:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9705297Z ##[error]25:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9707433Z ##[error]31:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9709307Z ##[error]37:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9711709Z ##[error]43:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9713829Z ##[error]47:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9716332Z ##[error]71:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9718701Z ##[error]96:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9721000Z ##[error]103:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9723257Z ##[error]107:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9725354Z ##[error]133:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9727494Z ##[error]156:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9729641Z ##[error]159:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9731916Z ##[error]162:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9733945Z ##[error]182:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9735994Z ##[error]203:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9737479Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9737919Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9738597Z ##[group]./stacks/media-indexers/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9740271Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9742328Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9742777Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9743451Z ##[group]./stacks/media-downloads/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9744986Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9746696Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9747126Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9747797Z ##[group]./stacks/infra-homepage/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9749291Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9751286Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9751724Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9752361Z ##[group]./stacks/infra-core/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9753904Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9755664Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9756110Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9756798Z ##[group]./stacks/media-jellyseerr/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9758332Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9760326Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9760785Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9761436Z ##[group]./stacks/dns-pihole/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9762879Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9765141Z ##[error]55:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9766820Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9767271Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9767941Z ##[group]./stacks/smtp-relay/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9769432Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9771312Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9771768Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9772449Z ##[group]./stacks/portainer-agent/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9773976Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9775743Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9776182Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9776890Z ##[group]./stacks/media-plex/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9778396Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9780525Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9781169Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9781842Z ##[group]./stacks/media-jellyfin/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9783341Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9785121Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9785494Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9786152Z ##[group]./stacks/networking-tailscale/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9787730Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9789533Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9790111Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9790740Z ##[group]./stacks/media-iptv/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9792182Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9793900Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9794282Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9794891Z ##[group]./stacks/media-tuliprox/docker-compose.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9796378Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9798054Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9798712Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9799286Z ##[group]./.github/workflows/validate.yml
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9800842Z ##[warning]1:1 [document-start] missing document start "---"
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9803292Z ##[warning]3:1 [truthy] truthy value should be one of [false, true]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9805595Z ##[error]15:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9807546Z ##[error]30:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9809445Z ##[error]33:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9811582Z ##[error]41:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9813531Z ##[error]45:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9815802Z ##[error]50:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9817860Z ##[error]59:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9820128Z ##[error]66:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9822190Z ##[error]72:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9826140Z ##[error]97:121 [line-length] line too long (134 > 120 characters)
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9828850Z ##[error]102:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9831688Z ##[error]119:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9833936Z ##[error]123:121 [line-length] line too long (127 > 120 characters)
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9835734Z ##[error]127:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9836931Z ##[error]133:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9838134Z ##[error]142:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9839307Z ##[error]146:31 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9841062Z ##[error]150:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9842238Z ##[error]157:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9843395Z ##[error]161:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9844814Z ##[error]162:26 [new-line-at-end-of-file] no new line character at the end of file
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9845819Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9845946Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9849198Z ##[error]Process completed with exit code 123.
+Validate YAML Files	Post Checkout repository	﻿2026-09-11T12:02:09.9983784Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:09.9985343Z Post job cleanup.
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0899338Z [command]/usr/bin/git version
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0942394Z git version 2.55.0
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0983363Z Temporarily overriding HOME='/home/runner/work/_temp/084ceec1-7d90-43df-a1fe-6f89f4b2d044' before making global git config changes
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0984940Z Adding repository directory to the temporary git global config as a safe directory
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0987785Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/homelab-apps/homelab-apps
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1030228Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1070807Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1318280Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1350642Z http.https://github.com/.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1372043Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1424208Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1680523Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1708410Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Validate YAML Files	Complete job	﻿2026-09-11T12:02:10.2109342Z Cleaning up orphan processes
+Validate YAML Files	Complete job	2026-09-11T12:02:10.2403700Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

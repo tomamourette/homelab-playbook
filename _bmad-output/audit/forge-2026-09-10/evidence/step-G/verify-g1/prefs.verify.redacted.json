@@ -1,0 +1,48 @@
+{
+  "AdvertiseRoutes": [
+    "192.168.50.0/24"
+  ],
+  "AdvertiseServices": null,
+  "AdvertiseTags": null,
+  "AllowSingleHosts": true,
+  "AppConnector": {
+    "Advertise": false
+  },
+  "AutoUpdate": {
+    "Apply": null,
+    "Check": true
+  },
+  "Config": {
+    "NetworkLockKey": "<REDACTED>",
+    "NodeID": "nPAJk7MPvq11CNTRL",
+    "OldPrivateNodeKey": "<REDACTED>",
+    "PrivateNodeKey": "<REDACTED>",
+    "UserProfile": {
+      "DisplayName": "Tom Amourette",
+      "ID": 6035293782264875,
+      "LoginName": "tom.amourette@gmail.com",
+      "ProfilePicURL": "https://lh3.googleusercontent.com/a/ACg8ocKpOvWtzQabc8GNCIoamVfMf0UsuCAgbAJqrhrUcXA5Y_M=s96-c"
+    }
+  },
+  "ControlURL": "https://controlplane.tailscale.com",
+  "CorpDNS": true,
+  "DriveShares": null,
+  "ExitNodeAllowLANAccess": false,
+  "ExitNodeID": "",
+  "ExitNodeIP": "",
+  "Hostname": "homelab-gateway",
+  "InternalExitNodePrior": "",
+  "LoggedOut": false,
+  "NetfilterKind": "",
+  "NetfilterMode": 2,
+  "NoSNAT": false,
+  "NoStatefulFiltering": true,
+  "NotepadURLs": false,
+  "PostureChecking": false,
+  "RouteAll": false,
+  "RunSSH": false,
+  "RunWebClient": false,
+  "ShieldsUp": false,
+  "Sync": null,
+  "WantRunning": true
+}

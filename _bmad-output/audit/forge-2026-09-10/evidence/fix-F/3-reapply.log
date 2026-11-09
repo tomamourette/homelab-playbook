@@ -1,0 +1,129 @@
+
+PLAY [Land internal DNS for the forge subtree and the missing Terraform names] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Assert every wildcard apex agrees with its hosts entry] ******
+ok: [ct-docker-01] => (item=forge.bi-services.be -> 192.168.50.167)
+
+TASK [forge-dns : Assert every managed file has a distinct basename] ***********
+ok: [ct-docker-01]
+
+TASK [forge-dns : Stat the dnsmasq drop-in directory] **************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Fail when the dnsmasq drop-in directory is missing] **********
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Ensure the hosts-file subdirectory exists] *******************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Record which of this role's drop-ins existed before this run] ***
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Test-render each drop-in to learn whether this run will change it] ***
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Decide, before writing anything, what a rollback would have to undo] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Show the rollback plan this run is operating under] **********
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts -> leave (existed=True, will_change=False)"
+}
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf -> leave (existed=True, will_change=False)"
+}
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf -> leave (existed=True, will_change=False)"
+}
+
+TASK [forge-dns : Ensure the pre-change copy directory exists] *****************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Save a pre-change copy of every drop-in this run will overwrite] ***
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts -> /opt/appdata/dns-pihole/forge-dns-prev/05-forge.hosts) 
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf -> /opt/appdata/dns-pihole/forge-dns-prev/00-forge-hosts.conf) 
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf -> /opt/appdata/dns-pihole/forge-dns-prev/05-forge.conf) 
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Render this role's drop-ins] *********************************
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Build the DNS assertion matrix] ******************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Assert the matrix carries one wildcard-label probe per wildcard] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Probe A and AAAA for every managed name] *********************
+ok: [ct-docker-01] => (item=forge.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=gemma.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-forge-01.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-saply-ai.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be (wildcard label (address=)))
+
+TASK [forge-dns : Determine which managed names are stale] *********************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Determine whether Pi-hole needs a DNS reload] ****************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Report which names are stale] ********************************
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Validate the render and reload Pi-hole DNS] ******************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/forge-dns/tasks/reload.yml for ct-docker-01
+
+TASK [forge-dns : Validate the rendered dnsmasq config before signalling a live resolver] ***
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Ensure the pihole-FTL s6 service is marked up] ***************
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Signal pihole-FTL to exit] ***********************************
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Wait for Pi-hole to answer every managed name correctly] *****
+skipping: [ct-docker-01] => (item=forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=gemma.bi-services.be -> A 192.168.50.194 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-forge-01.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-saply-ai.bi-services.be -> A 192.168.50.164 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be -> A 192.168.50.165 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Verify the regression guards and every name this role owns] ***
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/forge-dns/tasks/verify.yml for ct-docker-01
+
+TASK [forge-dns : Probe the regression guards this role does not own] **********
+ok: [ct-docker-01] => (item=hermes.bi-services.be -> A 192.168.50.194 + AAAA NODATA)
+
+TASK [forge-dns : Fail the play if a name this role does not own stopped resolving] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Fail the play if this role rolled its own drop-ins back] *****
+ok: [ct-docker-01]
+
+TASK [forge-dns : Verify Pi-hole answers every managed name correctly] *********
+ok: [ct-docker-01] => (item=forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA)
+ok: [ct-docker-01] => (item=gemma.bi-services.be -> A 192.168.50.194 + AAAA NODATA)
+ok: [ct-docker-01] => (item=ct-forge-01.bi-services.be -> A 192.168.50.167 + AAAA NODATA)
+ok: [ct-docker-01] => (item=ct-saply-ai.bi-services.be -> A 192.168.50.164 + AAAA NODATA)
+ok: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be -> A 192.168.50.165 + AAAA NODATA)
+ok: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA)
+
+TASK [forge-dns : Fail the play if a name this role owns is not answering correctly] ***
+ok: [ct-docker-01]
+
+PLAY RECAP *********************************************************************
+ct-docker-01               : ok=23   changed=0    unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
+

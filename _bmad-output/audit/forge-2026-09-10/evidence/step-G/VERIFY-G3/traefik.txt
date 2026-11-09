@@ -1,0 +1,3 @@
+grafana.bi-services.be       302
+hermes.bi-services.be        404
+forge.bi-services.be         404

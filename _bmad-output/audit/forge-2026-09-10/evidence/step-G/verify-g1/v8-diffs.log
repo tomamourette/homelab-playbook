@@ -1,0 +1,33 @@
+=== V8 docker ps diff (baseline vs now) ===
+PS_DIFF: IDENTICAL
+rc_diff=0
+-- baseline count: 32 ; now: 32
+-- tailscale row now: tailscale	Up 7 days (healthy)
+-- tailscale row baseline: tailscale	Up 7 days (healthy)
+
+=== V9 routes diff ===
+ROUTES_IDENTICAL
+
+=== V10 dns diff ===
+192.168.50.194
+192.168.50.167
+
+=== V11 backup tarballs ===
+-rw------- 1 developer developer 619288 Sep 11 11:53 /home/developer/g-backup-20260911T115353Z/opt-homelab-apps.tgz
+-rw------- 1 developer developer   5221 Sep 11 11:53 /home/developer/g-backup-20260911T115353Z/ts-state.tgz
+-- ts-state.tgz entries:
+tailscale/
+tailscale/tailscaled.state
+tailscale/tailscaled.log2.txt
+tailscale/tailscaled.log.conf
+tailscale/tailscaled.log1.txt
+tailscale/files/
+tailscale/files/tom.amourette-gmail.com-uid-6035293782264875/
+tailscale/derpmap.cached.json
+count=8
+-- opt-homelab-apps.tgz count=756
+homelab-apps/
+homelab-apps/homelab-apps-engineer-guide.md
+homelab-apps/plan-apps.md
+homelab-apps/global.env.sample
+homelab-apps/.git/

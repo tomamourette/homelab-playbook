@@ -1,0 +1,10 @@
+=== git log --oneline origin/main..feat/hermes-linear-webhook ===
+e268da1 feat(infra-core): route Linear webhooks to Hermes via Cloudflare Tunnel
+=== reverse: feat..origin/main ===
+dd96ed4 fix(tailscale): move auth key out of process argv into env var + file
+=== merge-base ===
+4b778f8e7ac211e0923ebbabc934007fa2b519c3
+=== diff --stat origin/main...feat ===
+ stacks/infra-core/config/hermes-saply.yml | 23 +++++++++++++++++++++++
+ stacks/infra-core/docker-compose.yml      | 16 ++++++++++++++++
+ 2 files changed, 39 insertions(+)

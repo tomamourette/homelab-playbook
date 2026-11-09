@@ -1,0 +1,40 @@
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9807546Z ##[error]30:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9809445Z ##[error]33:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9811582Z ##[error]41:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9813531Z ##[error]45:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9815802Z ##[error]50:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9817860Z ##[error]59:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9820128Z ##[error]66:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9822190Z ##[error]72:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9826140Z ##[error]97:121 [line-length] line too long (134 > 120 characters)
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9828850Z ##[error]102:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9831688Z ##[error]119:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9833936Z ##[error]123:121 [line-length] line too long (127 > 120 characters)
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9835734Z ##[error]127:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9836931Z ##[error]133:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9838134Z ##[error]142:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9839307Z ##[error]146:31 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9841062Z ##[error]150:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9842238Z ##[error]157:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9843395Z ##[error]161:1 [trailing-spaces] trailing spaces
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9844814Z ##[error]162:26 [new-line-at-end-of-file] no new line character at the end of file
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9845819Z ##[endgroup]
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9845946Z 
+Validate YAML Files	Lint YAML files	2026-09-11T12:02:09.9849198Z ##[error]Process completed with exit code 123.
+Validate YAML Files	Post Checkout repository	﻿2026-09-11T12:02:09.9983784Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:09.9985343Z Post job cleanup.
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0899338Z [command]/usr/bin/git version
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0942394Z git version 2.55.0
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0983363Z Temporarily overriding HOME='/home/runner/work/_temp/084ceec1-7d90-43df-a1fe-6f89f4b2d044' before making global git config changes
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0984940Z Adding repository directory to the temporary git global config as a safe directory
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.0987785Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/homelab-apps/homelab-apps
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1030228Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1070807Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1318280Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1350642Z http.https://github.com/.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1372043Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1424208Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1680523Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Validate YAML Files	Post Checkout repository	2026-09-11T12:02:10.1708410Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Validate YAML Files	Complete job	﻿2026-09-11T12:02:10.2109342Z Cleaning up orphan processes
+Validate YAML Files	Complete job	2026-09-11T12:02:10.2403700Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

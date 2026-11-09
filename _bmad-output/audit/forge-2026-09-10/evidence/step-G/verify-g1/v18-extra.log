@@ -1,0 +1,18 @@
+=== V18 tailscale ping -c 3 --until-direct=false ===
+pong from homelab-gateway-1 (100.74.151.44) via 192.168.50.194:41641 in 1ms
+pong from homelab-gateway-1 (100.74.151.44) via 192.168.50.194:41641 in 0s
+pong from homelab-gateway-1 (100.74.151.44) via 192.168.50.194:41641 in 0s
+rc=0
+
+=== V19 CT101 git untouched (no-optional-locks, read-only) ===
+HEAD fafe4a8b046d470b169408f1c40c84a77f9d5f39 2026-04-16T20:48:38+00:00 feat: add llama.bi-services.be Traefik route for llama-server
+dirty_entries=45
+main
+
+=== V20 baseline HEAD from G0 tarball ===
+ref: refs/heads/main
+7
+
+=== V21 compose still asserts accept-routes=true (G2/G3 not yet done) ===
+58:          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=true \
+66:            --accept-routes \

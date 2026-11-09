@@ -1,0 +1,8 @@
+### CMD: docker compose -f docker-compose.yml -p networking-tailscale up -d
+start 2026-09-11T12:09:52Z
+ Container tailscale  Recreate
+ Container tailscale  Recreated
+ Container tailscale  Starting
+ Container tailscale  Started
+rc=0
+end 2026-09-11T12:10:02Z

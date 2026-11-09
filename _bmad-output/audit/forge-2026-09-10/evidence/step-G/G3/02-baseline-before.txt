@@ -1,0 +1,69 @@
+### baseline ps.before.txt line count
+32
+### CMD: debug prefs RouteAll + AdvertiseRoutes (-A3)
+	"RouteAll": false,
+	"ExitNodeID": "",
+	"ExitNodeIP": "",
+	"InternalExitNodePrior": "",
+--
+	"AdvertiseRoutes": [
+		"192.168.50.0/24"
+	],
+	"AdvertiseServices": null,
+### CMD: status --json .Self.PrimaryRoutes
+[
+  "192.168.50.0/24"
+]
+### CMD: git status --short | wc -l  (BEFORE)
+45
+### CMD: git rev-parse HEAD (BEFORE)
+fafe4a8b046d470b169408f1c40c84a77f9d5f39
+main
+### CMD: md5sum live compose (BEFORE)
+951f2fe835047463362a75089de261c1  /opt/homelab-apps/stacks/networking-tailscale/docker-compose.yml
+### CMD: git status --short (BEFORE, full)
+M  stacks/automations-n8n/docker-compose.yml
+M  stacks/dns-pihole/config/custom.list
+M  stacks/infra-core/config/ai-services.yml
+M  stacks/infra-core/config/media-indexers.yml
+M  stacks/infra-core/docker-compose.yml
+M  stacks/media-downloads/docker-compose.yml
+M  stacks/media-indexers/docker-compose.yml
+M  stacks/media-jellyfin/docker-compose.yml
+M  stacks/media-jellyseerr/docker-compose.yml
+M  stacks/media-overseerr/docker-compose.yml
+M  stacks/media-plex/docker-compose.yml
+ M stacks/networking-tailscale/docker-compose.yml
+ M stacks/observability/.env.sample
+ M stacks/observability/config/alerting/service-alerts.yml
+ M stacks/observability/config/prometheus.yml
+ M stacks/observability/config/promtail-config.yml
+ M stacks/observability/config/targets/node-targets.json
+ M stacks/observability/dashboards/backup-status.json
+ M stacks/observability/dashboards/network-health.json
+ M stacks/observability/dashboards/service-health.json
+ M stacks/observability/dashboards/storage-overview.json
+ M stacks/observability/docker-compose.yml
+M  stacks/organizr/docker-compose.yml
+?? stacks/dns-pihole/docker-compose.yml.bak-preConflictResolve
+?? stacks/infra-core/.env.bak-20260424-2019
+?? stacks/infra-core/.env.bak_20260527_151259
+?? stacks/infra-core/config/dynamic/homeassistant.yml
+?? stacks/infra-core/config/hermes-saply.yml
+?? stacks/infra-core/docker-compose.yml.bak-20260424-2026
+?? stacks/infra-core/docker-compose.yml.bak-20260527-140152
+?? stacks/infra-core/docker-compose.yml.bak_20260527_150554
+?? stacks/networking-tailscale/.env.bak-deadkey
+?? stacks/networking-tailscale/.env.bak-preRotate
+?? stacks/networking-tailscale/docker-compose.yml.bak-preRotate
+?? stacks/observability/config/alerting/alertmanager-health.yml
+?? stacks/observability/config/alerting/ha-alerts.yml
+?? stacks/observability/config/alerting/host-memory-alerts.yml
+?? stacks/observability/config/alerting/node-systemd-alerts.yml
+?? stacks/observability/config/alerting/qbittorrent-alerts.yml
+?? stacks/observability/config/alerting/replication-alerts.yml
+?? stacks/observability/config/alertmanager/
+?? stacks/observability/config/ntfy/
+?? stacks/observability/config/targets/node-targets-static.json
+?? stacks/observability/dashboards/ha-replication.json
+?? stacks/observability/dashboards/litellm-gemma.json

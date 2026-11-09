@@ -1,0 +1,34 @@
+### PRE-CHECK 1: docker exec tailscale tailscale status | head -3
+100.74.151.44   homelab-gateway-1     tom.amourette@  linux    -                                                           
+100.91.10.47    crypto-quant-homelab  tom.amourette@  linux    offline, last seen 60d ago                                  
+100.104.114.63  ct-dev-homelab        tagged-devices  linux    -                                                           
+
+### PRE-CHECK 2: BackendState / Self.Online / AuthURL / PrimaryRoutes / KeyExpiry (parsed locally from status.before.json)
+BackendState     : Running
+Self.Online      : True
+AuthURL          : ''
+Self.PrimaryRoutes: ['192.168.50.0/24']
+Self.KeyExpiry   : None
+Self.Expired     : None
+Self.HostName    : homelab-gateway
+MagicDNSSuffix   : taildf9e93.ts.net
+Health           : []
+Peer count       : 5
+
+### PRE-CHECK 3: stat tailscaled.state
+/opt/appdata/networking-tailscale/tailscale/tailscaled.state 2746 2026-09-03 12:27:11.230390347 +0000
+
+### PRE-CHECK 4: ls -la .env* (names/sizes/dates only, NO values)
+-rw------- 1 root root 156 Jul 28 14:06 /opt/homelab-apps/stacks/networking-tailscale/.env
+-rw------- 1 root root 157 Jul 27 10:20 /opt/homelab-apps/stacks/networking-tailscale/.env.bak-deadkey
+-rw------- 1 root root 157 Apr 26 11:50 /opt/homelab-apps/stacks/networking-tailscale/.env.bak-preRotate
+-rw-r--r-- 1 root root 145 Apr  7 15:20 /opt/homelab-apps/stacks/networking-tailscale/.env.sample
+
+### PRE-CHECK 5: prefs RouteAll / AdvertiseRoutes (baseline)
+	"RouteAll": true,
+	"ExitNodeID": "",
+	"ExitNodeIP": "",
+--
+	"AdvertiseRoutes": [
+		"192.168.50.0/24"
+	],

@@ -1,0 +1,396 @@
+
+PLAY [Land internal DNS for the forge subtree and the missing Terraform names] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Assert every wildcard apex agrees with its hosts entry] ******
+ok: [ct-docker-01] => (item=forge.bi-services.be -> 192.168.50.167)
+
+TASK [forge-dns : Assert every managed file has a distinct basename] ***********
+ok: [ct-docker-01]
+
+TASK [forge-dns : Stat the dnsmasq drop-in directory] **************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Fail when the dnsmasq drop-in directory is missing] **********
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Ensure the hosts-file subdirectory exists] *******************
+--- before
++++ after
+@@ -1,4 +1,4 @@
+ {
+     "path": "/opt/appdata/dns-pihole/dnsmasq.d/forge",
+-    "state": "absent"
++    "state": "directory"
+ }
+
+changed: [ct-docker-01]
+
+TASK [forge-dns : Record which of this role's drop-ins existed before this run] ***
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Test-render each drop-in to learn whether this run will change it] ***
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Decide, before writing anything, what a rollback would have to undo] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Show the rollback plan this run is operating under] **********
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts -> remove (existed=False, will_change=True)"
+}
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf -> remove (existed=False, will_change=True)"
+}
+ok: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf) => {
+    "msg": "/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf -> restore (existed=True, will_change=True)"
+}
+
+TASK [forge-dns : Ensure the pre-change copy directory exists] *****************
+--- before
++++ after
+@@ -1,4 +1,4 @@
+ {
+     "path": "/opt/appdata/dns-pihole/forge-dns-prev",
+-    "state": "absent"
++    "state": "directory"
+ }
+
+changed: [ct-docker-01]
+
+TASK [forge-dns : Save a pre-change copy of every drop-in this run will overwrite] ***
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts -> /opt/appdata/dns-pihole/forge-dns-prev/05-forge.hosts) 
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf -> /opt/appdata/dns-pihole/forge-dns-prev/00-forge-hosts.conf) 
+skipping: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf -> /opt/appdata/dns-pihole/forge-dns-prev/05-forge.conf) 
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Render this role's drop-ins] *********************************
+--- before
++++ after: /home/developer/.ansible/tmp/ansible-local-582690o99ovvka/tmpsjlpfrub/05-forge.hosts.j2
+@@ -0,0 +1,67 @@
++# Ansible managed
++# Managed by homelab-infra: ansible/roles/forge-dns
++#
++# Hosts-format sidecar. It is pulled in by the single `addn-hosts=` line in
++# 00-forge-hosts.conf — NOT by 05-forge.conf; see that
++# file's header for why the declaration lives in its own 00- prefixed drop-in.
++#
++# WHY HOSTS FORMAT: a hosts entry makes the NAME exist in dnsmasq's local
++# namespace, so A answers the address below and AAAA answers NOERROR/ANSWER: 0
++# (NODATA) instead of the NXDOMAIN that `local=/bi-services.be/` would
++# otherwise synthesise. NXDOMAIN is cached by Windows against the NAME, which
++# is what made Chrome report "server IP address could not be found".
++#
++# WHY A SUBDIRECTORY: `conf-dir=/etc/dnsmasq.d` on this image carries no
++# `,*.conf` filter, so a hosts file sitting directly in that directory is
++# parsed as config and kills pihole-FTL. conf-dir skips subdirectories.
++#
++# FQDNs ONLY. 02-homelab.conf sets `expand-hosts` with `domain=bi-services.be`,
++# so a single-label name here would silently mint <label>.bi-services.be as an
++# extra record. Every name below is already fully qualified.
++#
++# This file is NOT /etc/pihole/custom.list and must never be conflated with it:
++# custom.list is read-only, holds hand-added records (hermes.bi-services.be),
++# and is never read or written by this role.
++#
++# Editing only this file would take effect on SIGHUP, but the role re-execs
++# pihole-FTL for a change to any of its three files. Records are sourced from
++# Terraform (terraform/envs/homelab/outputs.tf); see roles/forge-dns/defaults
++# for the per-record provenance.
++#
++# ---------------------------------------------------------------------------
++# REVERSE ZONE — what this file does and does not change
++# ---------------------------------------------------------------------------
++# dnsmasq answers a PTR with the FIRST-loaded name for an address, and reads
++# addn-hosts files in reverse declaration order. Declaring this file from
++# 00-forge-hosts.conf (which conf-dir reads BEFORE 01-pihole.conf)
++# makes /etc/pihole/custom.list load first, so custom.list keeps every reverse
++# answer it has today. FTL log, in load order:
++#     read /etc/pihole/custom.list - 37 names
++#     read /etc/dnsmasq.d/forge/05-forge.hosts - 5 names
++#
++# Measured net effect against the unmodified production resolver (dig -x):
++#     192.168.50.194   alertmanager.bi-services.be -> alertmanager...   UNCHANGED
++#     192.168.50.167   NXDOMAIN                    -> forge...          added
++#     192.168.50.164   NXDOMAIN                    -> ct-saply-ai...    added
++#     192.168.50.165   NXDOMAIN                    -> ct-crypto-quant   added
++# The three additions are addresses that had no reverse name at all. Nothing in
++# homelab-infra or homelab-apps consumes a PTR (grepped for in-addr.arpa,
++# `dig -x`, and reverse-DNS relabeling in the Prometheus and log config — zero
++# hits), and Pi-hole runs no conditional forwarding and no rev-server.
++#
++# The earlier single-file layout (addn-hosts= declared from
++# 05-forge.conf) DID flip 192.168.50.194 to gemma.bi-services.be.
++# That is what the 00- split exists to avoid. Forward resolution was identical
++# either way, so if this role is ever collapsed back into one file, expect that
++# reverse answer to move again.
++#
++# IF THIS FILE GOES MISSING: `pihole-FTL dnsmasq-test` still passes, FTL starts,
++# and it logs `failed to load names from ...` — every other name keeps
++# resolving and only the 5 names below go
++# NXDOMAIN. The syntax gate therefore cannot catch it; the role's per-name dig
++# verification is what does.
++192.168.50.167 forge.bi-services.be
++192.168.50.194 gemma.bi-services.be
++192.168.50.167 ct-forge-01.bi-services.be
++192.168.50.164 ct-saply-ai.bi-services.be
++192.168.50.165 ct-crypto-quant.bi-services.be
+
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/forge/05-forge.hosts)
+--- before
++++ after: /home/developer/.ansible/tmp/ansible-local-582690o99ovvka/tmp1kdbd3zy/00-forge-hosts.conf.j2
+@@ -0,0 +1,56 @@
++# Ansible managed
++# Managed by homelab-infra: ansible/roles/forge-dns
++#
++# ONE LINE, IN ITS OWN FILE, WITH A 00- PREFIX — all three on purpose.
++#
++# ---------------------------------------------------------------------------
++# WHY A SEPARATE DROP-IN: the reverse zone
++# ---------------------------------------------------------------------------
++# dnsmasq holds addn-hosts targets in a LIFO list — the file declared LAST is
++# read FIRST — and answers a reverse (PTR) lookup with the FIRST-loaded name
++# for an address. /etc/pihole/custom.list is declared by Pi-hole's own
++# 01-pihole.conf, so where this role declares its hosts file decides whether
++# custom.list still wins PTR for the addresses both files name.
++#
++# Measured on pihole/pihole:2024.07.0 (pi-hole-v2.90+1 / FTL v5.25.2), same
++# harness, same records, only the declaring file moved:
++#
++#   declared from 05-forge.conf (sorts AFTER 01-pihole.conf):
++#     FTL log order:  read /etc/dnsmasq.d/forge/05-forge.hosts - 5 names
++#                     read /etc/pihole/custom.list - 37 names
++#     dig -x 192.168.50.194  ->  gemma.bi-services.be          CHANGED
++#
++#   declared from THIS file (sorts BEFORE 01-pihole.conf):
++#     FTL log order:  read /etc/pihole/custom.list - 37 names
++#                     read /etc/dnsmasq.d/forge/05-forge.hosts - 5 names
++#     dig -x 192.168.50.194  ->  alertmanager.bi-services.be   UNCHANGED
++#
++# Forward resolution is byte-for-byte identical between the two layouts: the
++# forge apex and wildcard labels, all five exact names, hermes, alertmanager,
++# grafana and the NXDOMAIN negative controls all answer the same either way.
++# So the split costs one extra file and buys back a reverse-zone answer that
++# is outside this fix's blast radius. .167/.164/.165 still GAIN a PTR where
++# they had none — those are pure additions, not changes.
++#
++# ---------------------------------------------------------------------------
++# WHY THE TARGET IS IN A SUBDIRECTORY
++# ---------------------------------------------------------------------------
++# /etc/dnsmasq.conf on this image is exactly
++# `conf-dir=/etc/dnsmasq.d` with NO `,*.conf` filter, so every regular file in
++# that directory is parsed as dnsmasq CONFIG. A hosts file placed there fails
++# with "dnsmasq: bad option at line 2" and pihole-FTL enters an s6
++# crash-restart loop — a full LAN DNS outage, measured. conf-dir skips
++# subdirectories, so forge/ is safe.
++#
++# ---------------------------------------------------------------------------
++# IF THE TARGET IS MISSING
++# ---------------------------------------------------------------------------
++# A dangling addn-hosts= is TOLERATED, not fatal (measured): `pihole-FTL
++# dnsmasq-test` still prints "dnsmasq: syntax check OK." and exits 0, FTL
++# starts normally and logs
++#   failed to load names from /etc/dnsmasq.d/forge/05-forge.hosts: No such file or directory
++# while every other name — hermes, alertmanager, the wildcard subtree — keeps
++# resolving. Only the exact names in that file go NXDOMAIN. That also means
++# the syntax gate in tasks/main.yml CANNOT catch a missing target; the role
++# renders the hosts file before this one and verifies each name by dig instead.
++addn-hosts=/etc/dnsmasq.d/forge/05-forge.hosts
+
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/00-forge-hosts.conf)
+--- before: /opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf
++++ after: /home/developer/.ansible/tmp/ansible-local-582690o99ovvka/tmpmqf42qyu/05-forge.conf.j2
+@@ -2,22 +2,99 @@
+ # Managed by homelab-infra: ansible/roles/forge-dns
+ #
+ # ADDITIVE internal DNS for the Forge (Coder) PoC on ct-forge-01 (CT 167).
++# This file carries the WILDCARD subtrees only; the exact Terraform names are
++# hosts-format records pulled in by 00-forge-hosts.conf.
+ #
+-# Landed as a dnsmasq drop-in rather than through /etc/pihole/custom.list on
+-# purpose: custom.list is bind-mounted read-only from the homelab-apps clone and
+-# contains hand-added records (notably `192.168.50.194 hermes.bi-services.be`,
+-# the live Linear -> Hermes webhook router) that are NOT in Terraform's DNS map.
+-# Rewriting custom.list from Terraform's generated copy would delete them.
+-# This file adds records without reading or replacing any existing record.
++# ---------------------------------------------------------------------------
++# WHY THIS FILE EXISTS AND NOT custom.list
++# ---------------------------------------------------------------------------
++# /etc/pihole/custom.list is bind-mounted READ-ONLY from the homelab-apps clone
++# and carries hand-added records — notably `192.168.50.194 hermes.bi-services.be`,
++# the live Linear -> Hermes webhook router — that are NOT in Terraform's DNS
++# map. Landing Terraform's generated/pihole-custom.list over it would delete
++# them. Everything here is added; no existing record is read or replaced.
+ #
+ # Follow-up (tracked, NOT done here): reconcile hermes into Terraform's DNS map
+ # and land generated/pihole-custom.list as additions-only.
+ #
+-# Changing this file only takes effect once pihole-FTL is restarted. Do NOT
+-# run `pihole restartdns` on this image: it hangs forever and can leave the
+-# s6 service marked down, taking homelab DNS with it. Re-run the role.
++# ---------------------------------------------------------------------------
++# WHY NODATA, NOT NXDOMAIN — the Windows failure this fixes
++# ---------------------------------------------------------------------------
++# `address=/<domain>/<ipv4>` matches A queries only. Any other qtype for the
++# subtree used to fall through to `local=/bi-services.be/` in 02-homelab.conf,
++# which synthesises NXDOMAIN. NXDOMAIN means "this NAME does not exist" — not
++# "this name has no AAAA" — and the Windows DNS client caches it against the
++# NAME. Chrome then reports "server IP address could not be found" for a name
++# whose A record is perfect, because Windows asks AAAA first and never retries.
+ #
+-# `address=/<domain>/<ip>` is a wildcard match: it answers <domain> and every
+-# name under it. dnsmasq prefers the most specific match, so this takes
+-# precedence over the `local=/bi-services.be/` catch-all in 02-homelab.conf.
++# The correct negative answer is NODATA: rcode NOERROR with ANSWER: 0. That is
++# what hermes.bi-services.be has always returned (it is a hosts entry, so the
++# name exists for every qtype), and it is the shape reproduced below.
++#
++# ---------------------------------------------------------------------------
++# TWO MECHANISMS, ONE FOR EACH KIND OF NAME
++# ---------------------------------------------------------------------------
++# 1. WILDCARD SUBTREES (this file). Coder's workspace preview URLs are
++#    subdomain-based (*.forge.bi-services.be), so an arbitrary label must
++#    resolve. A hosts file cannot express that — a hosts file has no wildcard,
++#    and ADR-005/FE2-S05-AC5 forbid an asterisk ever entering the generated
++#    hosts map. Hence the address= pair: the IPv4 form serves A for the apex
++#    and every label under it; the BARE form (no address after the final "/")
++#    makes every OTHER qtype answer NOERROR/ANSWER: 0 from config.
++#
++#    Measured on this exact image (pihole/pihole:2024.07.0, pi-hole-v2.90+1,
++#    FTL v5.25.2): the FTL query log shows `config <name> is NODATA-IPv6` and
++#    `config <name> is NODATA`, with no `forwarded ... to` line — the answer is
++#    local. Line order between the two forms does not matter. Re-measure this
++#    before any Pi-hole image bump: v6 drops dnsmasq config for pihole.toml.
++#    The bare form answers EVERY non-A qtype for the subtree — TXT, SRV and
++#    HTTPS/SVCB (type 65) included — NODATA from local config, so an internal
++#    DNS-01 challenge under forge. would need a narrower directive than this
++#    pair rather than a TXT record dnsmasq will never serve.
++#
++# 2. EXACT NAMES (05-forge.hosts, declared from 00-forge-hosts.conf).
++#    The five Terraform names are NOT under forge., so the wildcard cannot
++#    cover them, and an address= per name would reintroduce the AAAA-NXDOMAIN
++#    bug one name at a time. A hosts entry makes the NAME exist, so A answers
++#    the IP and AAAA answers NODATA for free — exactly how hermes behaves. A
++#    hosts entry also OVERRIDES address= for the exact name it declares
++#    (measured), while leaving the wildcard in force for every other label,
++#    which is why forge.bi-services.be safely appears in both places.
++#
++# ---------------------------------------------------------------------------
++# WHY NOT server=/forge.bi-services.be/# (the forwarding alternative)
++# ---------------------------------------------------------------------------
++# Forwarding the subtree to the public Cloudflare zone also produces NODATA for
++# AAAA, and was measured working. It was rejected: with the upstream
++# unreachable, AAAA for the subtree got NO ANSWER AT ALL and dig gave up after
++# 15.0 s, turning a fast wrong answer into a 15-second stall. It would also
++# make internal DNS correctness depend on a public zone continuing to publish
++# unproxied RFC1918 A records. Under an identical dead-upstream test, the
++# address= pair below answered every probe in ~18 ms: it is served from local
++# config and has ZERO upstream dependency. Losing 8.8.8.8/8.8.4.4 degrades
++# ordinary internet resolution only, exactly as it does today.
++#
++# ---------------------------------------------------------------------------
++# RELOAD SEMANTICS
++# ---------------------------------------------------------------------------
++# Changing THIS file takes effect only after a full pihole-FTL re-exec: dnsmasq
++# re-reads hosts files on SIGHUP but never re-reads its config files (measured
++# — a newly added address= still answered NXDOMAIN after SIGHUP). Changing only
++# 05-forge.hosts would be a SIGHUP away, and there is no inotify
++# auto-reload for addn-hosts. The role nevertheless re-execs FTL for a change
++# to ANY of its three files: `addn-hosts=` is itself a config directive, the
++# re-exec is already proven safe and costs ~1.1 s (measured: exactly one 50 ms
++# probe missed per re-exec, 1.06-1.13 s from that probe to the next successful
++# answer, over four measured re-execs), and one code path is one thing to get
++# wrong at 2am.
++#
++# Do NOT run `pihole restartdns` on this image: it hangs forever and can leave
++# the s6 service marked down, taking homelab DNS with it. Re-run the role.
++
++# --- wildcard subtree: forge.bi-services.be and every label beneath it ---
++# A for the apex and *.forge.bi-services.be
+ address=/forge.bi-services.be/192.168.50.167
++# AAAA (and every other qtype) -> NOERROR / ANSWER: 0, served locally.
++# Deleting this line reintroduces the Windows "server IP address could not be
++# found" bug. It is NOT a synthetic IPv6 answer and NOT a global filter-AAAA.
++address=/forge.bi-services.be/
+
+changed: [ct-docker-01] => (item=/opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf)
+
+TASK [forge-dns : Build the DNS assertion matrix] ******************************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Assert the matrix carries one wildcard-label probe per wildcard] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Probe A and AAAA for every managed name] *********************
+ok: [ct-docker-01] => (item=forge.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=gemma.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-forge-01.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-saply-ai.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be (exact name (addn-hosts)))
+ok: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be (wildcard label (address=)))
+
+TASK [forge-dns : Determine which managed names are stale] *********************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Determine whether Pi-hole needs a DNS reload] ****************
+ok: [ct-docker-01]
+
+TASK [forge-dns : Report which names are stale] ********************************
+ok: [ct-docker-01] => {
+    "msg": "Reload required. Not answering correctly yet: forge.bi-services.be [exact name (addn-hosts)]; gemma.bi-services.be [exact name (addn-hosts)]; ct-forge-01.bi-services.be [exact name (addn-hosts)]; ct-saply-ai.bi-services.be [exact name (addn-hosts)]; ct-crypto-quant.bi-services.be [exact name (addn-hosts)]; forge-dns-probe.forge.bi-services.be [wildcard label (address=)]"
+}
+
+TASK [forge-dns : Validate the render and reload Pi-hole DNS] ******************
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/forge-dns/tasks/reload.yml for ct-docker-01
+
+TASK [forge-dns : Validate the rendered dnsmasq config before signalling a live resolver] ***
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Ensure the pihole-FTL s6 service is marked up] ***************
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Signal pihole-FTL to exit] ***********************************
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Wait for Pi-hole to answer every managed name correctly] *****
+skipping: [ct-docker-01] => (item=forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=gemma.bi-services.be -> A 192.168.50.194 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-forge-01.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-saply-ai.bi-services.be -> A 192.168.50.164 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be -> A 192.168.50.165 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Verify the regression guards and every name this role owns] ***
+included: /home/developer/workspace/homelab/homelab-infra/ansible/roles/forge-dns/tasks/verify.yml for ct-docker-01
+
+TASK [forge-dns : Probe the regression guards this role does not own] **********
+ok: [ct-docker-01] => (item=hermes.bi-services.be -> A 192.168.50.194 + AAAA NODATA)
+
+TASK [forge-dns : Fail the play if a name this role does not own stopped resolving] ***
+ok: [ct-docker-01]
+
+TASK [forge-dns : Fail the play if this role rolled its own drop-ins back] *****
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Verify Pi-hole answers every managed name correctly] *********
+skipping: [ct-docker-01] => (item=forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=gemma.bi-services.be -> A 192.168.50.194 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-forge-01.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-saply-ai.bi-services.be -> A 192.168.50.164 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=ct-crypto-quant.bi-services.be -> A 192.168.50.165 + AAAA NODATA) 
+skipping: [ct-docker-01] => (item=forge-dns-probe.forge.bi-services.be -> A 192.168.50.167 + AAAA NODATA) 
+skipping: [ct-docker-01]
+
+TASK [forge-dns : Fail the play if a name this role owns is not answering correctly] ***
+skipping: [ct-docker-01]
+
+PLAY RECAP *********************************************************************
+ct-docker-01               : ok=21   changed=4    unreachable=0    failed=0    skipped=9    rescued=0    ignored=0   
+

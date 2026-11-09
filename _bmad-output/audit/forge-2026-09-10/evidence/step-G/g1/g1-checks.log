@@ -1,0 +1,39 @@
+### G1.3 CMD: ip link show tailscale0 2>&1
+Device "tailscale0" does not exist.
+rc=1
+
+### G1.4 CMD: ip -4 route show | head -3
+default via 192.168.50.1 dev eth0 onlink 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.18.0.0/16 dev br-9235d7ab138a proto kernel scope link src 172.18.0.1 
+rc=0
+
+### G1.5 CMD: ping -c2 -W2 192.168.50.1
+PING 192.168.50.1 (192.168.50.1) 56(84) bytes of data.
+64 bytes from 192.168.50.1: icmp_seq=1 ttl=64 time=0.615 ms
+64 bytes from 192.168.50.1: icmp_seq=2 ttl=64 time=0.742 ms
+
+--- 192.168.50.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1008ms
+rtt min/avg/max/mdev = 0.615/0.678/0.742/0.063 ms
+rc=0
+
+### G1.6 CMD: dig +short @192.168.50.194 hermes.bi-services.be forge.bi-services.be
+192.168.50.194
+192.168.50.167
+rc=0
+
+### G1.7 CMD: docker ps --format "{{.Names}}\t{{.Status}}"
+rc=0
+--- diff ps.before vs ps.after (sorted) ---
+PS_DIFF: IDENTICAL (no container restarted)
+
+--- dns diff ---
+DNS_DIFF: IDENTICAL
+
+### G1.8 post-state sanity: status Running/Online/PrimaryRoutes
+BackendState      : Running
+Self.Online       : True
+AuthURL           : ''
+Self.PrimaryRoutes: ['192.168.50.0/24']
+Health            : []

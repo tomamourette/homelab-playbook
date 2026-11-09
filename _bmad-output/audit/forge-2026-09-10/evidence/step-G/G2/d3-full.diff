@@ -1,0 +1,63 @@
+diff --git a/stacks/infra-core/config/hermes-saply.yml b/stacks/infra-core/config/hermes-saply.yml
+new file mode 100644
+index 0000000..3b0addb
+--- /dev/null
++++ b/stacks/infra-core/config/hermes-saply.yml
+@@ -0,0 +1,23 @@
++# Traefik configuration for Hermes webhook listener on ct-saply-ai (192.168.50.164)
++# Pattern follows ai-services.yml for cross-host routing
++# HTTP→HTTPS redirect is handled globally at the entrypoint level in traefik.yml
++
++http:
++  # Services - point to ct-saply-ai
++  services:
++    hermes-saply:
++      loadBalancer:
++        servers:
++          - url: "http://192.168.50.164:8644"
++
++  # Routers - HTTPS only (redirect handled by entrypoint)
++  routers:
++    hermes-saply-secure:
++      entryPoints:
++        - "websecure"
++      rule: "Host(`hermes.bi-services.be`)"
++      service: "hermes-saply"
++      # No Authelia middleware — webhook authenticates via HMAC signature
++      # (X-Hub-Signature-256 validated per-route in hermes-agent gateway).
++      tls:
++        certResolver: letsencrypt
+diff --git a/stacks/infra-core/docker-compose.yml b/stacks/infra-core/docker-compose.yml
+index ac4d015..13b17fa 100644
+--- a/stacks/infra-core/docker-compose.yml
++++ b/stacks/infra-core/docker-compose.yml
+@@ -14,6 +14,7 @@ services:
+       - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+       - ./config/media-indexers.yml:/etc/traefik/media-indexers.yml:ro
+       - ./config/ai-services.yml:/etc/traefik/ai-services.yml:ro
++      - ./config/hermes-saply.yml:/etc/traefik/hermes-saply.yml:ro
+       - ./config/security-headers.yml:/etc/traefik/security-headers.yml:ro
+       - ./config/homeassistant.yml:/etc/traefik/homeassistant.yml:ro
+       - ./config/dynamic:/etc/traefik/dynamic:ro
+@@ -102,6 +103,21 @@ services:
+       - "--bind=:9000"
+       - "--tunnel-port=8000"
+ 
++  cloudflared:
++    image: cloudflare/cloudflared:latest
++    container_name: cloudflared
++    restart: unless-stopped
++    command: tunnel --no-autoupdate run
++    environment:
++      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
++    networks:
++      - proxy
++    logging:
++      driver: "json-file"
++      options:
++        max-size: "10m"
++        max-file: "3"
++
+ networks:
+   proxy:
+     external: true

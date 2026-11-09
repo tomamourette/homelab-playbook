@@ -1,0 +1,11 @@
+e9e5ac6f560021b26d6ef34398624e29  /opt/appdata/dns-pihole/dnsmasq.d/05-forge.conf
+ls: cannot access '/opt/appdata/dns-pihole/forge-dns-prev': No such file or directory
+/opt/appdata/dns-pihole/dnsmasq.d/:
+total 23
+drwxr-xr-x 2 root root    6 Sep  9 17:09 .
+drwxr-xr-x 4 root root    5 Apr 16 20:54 ..
+-rw-r--r-- 1 root root 1357 Feb  9  2026 01-pihole.conf
+-rwxr-xr-x 1 root root    0 Sep 27  2025 02-homelab.conf
+-rw-r--r-- 1 root root 1257 Sep  9 17:09 05-forge.conf
+-rw-r--r-- 1 root root 2190 Feb  9  2026 06-rfc6761.conf
+253388

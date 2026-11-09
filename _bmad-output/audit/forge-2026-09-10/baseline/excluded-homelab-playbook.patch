@@ -1,0 +1,214 @@
+# Excluded (uncommitted) remainder — homelab-playbook
+# Generated: 2026-09-10T08:09:45Z
+# Tree:      /home/developer/workspace/homelab/homelab-playbook
+# Branch:    audit/forge-baseline
+# Baseline commit: 8d9861deb4ac7d1dadb261d7f46a5aa819be0760
+# Branched from:   2aed3cf9c025ba11a59449fdebf1b0088d4bb3dc (docs/remote-access-tailscale-primary)
+#
+# Everything below was left UNCOMMITTED in the working tree after the
+# chore(audit) baseline commit. Nothing here was reverted, stashed or cleaned.
+# No git clean / git stash / git checkout -- was run against this tree.
+#
+# Secret handling: no ansible-vault file lives in this tree (all 7 vault
+# sources are in homelab-infra/ansible/inventories/homelab/), so no vault or
+# secret-bearing file content is reproduced here. Section 1 was scanned by
+# secret VALUE against all 27 decrypted vault_* variables before inclusion:
+# the only match is vault_smtp_host, which resolves to a non-secret RFC1918
+# LAN address already present in 31 files committed at HEAD.
+#
+# ---------------------------------------------------------------------------
+# SECTION 1 — tracked, modified, not committed (full git diff follows)
+# ---------------------------------------------------------------------------
+#  .gitignore                                         |  1 +
+#  .../hybrid-gemma-serving-architecture.md           | 17 ++++++++++++++-
+#  docs/runbooks/hybrid-gemma-clients.md              | 25 ++++++++++++----------
+#  3 files changed, 31 insertions(+), 12 deletions(-)
+#
+# Rationale: none of these are Forge-effort paths.
+#   .gitignore                                             — adds .gitnexus, tooling hygiene
+#   _bmad-output/planning-artifacts/hybrid-gemma-serving-architecture.md — hybrid-gemma effort
+#   docs/runbooks/hybrid-gemma-clients.md                  — hybrid-gemma effort
+#
+diff --git a/.gitignore b/.gitignore
+index 080e386..7eba07d 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,2 +1,3 @@
+ # Claude-flow runtime telemetry — not user work, auto-mutated by tooling
+ .claude-flow/data/
++.gitnexus
+diff --git a/_bmad-output/planning-artifacts/hybrid-gemma-serving-architecture.md b/_bmad-output/planning-artifacts/hybrid-gemma-serving-architecture.md
+index bc0ea41..844e9c8 100644
+--- a/_bmad-output/planning-artifacts/hybrid-gemma-serving-architecture.md
++++ b/_bmad-output/planning-artifacts/hybrid-gemma-serving-architecture.md
+@@ -331,9 +331,24 @@ The MARGINAL tier preserves the user's uncensored-chat choice while routing the
+   - (−) Status text appears in transcript; clients that want to strip it must do so themselves (acceptable trade-off).
+ - **References:** [OpenAI streaming events](https://developers.openai.com/api/reference/resources/chat/subresources/completions/streaming-events), research §Tool-Call Orchestration Pattern.
+ 
++### ADR-013 — Publish LiteLLM gateway via Traefik at `gemma.bi-services.be` (amends ADR-005, ADR-010)
++
++- **Status:** Accepted (2026-05-06)
++- **Context:** ADR-010 originally constrained external exposure to "Tailscale-only, no public DNS record". In practice, the homelab convention for *all* internal services (chat, ollama, llama, n8n, grafana, …) is split-horizon DNS via Pi-hole + Traefik on `*.bi-services.be` — a stable hostname that follows the host across IP/migration events, with TLS terminated at Traefik. Pinning hermes (and any future agent client) to the raw container IP `192.168.50.160:4000` reproduces the same fragility ADR-010 was trying to avoid. The original "no public DNS" goal was about *internet exposure*, not about *naming*.
++- **Decision:** Publish the LiteLLM gateway through the existing Traefik stack on ct-docker-01 at `gemma.bi-services.be`, using the same `letsencrypt` cert resolver and `websecure` entrypoint as `chat`/`ollama`/`llama`. Naming is intentionally `gemma.` (the model contract) rather than `litellm.` (the implementation) so the URL survives a future gateway swap. The route is configured **without Authelia middleware**: bearer-token auth (LiteLLM master key) remains the sole gate. LiteLLM's `:4000` listener stays unchanged (`0.0.0.0`, vault-protected master key, ADR-005 unchanged at the listener level).
++- **Consequences:**
++  - (+) Clients consume a stable hostname; container migrations and IP changes don't break agent configs.
++  - (+) Pattern-matches every other AI subdomain — zero new convention to learn.
++  - (+) TLS for free via the existing cert chain.
++  - (+) Adding new agent clients (hermes, future bots) is a one-line config change.
++  - (−) Cloudflare DNS publishes a public A record for `gemma.bi-services.be` → `192.168.50.194` (LAN IP, RFC1918, unroutable from internet). Same posture as `chat`/`ollama`/`llama` already have; informational leak only.
++  - (−) Amends the ADR-010 "no public DNS record" wording — corrected interpretation captured in this ADR.
++- **Auth posture:** Authelia is deliberately NOT chained in front of the route. Authelia is a browser-SSO gate; chaining it in front of an API endpoint breaks `Authorization: Bearer` clients. LiteLLM's master/virtual key system already provides per-client revocable auth.
++- **References:** `homelab-apps/stacks/infra-core/config/ai-services.yml` (route definition), `homelab-infra/terraform/envs/homelab/outputs.tf` (`ai_service_ip_map`), this document's ADR-005/ADR-009/ADR-010.
++
+ ### ADR coherence note
+ 
+-ADRs 001–012 are mutually reinforcing: 001 (Vulkan) enables 002 (TrevorJS) via 003 (template fix); 004 (hybrid loop) drives 007 (hexagonal layout); 005 (two-layer proxy) is enforced by 009 (loopback) and 010 (tailscale); 006 (stateless) and 012 (stream-only) preserve the OpenAI contract; 008 (defer audio) reduces v1 risk; 011 (LiteLLM pinning) hardens the supply chain. No two ADRs contradict; see §Architecture Validation for the explicit coherence check.
++ADRs 001–013 are mutually reinforcing: 001 (Vulkan) enables 002 (TrevorJS) via 003 (template fix); 004 (hybrid loop) drives 007 (hexagonal layout); 005 (two-layer proxy) is enforced by 009 (loopback) and 010 (tailscale); 006 (stateless) and 012 (stream-only) preserve the OpenAI contract; 008 (defer audio) reduces v1 risk; 011 (LiteLLM pinning) hardens the supply chain; 013 publishes the gateway at a stable Traefik hostname (amending ADR-010's literal "no public DNS" reading) without weakening the bearer-auth boundary established in 005. No two ADRs contradict; see §Architecture Validation for the explicit coherence check.
+ 
+ ---
+ 
+diff --git a/docs/runbooks/hybrid-gemma-clients.md b/docs/runbooks/hybrid-gemma-clients.md
+index 01ab96b..185ea0d 100644
+--- a/docs/runbooks/hybrid-gemma-clients.md
++++ b/docs/runbooks/hybrid-gemma-clients.md
+@@ -13,7 +13,9 @@ Client ──► LiteLLM :4000 ──► gemma-hybrid-proxy :8000 ──► llam
+                                                        └► llama-server 26B :8081
+ ```
+ 
+-- LiteLLM listens on `192.168.50.160:4000` (LAN-private).
++- LiteLLM listens on `192.168.50.160:4000` (LAN-private), published via
++  Traefik at **`https://gemma.bi-services.be`** (ADR-013). Off-host clients
++  should use the FQDN; OWUI on ct-ai-01 itself uses loopback `127.0.0.1:4000`.
+ - Bearer-token auth — every `/v1/*` path requires `Authorization: Bearer $LITELLM_MASTER_KEY`.
+ - Master key stored in Ansible Vault at
+   `homelab-infra/ansible/inventories/homelab/host_vars/ct-ai-01/vault.yml`
+@@ -72,21 +74,21 @@ models:
+   - name: Gemma 4 26B (text)
+     provider: openai
+     model: gemma4-26b-text
+-    apiBase: http://192.168.50.160:4000/v1
++    apiBase: https://gemma.bi-services.be/v1
+     apiKey: <paste-litellm-master-key-here>
+     contextLength: 32000
+ 
+   - name: Gemma 4 E4B (vision)
+     provider: openai
+     model: gemma4-e4b-vision
+-    apiBase: http://192.168.50.160:4000/v1
++    apiBase: https://gemma.bi-services.be/v1
+     apiKey: <paste-litellm-master-key-here>
+     contextLength: 8000
+ 
+   - name: Gemma 4 auto-route
+     provider: openai
+     model: gemma4-auto
+-    apiBase: http://192.168.50.160:4000/v1
++    apiBase: https://gemma.bi-services.be/v1
+     apiKey: <paste-litellm-master-key-here>
+     contextLength: 32000
+ ```
+@@ -99,9 +101,10 @@ ansible -i inventories/homelab/hosts.ini ct-ai-01 -m debug \
+   -a 'msg={{ vault_litellm_master_key }}'
+ ```
+ 
+-If the workstation is off the LAN, replace the IP with the ct-ai-01
+-Tailscale hostname (Tailscale not yet installed on ct-ai-01 at MVP gate;
+-pending follow-up — see "Off-LAN access" below).
++The FQDN resolves via Pi-hole on the LAN (split-horizon DNS) and via
++public Cloudflare DNS off-LAN. Off-LAN clients still need to be on the
++tailnet to actually reach the LAN IP — DNS resolves but the IP is
++RFC1918 (see "Off-LAN access" below).
+ 
+ ## Cursor (IDE)
+ 
+@@ -110,7 +113,7 @@ Cursor → Settings → Models → Add custom OpenAI-compatible model:
+ | Field | Value |
+ |-------|-------|
+ | Model name | `gemma4-26b-text` (or `gemma4-auto`, `gemma4-e4b-vision`) |
+-| API endpoint | `http://192.168.50.160:4000/v1` |
++| API endpoint | `https://gemma.bi-services.be/v1` |
+ | API key | (vault-stored master key) |
+ 
+ Same off-LAN caveat as Continue.dev.
+@@ -132,7 +135,7 @@ Useful for Mac/iOS apps like *Pal* or *ChatBox*:
+ 
+ | Setting | Value |
+ |---------|-------|
+-| Endpoint | `http://192.168.50.160:4000/v1` |
++| Endpoint | `https://gemma.bi-services.be/v1` |
+ | API key | (vault-stored master key) |
+ | Model | `gemma4-26b-text` |
+ 
+@@ -178,11 +181,11 @@ KEY=$(ansible -i ~/workspace/homelab/homelab-infra/ansible/inventories/homelab/h
+ 
+ # Models
+ curl -s -H "Authorization: Bearer $KEY" \
+-  http://192.168.50.160:4000/v1/models | jq '.data[].id'
++  https://gemma.bi-services.be/v1/models | jq '.data[].id'
+ # → "gemma4-auto" "gemma4-26b-text" "gemma4-e4b-vision"
+ 
+ # Text chat
+-curl -fsS -X POST http://192.168.50.160:4000/v1/chat/completions \
++curl -fsS -X POST https://gemma.bi-services.be/v1/chat/completions \
+   -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' \
+   -d '{"model":"gemma4-26b-text","messages":[{"role":"user","content":"Reply: ok"}],"max_tokens":256,"temperature":0}' \
+   | jq -r '.choices[0].message.content'
+
+# ---------------------------------------------------------------------------
+# SECTION 2 — untracked, not committed (paths listed by name, contents omitted)
+# ---------------------------------------------------------------------------
+# 24 untracked file(s). Listed by name only, per the audit rule that
+# untracked content is not reproduced into the audit artifact.
+# The audit output directory itself
+# (_bmad-output/audit/forge-2026-09-10/baseline/) is self-referential and is
+# omitted from this listing.
+#
+#   .claude/skills/gitnexus/gitnexus-cli/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-debugging/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-exploring/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-guide/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-refactoring/SKILL.md
+#   AGENTS.md
+#   CLAUDE.md
+#   _bmad-output/planning-artifacts/products/doc-system/architecture.md
+#   _bmad-output/planning-artifacts/products/doc-system/epics.md
+#   _bmad-output/planning-artifacts/products/doc-system/prd.md
+#   _bmad-output/planning-artifacts/products/doc-system/sprint-plan.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S1-pass1-stub-redirect.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S1-review.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S2-adversarial-review.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S2-audit-cuts-agents-md.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S2-code-review.md
+#   _bmad-output/planning-artifacts/products/doc-system/stories/sprint-1/E1.S3-pass2-topic-split.md
+#   _bmad-output/planning-artifacts/products/forge-platform/.claude-flow/data/pending-insights.jsonl
+#   _bmad-output/planning-artifacts/research/technical-claude-md-best-practices-2026-04-27.md
+#   _bmad-output/planning-artifacts/research/technical-codebase-docs-system-research-2026-04-27.md
+#   _bmad-output/planning-artifacts/research/technical-hermes-agent-multi-provider-routing-2026-05-15.md
+#   _bmad-output/planning-artifacts/research/technical-hermes-as-director-claude-code-orchestrator-2026-05-15.md
+#   wiki/.claude-flow/data/pending-insights.jsonl
+#
+# Rationale by group:
+#   .claude/skills/, CLAUDE.md, AGENTS.md            — agent harness config, not Forge
+#   _bmad-output/planning-artifacts/products/doc-system/ — separate doc-system product
+#   _bmad-output/planning-artifacts/research/*.md    — unrelated research (claude.md,
+#                                                      codebase-docs, hermes routing)
+#   wiki/.claude-flow/                               — claude-flow runtime telemetry
+#   .../forge-platform/.claude-flow/                 — claude-flow runtime telemetry that
+#                                                      happens to sit under a Forge path;
+#                                                      this repo .gitignore declares
+#                                                      .claude-flow/data/ "not user work,
+#                                                      auto-mutated by tooling" (the rule
+#                                                      is root-anchored so it does not
+#                                                      match at this depth)
+#
+# ---------------------------------------------------------------------------
+# SECTION 3 — git-ignored paths present in the tree (name only)
+# ---------------------------------------------------------------------------
+#   .claude-flow/data/auto-memory-store.json
+#   .claude-flow/data/graph-state.json
+#   .claude-flow/data/intelligence-snapshot.json
+#   .claude-flow/data/pending-insights.jsonl
+#   .claude-flow/data/ranked-context.json
+#   .gitnexus/lbug
+#   .gitnexus/meta.json

@@ -1,0 +1,262 @@
++++ date -u +%FT%TZ
+++ echo '=== 2026-09-11T11:59:35Z G2 start ==='
+=== 2026-09-11T11:59:35Z G2 start ===
+++ echo '--- git status --short (pre-stash) ---'
+--- git status --short (pre-stash) ---
+++ git status --short
+ M .claude-flow/data/pending-insights.jsonl
+ M stack-targets.yml
+ M stacks/infra-core/config/ai-services.yml
+ M stacks/media-downloads/docker-compose.yml
+ M stacks/media-jellyfin/docker-compose.yml
+?? stacks/infra-core/config/sparkle-vlabel.yml
+?? stacks/infra-core/docker-compose.yml.bak-20260527-141920
+?? stacks/lan-share/
+++ echo '--- git stash push -u ---'
+--- git stash push -u ---
+++ git stash push -u -m 'pre-G unrelated wip'
+Saved working directory and index state On fix/tailscale-authkey-argv: pre-G unrelated wip
+++ echo '--- stash list ---'
+--- stash list ---
+++ git stash list
+stash@{0}: On fix/tailscale-authkey-argv: pre-G unrelated wip
+stash@{1}: On feature/context-stack-e3-graphiti: session-noise-pre-merge-2026-04-27
+stash@{2}: On main: director-pre-e3-kickoff-20260426-154537
+stash@{3}: On ops/grafana-audit-fixes: pending-insights pre-merge
+stash@{4}: On ops/grafana-audit-fixes: unrelated litellm-gemma + insights changes
+++ echo '--- git status --short (post-stash) ---'
+--- git status --short (post-stash) ---
+++ git status --short
+--- stash commit sha ---
+ff4a24389e00eea541915f94d3a15db549175b30
+--- git fetch origin ---
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+--- git checkout main ---
+Switched to branch 'main'
+Your branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+--- main before ---
+4b778f8
+--- git merge --ff-only origin/main ---
+Updating 4b778f8..dd96ed4
+Fast-forward
+ .gitignore                                     |  1 +
+ stacks/networking-tailscale/docker-compose.yml | 31 +++++++++++++++++++++-----
+ 2 files changed, 27 insertions(+), 5 deletions(-)
+--- main after ---
+dd96ed4
+--- git checkout -b fix/tailscale-disarm-accept-routes ---
+Switched to a new branch 'fix/tailscale-disarm-accept-routes'
+--- status ---
+dd96ed4
+=== GATE: custom.list vs live (sorted set compare) ===
+-- records repo has that live lacks --
+-- records live has that repo lacks --
+-- line counts: repo / live --
+41
+41
+=== git diff --stat (tracked) ===
+ .gitignore                                     |  5 +++++
+ stacks/dns-pihole/config/custom.list           |  3 +++
+ stacks/networking-tailscale/docker-compose.yml | 10 ++++++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+=== git status --short ===
+ M .gitignore
+ M stacks/dns-pihole/config/custom.list
+ M stacks/networking-tailscale/docker-compose.yml
+?? stacks/infra-core/config/dynamic/homeassistant.yml
+=== git diff (full) ===
+diff --git a/.gitignore b/.gitignore
+index 9df1484..14c304b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -32,6 +32,11 @@ secrets/
+ *.backup
+ *.bak
+ .env.bak-*
++*.bak-*
++*.bak_*
++
++# Live-only secret material that must never be committed
++stacks/observability/config/alertmanager/ntfy-password
+ 
+ # Temporary files
+ *.tmp
+diff --git a/stacks/dns-pihole/config/custom.list b/stacks/dns-pihole/config/custom.list
+index d936eac..708800e 100644
+--- a/stacks/dns-pihole/config/custom.list
++++ b/stacks/dns-pihole/config/custom.list
+@@ -6,10 +6,13 @@
+ 192.168.50.194 auth.bi-services.be
+ 192.168.50.194 bazarr.bi-services.be
+ 192.168.50.194 chat.bi-services.be
++192.168.50.156 ct-dev-homelab.bi-services.be
++192.168.50.163 ct-hermes-hub.bi-services.be
+ 192.168.50.162 ct-quant-trading.bi-services.be
+ 192.168.50.151 ct-sparkle-cps.bi-services.be
+ 192.168.50.194 dashboard.bi-services.be
+ 192.168.50.194 grafana.bi-services.be
++192.168.50.194 hermes.bi-services.be
+ 192.168.50.11 ha-test.bi-services.be
+ 192.168.50.194 ha.bi-services.be
+ 192.168.50.194 home.bi-services.be
+diff --git a/stacks/networking-tailscale/docker-compose.yml b/stacks/networking-tailscale/docker-compose.yml
+index 642a6fb..1c76466 100644
+--- a/stacks/networking-tailscale/docker-compose.yml
++++ b/stacks/networking-tailscale/docker-compose.yml
+@@ -55,7 +55,14 @@ services:
+         sleep 5
+         if tailscale status --json 2>/dev/null | grep -q '"BackendState"[[:space:]]*:[[:space:]]*"Running"'; then
+           echo "tailscale: already authenticated from persisted state; reasserting routes"
+-          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=true \
++          # --accept-routes MUST be asserted false, not merely omitted. RouteAll is a
++          # PERSISTED pref in tailscaled.state; `tailscale set` only mutates the prefs
++          # named on the command line, so dropping the flag would leave RouteAll=true
++          # in place from earlier starts. This node advertises 192.168.50.0/24 and
++          # LIVES on it: accepting the route installs 192.168.50.0/24 via tailscale0,
++          # which outranks eth0 and blackholes the LAN. See
++          # homelab-infra/ansible/roles/remote-access/defaults/main.yml:32-42.
++          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=false \
+             || echo "tailscale: WARNING - could not reassert routes"
+         else
+           echo "tailscale: no valid state, authenticating with auth key"
+@@ -63,7 +70,6 @@ services:
+           printf '%s' "$$TS_AUTHKEY" > /var/lib/tailscale/authkey
+           tailscale up --auth-key=file:/var/lib/tailscale/authkey \
+             --advertise-routes=192.168.50.0/24 \
+-            --accept-routes \
+             --hostname=homelab-gateway \
+             || echo "tailscale: WARNING - authentication failed"
+           rm -f /var/lib/tailscale/authkey
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+remote: 
+remote: Create a pull request for 'fix/tailscale-disarm-accept-routes' on GitHub by visiting:        
+remote:      https://github.com/tomamourette/homelab-apps/pull/new/fix/tailscale-disarm-accept-routes        
+remote: 
+To github.com:tomamourette/homelab-apps.git
+ * [new branch]      fix/tailscale-disarm-accept-routes -> fix/tailscale-disarm-accept-routes
+branch 'fix/tailscale-disarm-accept-routes' set up to track 'origin/fix/tailscale-disarm-accept-routes'.
+https://github.com/tomamourette/homelab-apps/pull/1
+https://github.com/tomamourette/homelab-apps/pull/2
+=== current branch ===
+fix/tailscale-disarm-accept-routes
+=== git checkout main ===
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+=== git pull --ff-only ===
+Warning: Permanently added 'github.com' (ED25519) to the list of known hosts.
+From github.com:tomamourette/homelab-apps
+   dd96ed4..7438e74  main       -> origin/main
+Updating dd96ed4..7438e74
+Fast-forward
+ stacks/infra-core/config/hermes-saply.yml | 23 +++++++++++++++++++++++
+ stacks/infra-core/docker-compose.yml      | 16 ++++++++++++++++
+ 2 files changed, 39 insertions(+)
+ create mode 100644 stacks/infra-core/config/hermes-saply.yml
+=== main HEAD ===
+7438e74 Merge pull request #2 from tomamourette/feat/hermes-linear-webhook
+dd96ed4 fix(tailscale): move auth key out of process argv into env var + file
+e268da1 feat(infra-core): route Linear webhooks to Hermes via Cloudflare Tunnel
+=== contains e268da1? ===
+YES: main contains e268da1
+=== contains merge commit 7438e74? ===
+7438e74
+=== files present on main ===
+commit 7438e74f42e824280382be8dad0a4f4242bdb652
+Merge: dd96ed4 e268da1
+Author: tomamourette <tom.amourette@gmail.com>
+Date:   Fri Sep 11 14:02:45 2026 +0200
+
+    Merge pull request #2 from tomamourette/feat/hermes-linear-webhook
+    
+    feat(infra-core): route Linear webhooks to Hermes via Cloudflare Tunnel
+
+ stacks/infra-core/config/hermes-saply.yml | 23 +++++++++++++++++++++++
+ stacks/infra-core/docker-compose.yml      | 16 ++++++++++++++++
+ 2 files changed, 39 insertions(+)
+=== PR1 still open? ===
+{"mergeable":"UNKNOWN","state":"OPEN","url":"https://github.com/tomamourette/homelab-apps/pull/1"}
+=== branch/HEAD before pop ===
+main
+7438e74
+=== stash list before ===
+stash@{0}: On fix/tailscale-authkey-argv: pre-G unrelated wip
+stash@{1}: On feature/context-stack-e3-graphiti: session-noise-pre-merge-2026-04-27
+stash@{2}: On main: director-pre-e3-kickoff-20260426-154537
+=== git stash pop ===
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .claude-flow/data/pending-insights.jsonl
+	modified:   stack-targets.yml
+	modified:   stacks/infra-core/config/ai-services.yml
+	modified:   stacks/media-downloads/docker-compose.yml
+	modified:   stacks/media-jellyfin/docker-compose.yml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	stacks/infra-core/config/sparkle-vlabel.yml
+	stacks/infra-core/docker-compose.yml.bak-20260527-141920
+	stacks/lan-share/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (ff4a24389e00eea541915f94d3a15db549175b30)
+=== git status --short ===
+ M .claude-flow/data/pending-insights.jsonl
+ M stack-targets.yml
+ M stacks/infra-core/config/ai-services.yml
+ M stacks/media-downloads/docker-compose.yml
+ M stacks/media-jellyfin/docker-compose.yml
+?? stacks/infra-core/config/sparkle-vlabel.yml
+?? stacks/infra-core/docker-compose.yml.bak-20260527-141920
+?? stacks/lan-share/
+=== count ===
+8
+=== stash list after ===
+stash@{0}: On feature/context-stack-e3-graphiti: session-noise-pre-merge-2026-04-27
+stash@{1}: On main: director-pre-e3-kickoff-20260426-154537
+stash@{2}: On ops/grafana-audit-fixes: pending-insights pre-merge
+=== stash commit ff4a243 still reachable? ===
+commit
+=== G3 SOURCE HANDOFF ===
+branch ref sha: 714b7377217fcd8817e2bb4af38f640655b2f3f5
+blob sha (git):  1c7646675cee8fd085b451fe058e45332b910202
+blob md5:        5fe30efc915ad67a9f417c7886b73c18  -
+blob bytes:      3092
+-- grep accept-routes in that blob --
+58:          # --accept-routes MUST be asserted false, not merely omitted. RouteAll is a
+65:          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=false \
+=== PR1 ===
+{"headRefName":"fix/tailscale-disarm-accept-routes","mergeStateStatus":"UNSTABLE","mergeable":"MERGEABLE","number":1,"state":"OPEN","url":"https://github.com/tomamourette/homelab-apps/pull/1"}
+=== PR2 ===
+{"mergeCommit":{"oid":"7438e74f42e824280382be8dad0a4f4242bdb652"},"number":2,"state":"MERGED","url":"https://github.com/tomamourette/homelab-apps/pull/2"}
+=== homelab-apps final ===
+main
+7438e74
+ M .claude-flow/data/pending-insights.jsonl
+ M stack-targets.yml
+ M stacks/infra-core/config/ai-services.yml
+ M stacks/media-downloads/docker-compose.yml
+ M stacks/media-jellyfin/docker-compose.yml
+?? stacks/infra-core/config/sparkle-vlabel.yml
+?? stacks/infra-core/docker-compose.yml.bak-20260527-141920
+?? stacks/lan-share/
+=== FINAL STATE ===
+--- homelab-apps ---
+branch=main head=7438e74
+ M .claude-flow/data/pending-insights.jsonl
+ M stack-targets.yml
+ M stacks/infra-core/config/ai-services.yml
+ M stacks/media-downloads/docker-compose.yml
+ M stacks/media-jellyfin/docker-compose.yml
+?? stacks/infra-core/config/sparkle-vlabel.yml
+?? stacks/infra-core/docker-compose.yml.bak-20260527-141920
+?? stacks/lan-share/
+local main == origin/main ? 7438e74f42e824280382be8dad0a4f4242bdb652 7438e74f42e824280382be8dad0a4f4242bdb652
+--- homelab-infra ---
+branch=audit/forge-baseline head=451bd84
+unpushed: no upstream tracking
+(empty = committed clean)

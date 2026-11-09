@@ -1,0 +1,25 @@
+=== V14 workbench identity ===
+ct-dev-homelab
+developer
+    inet 127.0.0.1/8 scope host lo
+    inet 192.168.50.156/24 brd 192.168.50.255 scope global eth0
+    inet 100.104.114.63/32 scope global tailscale0
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-46f320f957c2
+    inet 172.19.0.1/16 brd 172.19.255.255 scope global br-8edcffd99e26
+
+=== V15 tailscale on workbench ===
+/usr/bin/tailscale
+100.104.114.63  ct-dev-homelab        ct-dev-homelab.taildf9e93.ts.net  linux    -                                                          
+100.91.10.47    crypto-quant-homelab  tom.amourette@                    linux    offline, last seen 60d ago                                 
+100.127.130.70  ct-sparkle-cps        tagged-devices                    linux    -                                                          
+100.74.151.44   homelab-gateway-1     tom.amourette@                    linux    -                                                          
+100.96.79.11    tom-note-asus         tom.amourette@                    windows  active; direct 192.168.50.39:41641, tx 9030992 rx 2714784  
+rc=0
+
+=== V16 tailscale ping -c 3 100.74.151.44 ===
+pong from homelab-gateway-1 (100.74.151.44) via 192.168.50.194:41641 in 1ms
+rc=0
+
+=== V17 dig @100.100.100.100 +short forge.bi-services.be ===
+192.168.50.167
+rc=0

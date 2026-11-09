@@ -1,0 +1,15 @@
+=== V1 prefs live ===
+rc=0
+RouteAll = false
+AdvertiseRoutes = ["192.168.50.0/24"]
+CorpDNS = true
+ExitNodeID = ""
+ExitNodeIP = ""
+Hostname = "homelab-gateway"
+AdvertiseTags = null
+RunSSH = false
+WantRunning = true
+LoggedOut = false
+NoSNAT = false
+NetfilterMode = 2
+ControlURL = "https://controlplane.tailscale.com"

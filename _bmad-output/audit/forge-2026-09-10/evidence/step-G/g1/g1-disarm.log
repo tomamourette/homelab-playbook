@@ -1,0 +1,13 @@
+### G1.1 CMD: docker exec tailscale tailscale set --accept-routes=false
+rc=0
+
+### G1.2 CMD: docker exec tailscale tailscale debug prefs | grep -E '"RouteAll"|"AdvertiseRoutes"'
+	"RouteAll": false,
+	"ExitNodeID": "",
+	"ExitNodeIP": "",
+	"InternalExitNodePrior": "",
+--
+	"AdvertiseRoutes": [
+		"192.168.50.0/24"
+	],
+	"AdvertiseServices": null,

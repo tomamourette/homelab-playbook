@@ -1,0 +1,35 @@
+=== V3 status --json ===
+rc=0
+BackendState = "Running"
+AuthURL = ""
+MagicDNSSuffix = "taildf9e93.ts.net"
+Health = []
+Self.Online = true
+Self.HostName = "homelab-gateway"
+Self.DNSName = "homelab-gateway-1.taildf9e93.ts.net."
+Self.TailscaleIPs = ["100.74.151.44", "fd7a:115c:a1e0::2c39:972c"]
+Self.PrimaryRoutes = ["192.168.50.0/24"]
+Self.AllowedIPs = ["100.74.151.44/32", "fd7a:115c:a1e0::2c39:972c/128", "192.168.50.0/24"]
+Self.KeyExpiry = null
+Self.Expired = null
+PeerCount = 5
+
+=== V4 ip link show tailscale0 ===
+Device "tailscale0" does not exist.
+rc=1
+
+=== V5 ip -4 route show ===
+rc=0
+default via 192.168.50.1 dev eth0 onlink 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.18.0.0/16 dev br-9235d7ab138a proto kernel scope link src 172.18.0.1 
+
+=== V6 docker ps ===
+rc=0
+32
+
+=== V7 dig via pihole ===
+192.168.50.194
+192.168.50.167
+192.168.50.194
+rc=0

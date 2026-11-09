@@ -1,0 +1,26 @@
+{
+  "terraform.tfvars": {
+    "sha256_raw": "804bc73f29b3c2870cec1ad7f3c86f6a3b069f43ebd4e6b66ce43ab3c2b5f364",
+    "sha256_redacted": "dd5d0fd1b62be6fd212ed9b3b0c32ed83d2b8f6e37a22e02e8d17c08cc25ae02",
+    "mode": "600",
+    "ssh_keys_count": 2
+  },
+  "terraform.tfstate": {
+    "sha256": "66bfacf86cba85c2bdbfa0c5c14386696ae10bdcb44227ea44fc2ceb1f39b1fd",
+    "bytes": 120383,
+    "mode": "644"
+  },
+  "terraform.tfstate.backup": {
+    "sha256": "5d4e5bf9eda203803d70be20c8a9df9ef7343241bf06f2029847677f706799f3",
+    "bytes": 118873,
+    "mode": "644"
+  },
+  "group_vars/vault.yml": {
+    "sha256_ciphertext": "e6f8f46b7c32d7f40a738b0eaa84300d5b2738133839ecfe8f5028664ab06aa3",
+    "encrypted": true,
+    "key_count": 21
+  },
+  "backend": {
+    "kind": "remote?"
+  }
+}

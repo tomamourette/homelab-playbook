@@ -1,0 +1,64 @@
+### G5 CMD: ping -c3 -W2 192.168.50.1 (LAN gateway)
+--- 192.168.50.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2039ms
+rtt min/avg/max/mdev = 0.608/0.710/0.805/0.080 ms
+### G5 CMD: ping -c3 -W2 192.168.50.156 (workbench CT250)
+--- 192.168.50.156 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2031ms
+rtt min/avg/max/mdev = 0.252/0.437/0.779/0.242 ms
+### G5 CMD: dig +short @192.168.50.194 hermes.bi-services.be forge.bi-services.be
+192.168.50.194
+192.168.50.167
+### BASELINE dns.before.txt
+192.168.50.194
+192.168.50.167
+### G5 CMD: docker ps --format ... | sort  (AFTER)
+alertmanager	Up 8 days (healthy)
+authelia	Up 8 days (healthy)
+bazarr	Up 8 days (healthy)
+blackbox-exporter	Up 8 days (healthy)
+cadvisor	Up 8 days (healthy)
+cloudflared	Up 8 days
+diun	Up 8 days (healthy)
+grafana	Up 8 days (healthy)
+homepage	Up 8 days (healthy)
+jellyfin	Up 8 days (healthy)
+jellyseerr	Up 8 days (healthy)
+loki	Up 8 days (healthy)
+n8n	Up 8 days (healthy)
+n8n-db	Up 8 days (healthy)
+n8n-redis	Up 8 days (healthy)
+netconsole-collector	Up 8 days
+node-exporter	Up 8 days
+ntfy	Up 8 days (healthy)
+obsidian-couchdb	Up 8 days (healthy)
+organizr	Up 8 days (healthy)
+organizr-db	Up 8 days (healthy)
+overseerr	Up 8 days (healthy)
+pihole	Up 8 days (healthy)
+portainer	Up 8 days (healthy)
+prometheus	Up 8 days (healthy)
+promtail	Up 8 days (healthy)
+prowlarr	Up 8 days (healthy)
+radarr	Up 8 days (healthy)
+smtp-relay	Up 8 days (healthy)
+sonarr	Up 8 days (healthy)
+tailscale	Up 34 seconds (healthy)
+traefik	Up 8 days (healthy)
+### DIFF vs ps.before.txt (sorted)
+12a13
+> n8n	Up 8 days (healthy)
+15d15
+< n8n	Up 8 days (healthy)
+20d19
+< organizr-db	Up 8 days (healthy)
+21a21
+> organizr-db	Up 8 days (healthy)
+31c31
+< tailscale	Up 7 days (healthy)
+---
+> tailscale	Up 34 seconds (healthy)
+diff rc=1
+### counts before/after
+32
+32

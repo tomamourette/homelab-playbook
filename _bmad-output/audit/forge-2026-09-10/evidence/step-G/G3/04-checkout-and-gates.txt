@@ -1,0 +1,18 @@
+### CMD: git checkout origin/fix/tailscale-disarm-accept-routes -- stacks/networking-tailscale/docker-compose.yml
+rc=0
+### GATE 1 CMD: md5sum of checked-out file
+5fe30efc915ad67a9f417c7886b73c18  /opt/homelab-apps/stacks/networking-tailscale/docker-compose.yml
+### GATE 1 CMD: md5 of branch blob (recompute)
+5fe30efc915ad67a9f417c7886b73c18  -
+### GATE 2 CMD: grep -n accept-routes
+58:          # --accept-routes MUST be asserted false, not merely omitted. RouteAll is a
+65:          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=false \
+### GATE 2b CMD: grep -n accept-routes | grep -v '#'  (non-comment hits)
+65:          tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=false \
+### GATE 2c CMD: grep -c accept-routes=true
+0
+### GATE 3 CMD: git status --short | wc -l (AFTER)
+45
+### CMD: git diff --stat HEAD -- stacks/networking-tailscale/
+ stacks/networking-tailscale/docker-compose.yml | 39 ++++++++++++++++++++++----
+ 1 file changed, 33 insertions(+), 6 deletions(-)

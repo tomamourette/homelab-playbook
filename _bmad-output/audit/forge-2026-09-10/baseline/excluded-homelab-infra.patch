@@ -1,0 +1,604 @@
+# ============================================================================
+# Forge audit baseline — EXCLUDED remainder for tree: homelab-infra
+# Repo:    /home/developer/workspace/homelab/homelab-infra
+# Branch:  audit/forge-baseline  (cut from feature/context-stack-e3-graphiti)
+# Baseline commit that this remainder sits ON TOP OF: 86d7cacf9401bdcf36d03a87bff4d17915695e92
+# Generated: 2026-09-10
+#
+# Everything below was left UNCOMMITTED in the working tree on purpose: it is
+# not part of the 2026-09-08/09 Forge PoC effort. Nothing was stashed, cleaned
+# or checked out — the tree still holds all of it live.
+#
+# ---------------------------------------------------------------------------
+# TRACKED, MODIFIED, EXCLUDED  (diffs included below unless noted)
+# ---------------------------------------------------------------------------
+#   ansible/playbooks/sync-cloudflare-token.yml          (+400) pre-existing
+#       playbook, last committed in 5feb5f6; classified UNRELATED per the audit
+#       guidance's "if predating" rule. NOTE THE COUPLING: the provider-logging
+#       comment committed in envs/homelab/main.tf points at this playbook's
+#       `--tags token-hygiene`, which lives only in this excluded diff. Commit
+#       this separately before relying on that instruction.
+#   terraform/envs/homelab/main.tf                       ONE hunk only — the
+#       ct_sparkle_cps memory_mb 4096->8192 + swap_mb 2048 bump (ct:151, nothing
+#       to do with Forge). The other two hunks of this file were committed.
+#   terraform/modules/ct-debian/outputs.tf               `terraform fmt`
+#       whitespace realignment only, no semantic change.
+#   terraform/modules/ct-debian/variables.tf             `terraform fmt`
+#       whitespace realignment only, no semantic change.
+#   ansible/.claude-flow/data/pending-insights.jsonl                 agent telemetry noise
+#   terraform/envs/homelab/.claude-flow/data/pending-insights.jsonl  agent telemetry noise
+#
+#   terraform/envs/homelab/terraform.tfvars.example      *** DIFF WITHHELD ***
+#       Its removed line carries a LIVE credential: the placeholder string in
+#       the tracked example file is byte-identical to the dev_vm_password in the
+#       live terraform.tfvars, which is exactly the defect that edit fixes.
+#       Reproducing the diff here would re-publish the value. Listed by name
+#       only; take the change straight from the working tree.
+#       Operator action still outstanding: rotate the live value (it is also in
+#       git history).
+#
+# ---------------------------------------------------------------------------
+# UNTRACKED, EXCLUDED  (listed by name only — no contents reproduced)
+# ---------------------------------------------------------------------------
+#   ansible/inventories/homelab/host_vars/ct-media-01/vault.yml
+#       *** SECRET-BEARING *** ansible-vault file, name only.
+#   ansible/playbooks/sonarr-missing-search-deploy.yml           (2026-07-14)
+#   ansible/roles/sonarr-missing-search/README.md
+#   ansible/roles/sonarr-missing-search/defaults/main.yml
+#   ansible/roles/sonarr-missing-search/files/sonarr-missing-search.sh
+#   ansible/roles/sonarr-missing-search/tasks/main.yml
+#   ansible/roles/sonarr-missing-search/templates/sonarr-missing-search.cron.j2
+#   ansible/roles/sonarr-missing-search/templates/sonarr-missing-search.env.j2
+#   AGENTS.md                                                    (2026-04-28)
+#   CLAUDE.md                                                    (2026-04-28)
+#   .claude/skills/gitnexus/gitnexus-cli/SKILL.md                (2026-07-28)
+#   .claude/skills/gitnexus/gitnexus-debugging/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-exploring/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-guide/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-impact-analysis/SKILL.md
+#   .claude/skills/gitnexus/gitnexus-refactoring/SKILL.md
+#
+# ============================================================================
+
+diff --git a/ansible/.claude-flow/data/pending-insights.jsonl b/ansible/.claude-flow/data/pending-insights.jsonl
+index 7593602..24d8975 100644
+--- a/ansible/.claude-flow/data/pending-insights.jsonl
++++ b/ansible/.claude-flow/data/pending-insights.jsonl
+@@ -137,3 +137,40 @@
+ {"type":"edit","file":"unknown","timestamp":1777063240729,"sessionId":null}
+ {"type":"edit","file":"unknown","timestamp":1777063300594,"sessionId":null}
+ {"type":"edit","file":"unknown","timestamp":1777063335491,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786525083,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786545187,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786566015,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786584548,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786707583,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786734538,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786760628,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786789624,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786823506,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786850507,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786877377,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778786880914,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778787278190,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778787293270,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778787320327,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778787326650,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778787334954,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1779891567674,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1779891574553,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1779895230207,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1779895239911,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1779895456057,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251451643,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251510904,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251516806,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251528309,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251532429,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251579367,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251592680,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251607092,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251615710,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251627272,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251634926,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1785251663199,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1788952535925,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1789026708840,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1789027273686,"sessionId":null}
+diff --git a/ansible/playbooks/sync-cloudflare-token.yml b/ansible/playbooks/sync-cloudflare-token.yml
+index 0b54c05..e772082 100644
+--- a/ansible/playbooks/sync-cloudflare-token.yml
++++ b/ansible/playbooks/sync-cloudflare-token.yml
+@@ -6,6 +6,19 @@
+ #   1. homelab-infra/terraform/envs/homelab/terraform.tfvars  → cloudflare_api_token, cloudflare_zone_id
+ #   2. ct-docker-01:/opt/homelab-apps/stacks/infra-core/.env  → CF_DNS_API_TOKEN
+ #
++#   3. THIS PLAYBOOK DOES NOT COVER A THIRD CONSUMER THAT NOW EXISTS.
++#      ct-forge-01:/etc/caddy/cloudflare.env → CLOUDFLARE_API_TOKEN, rendered by
++#      roles/forge-coder-host (story FE2-S05) for Caddy's Let's Encrypt DNS-01
++#      challenge. It is refreshed ONLY by re-running that role:
++#          ansible-playbook -i inventories/homelab/hosts.ini \
++#            playbooks/forge-coder-host.yml --limit ct-forge-01 --tags forge-caddy
++#      Until this playbook is extended to include it, a rotation that skips that
++#      command leaves Caddy holding the OLD token — and because certificates
++#      renew on a ~60-day cycle, the failure surfaces WEEKS later as an expired
++#      certificate, not at rotation time. Extending this playbook is FE2-S05
++#      operator_items #4 and has NOT been approved, so it is documented here
++#      rather than silently implemented.
++#
+ # Token rotation procedure:
+ #   1. ansible-vault edit inventories/homelab/group_vars/vault.yml
+ #      — update vault_cloudflare_api_token to the new value
+@@ -19,6 +32,387 @@
+ #
+ # Related: Story 7.11 (LetsEncrypt DNS-01 ACME), Story 7.12 (full vault-backed secret rendering)
+ 
++# ---------------------------------------------------------------------------
++# Play 1 — operator-workbench credential hygiene.
++#
++# WHY THIS EXISTS. Independent security review of FE2-S05 found LIVE credentials
++# sitting in PLAINTEXT, world-readable, on the operator workbench
++# (ct-dev-homelab). None of them was created by FE2-S05; all of them predate it.
++# The first pass of this play fixed three, and a SECOND review proved that pass
++# too narrow. Both generations are handled below.
++#
++# FOUND BY THE FIRST REVIEW (fixed, and the fixes are kept):
++#   1. /tmp/tfvars.bak.<pid>        — mode 0644, WORLD-READABLE, in shared /tmp
++#                                     on the same machine that holds
++#                                     ansible/.vault_pass and the SSH key.
++#      Origin checked: NOTHING in either repo writes this path (`grep -rn
++#      tfvars.bak` over the whole workspace returns nothing), so it was a
++#      hand-typed `cp terraform.tfvars /tmp/...` — exactly the out-of-IaC
++#      shortcut this estate treats as drift.
++#   2. terraform.tfvars itself      — mode 0644, and its lineinfile `backup:`
++#                                     copies preserve that mode, so every
++#                                     rotation minted another world-readable
++#                                     copy of the live token next to it.
++#   3. ~/.bash_history              — a `curl -H "Authorization: Bearer <tok>"`
++#                                     against Cloudflare's token-verify endpoint.
++#
++# FOUND BY THE SECOND REVIEW — the first pass MISSED these, and said so wrongly:
++#   4. terraform/envs/homelab/terraform-plugin-proxmox.log — 11.7 MB, mode 0644,
++#      holding 6465 cleartext copies of var.pve_token_id and 6409 of
++#      var.pve_token_secret (counted BY VALUE, never printed). Not a stale
++#      artefact: it was REGENERATED by committed configuration on every apply,
++#      including FE2-S05's own. The generator is now off at source
++#      (terraform/envs/homelab/main.tf, pm_log_enable / pm_debug = false); this
++#      play destroys the file that configuration already wrote.
++#   5. VS Code local-history snapshots of terraform.tfvars — four 0644 files
++#      under History/, each byte-identical to the live tfvars for pve_token_id,
++#      pve_token_secret AND dev_vm_password. The first pass filtered history by
++#      the FILENAME of one shell script, so it could only ever match that
++#      script's history and never the tfvars history — the very file its own
++#      comments called out as holding the live token. The sweep below is
++#      RESOURCE-DRIVEN instead: it matches the history index's own "resource"
++#      field against secret-bearing PATH shapes, so a new secret file is covered
++#      the first time VS Code snapshots it, with no list to keep updated.
++#   6. The GENERATOR was left open. The first pass claimed the exposure "cannot
++#      recur" because terraform.tfvars is now 0600. That is false: VS Code local
++#      history writes a fresh 0644 snapshot on every save regardless of the
++#      source file's mode. Shredding snapshots without closing the generator
++#      just resets the clock. The settings task below excludes secret-bearing
++#      paths from local history so no new snapshot is taken.
++#
++# Every check and removal below is VALUE-FREE: it matches on paths and on
++# structural patterns ("Authorization: Bearer", '"resource":"...tfvars"'), never
++# on a secret value. Nothing here reads the vault, so running it cannot leak.
++#
++# Run just this play:
++#   ansible-playbook -i inventories/homelab/hosts.ini \
++#     playbooks/sync-cloudflare-token.yml --tags token-hygiene
++#
++# NOT DONE HERE, and still operator actions — purging copies BOUNDS an exposure,
++# it does not END one. Every credential below was world-readable on a shared
++# machine and must be treated as DISCLOSED:
++#   * vault_cloudflare_api_token — three consumers (terraform.tfvars, Traefik on
++#     ct-docker-01, Caddy on ct-forge-01). Procedure in the comment below.
++#   * pve_token_secret / pve_token_id — the Proxmox API token that Terraform
++#     drives the whole cluster with. Rotate in the Proxmox UI, then re-vault.
++#     This is the LARGER of the two disclosures and it is easy to overlook,
++#     because the review that started this play only named the Cloudflare one.
++#   * dev_vm_password — additionally, it was the SAME string as the one in the
++#     TRACKED terraform.tfvars.example, so it was published in the repository
++#     and remains in git history. The .example now says REPLACE_ME; rotating the
++#     live value is the other half and is not automatable from here.
++# None of these can be minted from this workbench: the vaulted Cloudflare token
++# carries only dns_records:edit / dns_records:read / zone:read, and the Proxmox
++# token cannot mint its own successor.
++- name: Purge plaintext credential spills from the operator workbench
++  hosts: localhost
++  connection: local
++  gather_facts: false
++  tags: [token-hygiene]
++  vars:
++    tf_env_dir: "{{ playbook_dir }}/../../terraform/envs/homelab"
++    tfvars_path: "{{ playbook_dir }}/../../terraform/envs/homelab/terraform.tfvars"
++    vscode_user_dir: "{{ lookup('env', 'HOME') }}/.vscode-server/data/User"
++    vscode_history_dir: "{{ lookup('env', 'HOME') }}/.vscode-server/data/User/History"
++    vscode_settings_path: "{{ lookup('env', 'HOME') }}/.vscode-server/data/User/settings.json"
++    bash_history_path: "{{ lookup('env', 'HOME') }}/.bash_history"
++    workspace_root: "{{ playbook_dir }}/../../.."
++    # GitNexus keeps a local code index per repo. It ingested terraform.tfvars
++    # while that file was still 0644, so the index carries the values verbatim.
++    gitnexus_index_dirs:
++      - "{{ playbook_dir }}/../../../homelab-infra/.gitnexus"
++      - "{{ playbook_dir }}/../../../homelab-apps/.gitnexus"
++      - "{{ playbook_dir }}/../../../homelab-playbook/.gitnexus"
++
++    # Value-free markers. A history line matching any of these is a plaintext
++    # credential spill by construction, whatever the value happens to be.
++    # PYTHON regex, not POSIX/ERE. lineinfile compiles `regexp` with Python's
++    # `re`, where `[[:space:]]` is NOT a whitespace class — it is a character
++    # set containing [ : s p a c e — so `Authorization:[[:space:]]*Bearer`
++    # silently matches NOTHING against `Authorization: Bearer <tok>`. Measured:
++    # the first run of this play reported ok/no-change on a history file that
++    # demonstrably held the line. Use \s. Single-quoted YAML scalars keep the
++    # backslash literal; a `>-` / `|-` block scalar would NOT, which is the same
++    # trap this estate already hit once.
++    secret_history_markers:
++      - 'Authorization:\s*Bearer\s'
++      - 'cloudflare_api_token\s*='
++      - 'CF_DNS_API_TOKEN='
++      - 'CF_TOKEN='
++      - 'pve_token_secret\s*='
++      - 'dev_vm_password\s*='
++
++    # RESOURCE-DRIVEN, not filename-driven. Each History/<hash>/entries.json is
++    # single-line JSON whose "resource" field is the URI of the file the
++    # snapshots belong to, e.g.
++    #   {"version":1,"resource":"vscode-remote://tunnel%2Bct-dev-homelab/.../terraform.tfvars","entries":[...]}
++    # Anchoring every pattern on "resource":" means the match is made against
++    # the INDEXED PATH and never against snapshot contents — so this sweep
++    # cannot itself read, log or diff a secret. Each pattern ends at the closing
++    # quote, so `.env` does not drag in `.env.sample` and `.tfvars` does not
++    # drag in the tracked `terraform.tfvars.example`.
++    secret_resource_patterns:
++      - '.*"resource":"[^"]*\.tfvars".*'
++      - '.*"resource":"[^"]*vault\.ya?ml".*'
++      - '.*"resource":"[^"]*\.env".*'
++      - '.*"resource":"[^"]*/local-secrets/[^"]*".*'
++      - '.*"resource":"[^"]*/secrets/[^"]*".*'
++      - '.*"resource":"[^"]*\.vault_pass".*'
++      - '.*"resource":"[^"]*id_(rsa|ed25519)".*'
++      - '.*"resource":"[^"]*test-cloudflare-token\.sh".*'
++
++    # CLOSING THE GENERATOR. VS Code writes a 0644 local-history snapshot on
++    # every save, whatever the source file's mode — so a 0600 terraform.tfvars
++    # still yields world-readable copies. These globs stop the snapshot being
++    # taken at all. Merged into the user settings rather than written over them,
++    # and it takes effect on the next window reload.
++    localhistory_exclude:
++      "**/*.tfvars": true
++      "**/vault.yml": true
++      "**/vault.yaml": true
++      "**/*.env": true
++      "**/local-secrets/**": true
++      "**/secrets/**": true
++      "**/.vault_pass": true
++      "**/id_rsa": true
++      "**/id_ed25519": true
++
++  tasks:
++
++    - name: Enforce 0600 on terraform.tfvars (it holds the live token in cleartext)
++      ansible.builtin.file:
++        path: "{{ tfvars_path }}"
++        mode: "0600"
++      register: tfvars_mode
++
++    # --- 1. world-readable copies of terraform.tfvars ------------------------
++
++    - name: Find world-readable plaintext spills of the token
++      ansible.builtin.find:
++        paths: "{{ item.path }}"
++        patterns: "{{ item.patterns }}"
++        file_type: file
++        recurse: false
++      loop:
++        # The hand-made /tmp copy the security review found, plus any sibling.
++        - { path: "/tmp", patterns: ["tfvars.bak.*", "terraform.tfvars.bak*"] }
++        # lineinfile `backup:` output — `terraform.tfvars.<pid>.<date>~`.
++        - { path: "{{ tf_env_dir }}", patterns: ["terraform.tfvars.*~", "terraform.tfvars.bak*"] }
++      loop_control:
++        label: "{{ item.path }}"
++      register: token_spills
++
++    - name: Shred and unlink each spill
++      # shred, not `state: absent`: these files are world-readable copies of a
++      # live credential. Best-effort on a CoW filesystem, but strictly better
++      # than an unlink, and it is what the security finding asked for.
++      ansible.builtin.command:
++        argv: [shred, -u, "{{ item.path }}"]
++      loop: "{{ token_spills.results | map(attribute='files') | flatten }}"
++      loop_control:
++        label: "{{ item.path }}"
++      changed_when: true
++
++    # --- 2. the Proxmox provider debug log -----------------------------------
++
++    - name: Find Proxmox provider debug logs inside the Terraform env
++      # Written by pm_log_enable/pm_debug, which are now false in main.tf. This
++      # destroys what the old setting already produced. The find is by NAME, so
++      # it never opens the file and cannot echo a credential.
++      ansible.builtin.find:
++        paths: "{{ tf_env_dir }}"
++        patterns: ["terraform-plugin-proxmox.log", "terraform-plugin-proxmox.log.*"]
++        file_type: file
++        recurse: false
++      register: proxmox_debug_logs
++
++    - name: Report the Proxmox debug logs about to be destroyed (sizes only)
++      ansible.builtin.debug:
++        msg: >-
++          {{ item.path | basename }}: {{ item.size }} bytes, mode {{ item.mode }}
++          — held the live Proxmox API token in cleartext
++      loop: "{{ proxmox_debug_logs.files }}"
++      loop_control:
++        label: "{{ item.path | basename }}"
++
++    - name: Shred the Proxmox provider debug logs
++      ansible.builtin.command:
++        argv: [shred, -u, "{{ item.path }}"]
++      loop: "{{ proxmox_debug_logs.files }}"
++      loop_control:
++        label: "{{ item.path | basename }}"
++      changed_when: true
++
++    # --- 2b. local tool indexes that swallowed the tfvars -------------------
++
++    # FOUND BY SCANNING BY VALUE WITH THE REAL grep. The interactive shell here
++    # aliases `grep` to ugrep, which honours .gitignore — so a by-value sweep run
++    # through the alias silently SKIPS every gitignored file, terraform.tfvars
++    # among them, and reports a reassuring zero. Re-run with /usr/bin/grep and
++    # -a (binary included, not -I), homelab-infra/.gitnexus/lbug turns up: a
++    # 31.8 MB index, mode 0644, holding dev_vm_password and pve_token_id in
++    # cleartext because it indexed terraform.tfvars back when that file was
++    # world-readable too. Gitignored (.gitignore:68) so never committed.
++    #
++    # TIGHTENED, NOT DESTROYED. Shredding a 31 MB code index would break the
++    # operator's GitNexus tooling to win a checkbox; the exposure here is the
++    # world-readable BIT, and 0600 closes it while the index keeps working (it
++    # is owned by, and read by, the same user). Rotating dev_vm_password remains
++    # the real fix and is listed as an operator action above.
++    - name: Find local tool indexes that ingested the tfvars while it was 0644
++      ansible.builtin.find:
++        paths: "{{ gitnexus_index_dirs }}"
++        patterns: ["lbug", "*.db", "meta.json"]
++        file_type: file
++        recurse: false
++      register: gitnexus_indexes
++      failed_when: false
++
++    - name: Take world-readability off those indexes
++      ansible.builtin.file:
++        path: "{{ item.path }}"
++        mode: "0600"
++      loop: "{{ gitnexus_indexes.files | default([]) }}"
++      loop_control:
++        label: "{{ item.path | regex_replace('^.*/homelab/', '') }}"
++
++    # --- 3. VS Code local history, by RESOURCE not by filename ---------------
++
++    - name: Find VS Code local-history indexes for secret-bearing files
++      ansible.builtin.find:
++        paths: "{{ vscode_history_dir }}"
++        patterns: "entries.json"
++        contains: "{{ item }}"
++        file_type: file
++        recurse: true
++      loop: "{{ secret_resource_patterns }}"
++      loop_control:
++        label: "{{ item }}"
++      register: vscode_secret_history
++      failed_when: false
++
++    - name: Collect the snapshot directories to destroy
++      ansible.builtin.set_fact:
++        vscode_secret_history_dirs: >-
++          {{ vscode_secret_history.results
++             | map(attribute='files') | flatten
++             | map(attribute='path') | map('dirname')
++             | unique | sort }}
++
++    - name: Report which snapshot directories are going (paths only, no contents)
++      ansible.builtin.debug:
++        msg: >-
++          {{ item | basename }}:
++          {{ (lookup('file', item ~ '/entries.json') | from_json)['resource'] }}
++      loop: "{{ vscode_secret_history_dirs }}"
++      loop_control:
++        label: "{{ item | basename }}"
++
++    - name: Shred every file inside those snapshot directories
++      ansible.builtin.shell:
++        cmd: |
++          set -euo pipefail
++          d={{ item | quote }}
++          find "$d" -type f -print0 | xargs -0 -r shred -u
++          rmdir "$d"
++        executable: /bin/bash
++      loop: "{{ vscode_secret_history_dirs }}"
++      loop_control:
++        label: "{{ item | basename }}"
++      changed_when: true
++
++    # --- 4. close the generator ----------------------------------------------
++
++    # ansible.cfg sets `become = true` GLOBALLY, so every task in this play runs
++    # as root even though it targets the operator's own home directory. Writing
++    # settings.json without an explicit owner therefore produced a root:root
++    # 0600 file that VS Code — running as the workbench user — could not read,
++    # silently defeating the exclusion it was written to install. Measured, not
++    # theorised: the first run of this task did exactly that. Take the ownership
++    # from the directory VS Code already owns rather than hardcoding a name.
++    - name: Stat the VS Code User directory to learn who owns it
++      ansible.builtin.stat:
++        path: "{{ vscode_user_dir }}"
++      register: vscode_user_dir_stat
++
++    - name: Read the VS Code user settings, if any
++      ansible.builtin.slurp:
++        src: "{{ vscode_settings_path }}"
++      register: vscode_settings_raw
++      failed_when: false
++
++    - name: Assume empty settings until proven parsable
++      ansible.builtin.set_fact:
++        vscode_settings_now: {}
++        vscode_settings_unparsable: false
++
++    - name: Parse the existing settings
++      when: vscode_settings_raw.content is defined
++      block:
++        - name: Decode settings.json
++          ansible.builtin.set_fact:
++            vscode_settings_now: "{{ vscode_settings_raw.content | b64decode | from_json }}"
++      rescue:
++        # VS Code accepts JSONC — comments and trailing commas — which from_json
++        # rejects. Refuse to rewrite a file we cannot round-trip rather than
++        # clobber the operator's settings to win a checkbox.
++        - name: Refuse to rewrite settings we cannot parse
++          ansible.builtin.set_fact:
++            vscode_settings_unparsable: true
++
++    - name: Exclude secret-bearing paths from VS Code local history
++      ansible.builtin.copy:
++        content: "{{ vscode_settings_desired | to_nice_json }}\n"
++        dest: "{{ vscode_settings_path }}"
++        owner: "{{ vscode_user_dir_stat.stat.pw_name }}"
++        group: "{{ vscode_user_dir_stat.stat.gr_name }}"
++        mode: "0600"
++      vars:
++        vscode_settings_desired: >-
++          {{ vscode_settings_now
++             | combine({'workbench.localHistory.exclude':
++                        (vscode_settings_now['workbench.localHistory.exclude'] | default({}))
++                        | combine(localhistory_exclude)}) }}
++      when:
++        - not vscode_settings_unparsable
++        - vscode_user_dir_stat.stat.exists
++
++    - name: Warn when the settings file had to be left alone
++      ansible.builtin.debug:
++        msg: >-
++          {{ vscode_settings_path }} is not plain JSON (VS Code allows comments),
++          so it was NOT rewritten. Add these globs to
++          workbench.localHistory.exclude by hand or local history will keep
++          minting world-readable snapshots of secret files:
++          {{ localhistory_exclude.keys() | list | join(', ') }}
++      when: vscode_settings_unparsable
++
++    # --- 5. shell history ----------------------------------------------------
++
++    - name: Scrub credential-bearing lines from the operator shell history
++      ansible.builtin.lineinfile:
++        path: "{{ bash_history_path }}"
++        regexp: "{{ item }}"
++        state: absent
++      loop: "{{ secret_history_markers }}"
++      # Never render the removed line into a diff — that would reprint the secret.
++      diff: false
++
++    - name: Report what the hygiene pass did
++      ansible.builtin.debug:
++        msg:
++          - "terraform.tfvars mode: {{ tfvars_mode.mode | default('unknown') }} (enforced 0600)"
++          - "tfvars spills shredded this run: {{ token_spills.results | map(attribute='matched') | sum }}"
++          - "Proxmox debug logs shredded this run: {{ proxmox_debug_logs.files | length }}"
++          - "local tool indexes tightened to 0600: {{ gitnexus_indexes.files | default([]) | length }}"
++          - "VS Code history dirs shredded this run: {{ vscode_secret_history_dirs | length }}"
++          - "VS Code local-history exclusions: {{ 'written' if not vscode_settings_unparsable else 'SKIPPED — settings.json is not plain JSON' }}"
++          - >-
++            REMAINING OPERATOR ACTION: rotate vault_cloudflare_api_token AND
++            pve_token_secret AND dev_vm_password — all three were
++            world-readable, so treat all three as disclosed.
++
++
+ - name: Sync Cloudflare token to terraform.tfvars + infra-core .env + restart Traefik
+   hosts: docker_hosts
+   gather_facts: false
+@@ -48,6 +442,12 @@
+         path: "{{ tfvars_path }}"
+         regexp: '^cloudflare_api_token\s*='
+         line: 'cloudflare_api_token = "{{ cloudflare_api_token }}"'
++        # 0600 is load-bearing, not cosmetic. This file holds the live token in
++        # cleartext and was found at 0644 by an FE2-S05 security review; worse,
++        # `backup:` copies the file with shutil.copy2, which PRESERVES the mode,
++        # so every past rotation left another world-readable copy of the token
++        # beside it. With 0600 enforced here the backups inherit 0600 too.
++        mode: "0600"
+         backup: true
+       delegate_to: localhost
+       no_log: true
+diff --git a/terraform/envs/homelab/.claude-flow/data/pending-insights.jsonl b/terraform/envs/homelab/.claude-flow/data/pending-insights.jsonl
+index 8e7b85b..e0155b7 100644
+--- a/terraform/envs/homelab/.claude-flow/data/pending-insights.jsonl
++++ b/terraform/envs/homelab/.claude-flow/data/pending-insights.jsonl
+@@ -101,3 +101,16 @@
+ {"type":"edit","file":"unknown","timestamp":1777031327645,"sessionId":null}
+ {"type":"edit","file":"unknown","timestamp":1777031503275,"sessionId":null}
+ {"type":"edit","file":"unknown","timestamp":1777035307140,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778052733851,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778303600908,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778303606131,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1778304160452,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1781265410665,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1783920971872,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1783921012252,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1783921027559,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1783921200698,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1783921214406,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1788951446523,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1788951449726,"sessionId":null}
++{"type":"edit","file":"unknown","timestamp":1788951450754,"sessionId":null}
+diff --git a/terraform/envs/homelab/main.tf b/terraform/envs/homelab/main.tf
+index 4749dd0..3a4ab1c 100644
+--- a/terraform/envs/homelab/main.tf
++++ b/terraform/envs/homelab/main.tf
+@@ -155,7 +155,8 @@ module "ct_sparkle_cps" {
+   vmid         = 151
+   node         = "pve3"
+   cores        = 8
+-  memory_mb    = 4096
++  memory_mb    = 8192
++  swap_mb      = 2048
+   disk_gb      = 20
+   storage_id   = "local-zfs"
+   unprivileged = true
+diff --git a/terraform/modules/ct-debian/outputs.tf b/terraform/modules/ct-debian/outputs.tf
+index 2ba213c..b08a2f0 100644
+--- a/terraform/modules/ct-debian/outputs.tf
++++ b/terraform/modules/ct-debian/outputs.tf
+@@ -76,7 +76,7 @@ output "monitoring" {
+   description = "Monitoring configuration for Prometheus service discovery"
+   value = {
+     enabled = var.monitoring_enabled
+-    target  = var.monitoring_enabled && length(proxmox_lxc.container.network) > 0 ? (
++    target = var.monitoring_enabled && length(proxmox_lxc.container.network) > 0 ? (
+       proxmox_lxc.container.network[0].ip != "dhcp"
+       ? "${split("/", proxmox_lxc.container.network[0].ip)[0]}:${var.node_exporter_port}"
+       : null
+diff --git a/terraform/modules/ct-debian/variables.tf b/terraform/modules/ct-debian/variables.tf
+index 74339dd..4aa0b49 100644
+--- a/terraform/modules/ct-debian/variables.tf
++++ b/terraform/modules/ct-debian/variables.tf
+@@ -49,7 +49,7 @@ variable "storage_id" {
+ variable "ostemplate" {
+   description = "LXC template to use"
+   type        = string
+-  default     = "local:vztmpl/debian-12-standard_12.12-1_amd64.tar.zst"  # Downloaded Debian 12 template
++  default     = "local:vztmpl/debian-12-standard_12.12-1_amd64.tar.zst" # Downloaded Debian 12 template
+ }
+ 
+ variable "unprivileged" {
+@@ -146,8 +146,8 @@ variable "mounts" {
+ variable "nfs_mounts" {
+   description = "List of host-path bind mounts (typically NFS-backed)"
+   type = list(object({
+-    host_path  = string           # Host path, e.g. /mnt/pve/shared-nfs/media
+-    guest_path = string           # Guest path, e.g. /media
++    host_path  = string # Host path, e.g. /mnt/pve/shared-nfs/media
++    guest_path = string # Guest path, e.g. /media
+     shared     = optional(bool, true)
+     replicate  = optional(bool, false)
+     readonly   = optional(bool, false)

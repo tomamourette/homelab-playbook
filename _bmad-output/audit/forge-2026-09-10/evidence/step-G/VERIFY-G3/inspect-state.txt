@@ -1,0 +1,1 @@
+StartedAt=2026-09-11T12:10:02.868805175Z Health=healthy Image=tailscale/tailscale:v1.96.5 Restarts=0

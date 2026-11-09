@@ -1,0 +1,29 @@
+tailscaled \
+  --state=/var/lib/tailscale/tailscaled.state \
+  --socket=/var/run/tailscale/tailscaled.sock \
+  --port=41641 \
+  --tun=userspace-networking &
+sleep 5
+if tailscale status --json 2>/dev/null | grep -q '"BackendState"[[:space:]]*:[[:space:]]*"Running"'; then
+  echo "tailscale: already authenticated from persisted state; reasserting routes"
+  # --accept-routes MUST be asserted false, not merely omitted. RouteAll is a
+  # PERSISTED pref in tailscaled.state; `tailscale set` only mutates the prefs
+  # named on the command line, so dropping the flag would leave RouteAll=true
+  # in place from earlier starts. This node advertises 192.168.50.0/24 and
+  # LIVES on it: accepting the route installs 192.168.50.0/24 via tailscale0,
+  # which outranks eth0 and blackholes the LAN. See
+  # homelab-infra/ansible/roles/remote-access/defaults/main.yml:32-42.
+  tailscale set --advertise-routes=192.168.50.0/24 --accept-routes=false \
+    || echo "tailscale: WARNING - could not reassert routes"
+else
+  echo "tailscale: no valid state, authenticating with auth key"
+  umask 077
+  printf '%s' "$TS_AUTHKEY" > /var/lib/tailscale/authkey
+  tailscale up --auth-key=file:/var/lib/tailscale/authkey \
+    --advertise-routes=192.168.50.0/24 \
+    --hostname=homelab-gateway \
+    || echo "tailscale: WARNING - authentication failed"
+  rm -f /var/lib/tailscale/authkey
+fi
+wait
+

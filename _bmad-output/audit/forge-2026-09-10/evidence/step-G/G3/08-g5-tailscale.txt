@@ -1,0 +1,48 @@
+### G5 CMD: debug prefs | grep -iE 'routeall|advertiseroutes' -A2
+	"RouteAll": false,
+	"ExitNodeID": "",
+	"ExitNodeIP": "",
+--
+	"AdvertiseRoutes": [
+		"192.168.50.0/24"
+	],
+### G5 CMD: status --json | jq .BackendState,.Self.Online,.Self.PrimaryRoutes,.AuthURL
+"Running"
+true
+[
+  "192.168.50.0/24"
+]
+""
+### G5 CMD: docker logs --since 5m tailscale | tail -20
+2026/09/11 12:10:03 derphttp.Client.Connect: connecting to derp-14 (ams)
+2026/09/11 12:10:03 control: NetInfo: NetInfo{varies=false ipv6=false ipv6os=true udp=true icmpv4=false derp=#14 portmap= link="" firewallmode=""}
+2026/09/11 12:10:03 magicsock: endpoints changed: 94.224.180.164:1081 (stun), 172.17.0.1:41641 (local), 172.18.0.1:41641 (local), 172.19.0.1:41641 (local), 172.20.0.1:41641 (local), 172.21.0.1:41641 (local), 172.22.0.1:41641 (local), 172.23.0.1:41641 (local), 172.24.0.1:41641 (local), 172.25.0.1:41641 (local), 172.26.0.1:41641 (local), 172.27.0.1:41641 (local), 172.28.0.1:41641 (local), 192.168.50.194:41641 (local)
+2026/09/11 12:10:03 health(warnable=warming-up): ok
+2026/09/11 12:10:03 Switching ipn state Starting -> Running (WantRunning=true, nm=true)
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 [RATELIMIT] format("health(warnable=%s): ok")
+2026/09/11 12:10:03 magicsock: derp-14 connected; connGen=1
+2026/09/11 12:10:03 wgengine: idle peer [CroVf] now active, reconfiguring WireGuard
+2026/09/11 12:10:03 wgengine: Reconfig: configuring userspace WireGuard config (with 1/5 peers)
+2026/09/11 12:10:03 magicsock: disco: node [CroVf] d:90ff0edba98dd321 now using 192.168.50.39:41641 mtu=1360 tx=5ccc6639f268
+2026/09/11 12:10:03 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:10:06 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:10:07 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+tailscale: already authenticated from persisted state; reasserting routes
+2026/09/11 12:10:07 localapi: [POST] /localapi/v0/check-prefs
+2026/09/11 12:10:07 localapi: [PATCH] /localapi/v0/prefs
+2026/09/11 12:10:11 backend -> client close connection: close tcp 192.168.50.194:38826->192.168.50.167:443: shutdown: transport endpoint is not connected
+### G5 CMD: log negative greps (expect 0 for each)
+0
+0
+0
+### G5 CMD: log positive greps
+tailscale: already authenticated from persisted state; reasserting routes
+### G5 CMD: ip link show tailscale0
+Device "tailscale0" does not exist.
+### G5 CMD: ip -4 route show | head -3
+default via 192.168.50.1 dev eth0 onlink 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.18.0.0/16 dev br-9235d7ab138a proto kernel scope link src 172.18.0.1 

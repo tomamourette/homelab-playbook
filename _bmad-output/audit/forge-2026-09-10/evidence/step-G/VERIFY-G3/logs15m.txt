@@ -1,0 +1,85 @@
+TPM: error opening: stat /dev/tpmrm0: no such file or directory
+2026/09/11 12:10:02 logtail started
+2026/09/11 12:10:02 Program starting: v1.96.5-t88200dbb4, Go 1.26.1: []string{"tailscaled", "--state=/var/lib/tailscale/tailscaled.state", "--socket=/var/run/tailscale/tailscaled.sock", "--port=41641", "--tun=userspace-networking"}
+2026/09/11 12:10:02 LogID: b683952cfa595c22d8e66b4224e199ba2788a658d480eb269b7178eefd8c1c71
+2026/09/11 12:10:02 logpolicy: using system state directory "/var/lib/tailscale"
+2026/09/11 12:10:02 dns: [rc=unknown ret=direct]
+2026/09/11 12:10:02 dns: using "direct" mode
+2026/09/11 12:10:02 dns: using *dns.directManager
+2026/09/11 12:10:02 wgengine.NewUserspaceEngine(tun "userspace-networking") ...
+2026/09/11 12:10:02 dns: using dns.noopManager
+2026/09/11 12:10:02 link state: interfaces.State{defaultRoute=eth0 ifs={br-2bdce48d4a00:[172.21.0.1/16 llu6] br-2c2abdb7a1b9:[172.28.0.1/16] br-408724807dc7:[172.24.0.1/16 llu6] br-4f74567bda4f:[172.22.0.1/16 llu6] br-5e7e7f5ba0fa:[172.25.0.1/16 llu6] br-635a82bd50ca:[172.26.0.1/16 llu6] br-65cfb335641c:[172.27.0.1/16 llu6] br-9235d7ab138a:[172.18.0.1/16 llu6] br-a86af7a0d451:[172.19.0.1/16 llu6] br-ca41f38c3e73:[172.23.0.1/16 llu6] br-f03599e3c113:[172.20.0.1/16 llu6] docker0:[172.17.0.1/16] eth0:[192.168.50.194/24 llu6]} v4=true v6=false}
+2026/09/11 12:10:02 dns: inotify: NewDirWatcher: context canceled
+2026/09/11 12:10:02 magicsock: [warning] failed to force-set UDP read buffer size to 7340032: operation not permitted; using kernel default values (impacts throughput only)
+2026/09/11 12:10:02 magicsock: [warning] failed to force-set UDP write buffer size to 7340032: operation not permitted; using kernel default values (impacts throughput only)
+2026/09/11 12:10:02 magicsock: [warning] failed to force-set UDP read buffer size to 7340032: operation not permitted; using kernel default values (impacts throughput only)
+2026/09/11 12:10:02 magicsock: [warning] failed to force-set UDP write buffer size to 7340032: operation not permitted; using kernel default values (impacts throughput only)
+2026/09/11 12:10:02 magicsock: disco key = d:a6b337ce345cf20a
+2026/09/11 12:10:02 Creating WireGuard device...
+2026/09/11 12:10:02 Bringing WireGuard device up...
+2026/09/11 12:10:02 Bringing router up...
+2026/09/11 12:10:02 Clearing router settings...
+2026/09/11 12:10:02 Starting network monitor...
+2026/09/11 12:10:02 Engine created.
+2026/09/11 12:10:02 pm: using backend prefs for "profile-77bd": Prefs{ra=false dns=true want=true routes=[192.168.50.0/24] snat=true statefulFiltering=false nf=on host="homelab-gateway" update=check Persist{o=, n=[Ehqig] u="tom.amourette@gmail.com" ak=-}}
+2026/09/11 12:10:02 logpolicy: using system state directory "/var/lib/tailscale"
+2026/09/11 12:10:02 linkChange: in state NoState; PAC or proxyConfig changed; updating routes
+2026/09/11 12:10:02 got LocalBackend in 9ms
+2026/09/11 12:10:02 Start
+2026/09/11 12:10:02 ipnext: active extensions: conn25, portlist, posture, clientupdate, relayserver, taildrop
+2026/09/11 12:10:02 Backend: logs: be:b683952cfa595c22d8e66b4224e199ba2788a658d480eb269b7178eefd8c1c71 fe:
+2026/09/11 12:10:02 control: client.Login(0)
+2026/09/11 12:10:02 health(warnable=warming-up): error: Tailscale is starting. Please wait.
+2026/09/11 12:10:02 control: doLogin(regen=false, hasUrl=false)
+2026/09/11 12:10:03 control: control server key from https://controlplane.tailscale.com: ts2021=[fSeS+], legacy=[nlFWp]
+2026/09/11 12:10:03 control: RegisterReq: onode= node=[Ehqig] fup=false nks=false
+2026/09/11 12:10:03 control: RegisterReq: got response; nodeKeyExpired=false, machineAuthorized=true; authURL=false
+2026/09/11 12:10:03 health(warnable=not-in-map-poll): ok
+2026/09/11 12:10:03 control: netmap: got new dial plan from control
+2026/09/11 12:10:03 active login: tom.amourette@gmail.com
+2026/09/11 12:10:03 netmap: suggested exit node: no preferred DERP, try again later
+2026/09/11 12:10:03 Switching ipn state NoState -> Starting (WantRunning=true, nm=true)
+2026/09/11 12:10:03 magicsock: SetPrivateKey called (init)
+2026/09/11 12:10:03 wgengine: Reconfig: configuring userspace WireGuard config (with 0/5 peers)
+2026/09/11 12:10:03 wgengine: Reconfig: configuring router
+2026/09/11 12:10:03 wgengine: Reconfig: user dialer
+2026/09/11 12:10:03 tsdial: bart table size: 8
+2026/09/11 12:10:03 wgengine: Reconfig: configuring DNS
+2026/09/11 12:10:03 dns: Set: {DefaultResolvers:[] Routes:{bi-services.be.:[192.168.50.194] taildf9e93.ts.net.:[] ts.net.:[199.247.155.53 2620:111:8007::53]}+65arpa SearchDomains:[taildf9e93.ts.net.] Hosts:6}
+2026/09/11 12:10:03 dns: Resolvercfg: {Routes:{bi-services.be.:[192.168.50.194] ts.net.:[199.247.155.53 2620:111:8007::53]} Hosts:6 LocalDomains:[taildf9e93.ts.net.]+65arpa}
+2026/09/11 12:10:03 dns: OScfg: {Nameservers:[100.100.100.100 fd7a:115c:a1e0::53] SearchDomains:[taildf9e93.ts.net.] MatchDomains:[bi-services.be. taildf9e93.ts.net. ts.net.]+65arpa}
+2026/09/11 12:10:03 peerapi: serving on http://100.74.151.44:41274
+2026/09/11 12:10:03 peerapi: serving on http://[fd7a:115c:a1e0::2c39:972c]:41274
+2026/09/11 12:10:03 monitor: gateway and self IP changed: gw=192.168.50.1 self=192.168.50.194
+2026/09/11 12:10:03 magicsock: home DERP changing from derp-0 [0ms] to derp-14 [28ms]
+2026/09/11 12:10:03 magicsock: home is now derp-14 (ams)
+2026/09/11 12:10:03 magicsock: adding connection to derp-14 for home-keep-alive
+2026/09/11 12:10:03 magicsock: 1 active derp conns: derp-14=cr0s,wr0s
+2026/09/11 12:10:03 derphttp.Client.Connect: connecting to derp-14 (ams)
+2026/09/11 12:10:03 control: NetInfo: NetInfo{varies=false ipv6=false ipv6os=true udp=true icmpv4=false derp=#14 portmap= link="" firewallmode=""}
+2026/09/11 12:10:03 magicsock: endpoints changed: 94.224.180.164:1081 (stun), 172.17.0.1:41641 (local), 172.18.0.1:41641 (local), 172.19.0.1:41641 (local), 172.20.0.1:41641 (local), 172.21.0.1:41641 (local), 172.22.0.1:41641 (local), 172.23.0.1:41641 (local), 172.24.0.1:41641 (local), 172.25.0.1:41641 (local), 172.26.0.1:41641 (local), 172.27.0.1:41641 (local), 172.28.0.1:41641 (local), 192.168.50.194:41641 (local)
+2026/09/11 12:10:03 health(warnable=warming-up): ok
+2026/09/11 12:10:03 Switching ipn state Starting -> Running (WantRunning=true, nm=true)
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 health(warnable=no-derp-connection): ok
+2026/09/11 12:10:03 [RATELIMIT] format("health(warnable=%s): ok")
+2026/09/11 12:10:03 magicsock: derp-14 connected; connGen=1
+2026/09/11 12:10:03 wgengine: idle peer [CroVf] now active, reconfiguring WireGuard
+2026/09/11 12:10:03 wgengine: Reconfig: configuring userspace WireGuard config (with 1/5 peers)
+2026/09/11 12:10:03 magicsock: disco: node [CroVf] d:90ff0edba98dd321 now using 192.168.50.39:41641 mtu=1360 tx=5ccc6639f268
+2026/09/11 12:10:03 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:10:06 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:10:07 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+tailscale: already authenticated from persisted state; reasserting routes
+2026/09/11 12:10:07 localapi: [POST] /localapi/v0/check-prefs
+2026/09/11 12:10:07 localapi: [PATCH] /localapi/v0/prefs
+2026/09/11 12:10:11 backend -> client close connection: close tcp 192.168.50.194:38826->192.168.50.167:443: shutdown: transport endpoint is not connected
+2026/09/11 12:10:40 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:10:46 netstack: decrementing connsInFlightByClient[100.96.79.11] because the packet was not handled; new value is 0
+2026/09/11 12:11:25 client -> backend close connection: close tcp 192.168.50.167:443->100.96.79.11:51818: endpoint not connected
+2026/09/11 12:11:32 netstack: UDP session between 0.0.0.0:62180 and 192.168.50.194:53 timed out
+2026/09/11 12:11:32 netstack: UDP session between 0.0.0.0:62181 and 192.168.50.194:53 timed out
+2026/09/11 12:13:00 backend -> client close connection: close tcp 192.168.50.194:57114->192.168.50.167:443: shutdown: transport endpoint is not connected
+2026/09/11 12:13:00 backend -> client close connection: close tcp 192.168.50.194:57144->192.168.50.167:443: shutdown: transport endpoint is not connected
+2026/09/11 12:13:00 backend -> client close connection: close tcp 192.168.50.194:57142->192.168.50.167:443: shutdown: transport endpoint is not connected

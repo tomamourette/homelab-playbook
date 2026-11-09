@@ -1,0 +1,25 @@
+# Declared-vs-live reconciliation — expected (consented) drift allowlist. Plan §6 Phase 0 (6), §7.
+# Anything the reconciliation finds that is NOT listed here is a finding. Each entry needs a why and an owner.
+version: 1
+entries:
+  - id: ED-001
+    what: "CT 167 features=nesting=1,keyctl=1 while terraform declares features=[\"nesting=1\"]"
+    where: "pct config 167 vs homelab-infra/terraform/envs/homelab/main.tf (ct_forge_01 block)"
+    why: "Proxmox API user cannot set feature flags other than nesting (root@pam only); keyctl applied post-create with pct set. Module ignores `features`."
+    consented_by: tomamourette
+    consented_on: 2026-09-09
+    revisit: "if the Terraform provider identity ever gains root@pam-equivalent rights, declare keyctl and drop this entry"
+  - id: ED-002
+    what: "coder.service drop-in and forge_* systemd units exist on the host but are not Proxmox/Terraform-visible"
+    where: "CT 167 /etc/systemd/system/*.d vs terraform"
+    why: "Expected layering: Terraform owns the CT, Ansible (forge-coder-host) owns everything inside it. Not drift; listed so the reconciler knows the boundary."
+    consented_by: tomamourette
+    consented_on: 2026-09-10
+  - id: ED-003
+    what: "HA state ct:167 = started (live) vs pve-ha-rules defaults state: started"
+    where: "ha-manager status vs roles/pve-ha-rules/defaults/main.yml"
+    why: "In sync as of 2026-09-09; listed because the role applies `state:` ONLY at registration and operator flips via ha-manager set are the sanctioned path — a future mismatch here is NOT automatically a defect, it is an operator decision to record."
+    consented_by: tomamourette
+    consented_on: 2026-09-09
+# NOT allowlisted (must be findings if observed): ct:151 memory/swap (reconciled 2026-09-09), target_node of any CT
+# other than as recorded by ha-manager, any /etc file whose hash differs from the role's rendered template.

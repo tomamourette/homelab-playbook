@@ -1,0 +1,15 @@
+Secret source: Actions
+##[group]Run # Check for common secret patterns
+[36;1m# Check for common secret patterns[0m
+[36;1mEXIT_CODE=0[0m
+[36;1m[0m
+[36;1m# Patterns that should not be in the repository[0m
+[36;1mPATTERNS=([0m
+[36;1m  "password.*=.*[^=]$"[0m
+[36;1m  "secret.*=.*[^=]$" [0m
+[36;1m  "api[_-]?key.*=.*[^=]$"[0m
+[36;1m  "token.*=.*[^=]$"[0m
+[36;1m)[0m
+[36;1m[0m
+[36;1mfor pattern in "${PATTERNS[@]}"; do[0m
+[36;1m  if grep -ri "$pattern" stacks/ --exclude="*.sample" --exclude-dir=".git"; then[0m

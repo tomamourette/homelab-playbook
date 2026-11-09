@@ -1,0 +1,14 @@
+### set-identity check: container NAME sets before vs after
+names diff rc=0
+### git status --short AFTER (full) vs BEFORE
+12c12
+<  M stacks/networking-tailscale/docker-compose.yml
+---
+> M  stacks/networking-tailscale/docker-compose.yml
+gitstatus diff rc=1
+### CT250 workbench: tailscale status | grep homelab-gateway
+100.74.151.44   homelab-gateway-1     tom.amourette@                    linux    -                                                           
+### CT250 workbench: tailscale ping 100.74.151.44 (first 3 lines)
+pong from homelab-gateway-1 (100.74.151.44) via 192.168.50.194:41641 in 1ms
+### CT250 workbench: tailscale debug prefs | grep RouteAll
+	"RouteAll": false,

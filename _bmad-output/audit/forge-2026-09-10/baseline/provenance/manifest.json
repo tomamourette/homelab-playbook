@@ -1,0 +1,32 @@
+{
+  "audit_parsed.json": {
+    "bytes": 111983,
+    "sha256": "ff17615d4c977135",
+    "vault_values_redacted": 2
+  },
+  "co.json": {
+    "bytes": 81252,
+    "sha256": "29fbe2555ef38d25",
+    "vault_values_redacted": 18
+  },
+  "fe2.json": {
+    "bytes": 91495,
+    "sha256": "9914069f55934db9",
+    "vault_values_redacted": 16
+  },
+  "fe3.json": {
+    "bytes": 86090,
+    "sha256": "1257ca67687f2848",
+    "vault_values_redacted": 0
+  },
+  "fe3fix.json": {
+    "bytes": 31647,
+    "sha256": "98897a0b41a47e14",
+    "vault_values_redacted": 0
+  },
+  "p0a.json": {
+    "bytes": 64502,
+    "sha256": "cf1f56e063c29507",
+    "vault_values_redacted": 1
+  }
+}

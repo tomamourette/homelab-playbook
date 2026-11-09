@@ -1,0 +1,342 @@
+{
+  "Version": "1.96.5-t88200dbb4",
+  "TUN": false,
+  "BackendState": "Running",
+  "HaveNodeKey": true,
+  "AuthURL": "",
+  "TailscaleIPs": [
+    "100.74.151.44",
+    "fd7a:115c:a1e0::2c39:972c"
+  ],
+  "Self": {
+    "ID": "nPAJk7MPvq11CNTRL",
+    "PublicKey": "nodekey:121aa2805724154e413eee0cf9aca1538af2e85b67675c5d5d9b28c62c8a972b",
+    "HostName": "homelab-gateway",
+    "DNSName": "homelab-gateway-1.taildf9e93.ts.net.",
+    "OS": "linux",
+    "UserID": 6035293782264875,
+    "TailscaleIPs": [
+      "100.74.151.44",
+      "fd7a:115c:a1e0::2c39:972c"
+    ],
+    "AllowedIPs": [
+      "100.74.151.44/32",
+      "fd7a:115c:a1e0::2c39:972c/128",
+      "192.168.50.0/24"
+    ],
+    "PrimaryRoutes": [
+      "192.168.50.0/24"
+    ],
+    "Addrs": [
+      "94.224.180.164:1081",
+      "172.17.0.1:41641",
+      "172.18.0.1:41641",
+      "172.19.0.1:41641",
+      "172.20.0.1:41641",
+      "172.21.0.1:41641",
+      "172.22.0.1:41641",
+      "172.23.0.1:41641",
+      "172.24.0.1:41641",
+      "172.25.0.1:41641",
+      "172.26.0.1:41641",
+      "172.27.0.1:41641",
+      "172.28.0.1:41641",
+      "192.168.50.194:41641"
+    ],
+    "CurAddr": "",
+    "Relay": "ams",
+    "PeerRelay": "",
+    "RxBytes": 0,
+    "TxBytes": 0,
+    "Created": "2026-04-18T09:25:47.137045458Z",
+    "LastWrite": "0001-01-01T00:00:00Z",
+    "LastSeen": "0001-01-01T00:00:00Z",
+    "LastHandshake": "0001-01-01T00:00:00Z",
+    "Online": true,
+    "ExitNode": false,
+    "ExitNodeOption": false,
+    "Active": false,
+    "PeerAPIURL": [
+      "http://100.74.151.44:41274",
+      "http://[fd7a:115c:a1e0::2c39:972c]:41274"
+    ],
+    "TaildropTarget": 0,
+    "NoFileSharingReason": "",
+    "Capabilities": [
+      "HTTPS://TAILSCALE.COM/s/DEPRECATED-NODE-CAPS#see-https://github.com/tailscale/tailscale/issues/11508",
+      "default-auto-update",
+      "https",
+      "https://tailscale.com/cap/file-sharing",
+      "https://tailscale.com/cap/is-admin",
+      "https://tailscale.com/cap/is-owner",
+      "https://tailscale.com/cap/ssh",
+      "https://tailscale.com/cap/tailnet-lock",
+      "probe-udp-lifetime",
+      "ssh-behavior-v1",
+      "ssh-env-vars",
+      "store-appc-routes",
+      "tailnet-display-name"
+    ],
+    "CapMap": {
+      "default-auto-update": [
+        true
+      ],
+      "https": null,
+      "https://tailscale.com/cap/file-sharing": null,
+      "https://tailscale.com/cap/is-admin": null,
+      "https://tailscale.com/cap/is-owner": null,
+      "https://tailscale.com/cap/ssh": null,
+      "https://tailscale.com/cap/tailnet-lock": null,
+      "probe-udp-lifetime": null,
+      "ssh-behavior-v1": null,
+      "ssh-env-vars": null,
+      "store-appc-routes": null,
+      "tailnet-display-name": [
+        "tom.amourette@gmail.com"
+      ]
+    },
+    "InNetworkMap": true,
+    "InMagicSock": false,
+    "InEngine": false
+  },
+  "Health": [],
+  "MagicDNSSuffix": "taildf9e93.ts.net",
+  "CurrentTailnet": {
+    "Name": "tom.amourette@gmail.com",
+    "MagicDNSSuffix": "taildf9e93.ts.net",
+    "MagicDNSEnabled": true
+  },
+  "CertDomains": [
+    "homelab-gateway-1.taildf9e93.ts.net"
+  ],
+  "Peer": {
+    "nodekey:0aba157e30a52da2e0b336cbb616d07cb3dd48c65669fb7dc28e59d86d204f0b": {
+      "ID": "nHFUQQLq3211CNTRL",
+      "PublicKey": "nodekey:0aba157e30a52da2e0b336cbb616d07cb3dd48c65669fb7dc28e59d86d204f0b",
+      "HostName": "tom-note-asus",
+      "DNSName": "tom-note-asus.taildf9e93.ts.net.",
+      "OS": "windows",
+      "UserID": 6035293782264875,
+      "TailscaleIPs": [
+        "100.96.79.11",
+        "fd7a:115c:a1e0::6d39:4f0c"
+      ],
+      "AllowedIPs": [
+        "100.96.79.11/32",
+        "fd7a:115c:a1e0::6d39:4f0c/128"
+      ],
+      "Addrs": null,
+      "CurAddr": "192.168.50.39:41641",
+      "Relay": "ams",
+      "PeerRelay": "",
+      "RxBytes": 370328,
+      "TxBytes": 4567640,
+      "Created": "2026-07-28T13:20:11.109966922Z",
+      "LastWrite": "2026-09-11T12:13:34.791804394Z",
+      "LastSeen": "0001-01-01T00:00:00Z",
+      "LastHandshake": "2026-09-11T12:12:04.074760898Z",
+      "Online": true,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": true,
+      "PeerAPIURL": [
+        "http://100.96.79.11:39024",
+        "http://[fd7a:115c:a1e0::6d39:4f0c]:39148"
+      ],
+      "TaildropTarget": 1,
+      "NoFileSharingReason": "",
+      "InNetworkMap": true,
+      "InMagicSock": true,
+      "InEngine": true,
+      "KeyExpiry": "2027-01-24T13:20:11Z"
+    },
+    "nodekey:2012e9ff797947a0cbfc80ae649abc1008df839d8e52ac6af68ba61ff7ff9677": {
+      "ID": "nT9AKfC2r411CNTRL",
+      "PublicKey": "nodekey:2012e9ff797947a0cbfc80ae649abc1008df839d8e52ac6af68ba61ff7ff9677",
+      "HostName": "ct-sparkle-cps",
+      "DNSName": "ct-sparkle-cps.taildf9e93.ts.net.",
+      "OS": "linux",
+      "UserID": 7541667192237769,
+      "TailscaleIPs": [
+        "100.127.130.70",
+        "fd7a:115c:a1e0::5b39:8247"
+      ],
+      "AllowedIPs": [
+        "100.127.130.70/32",
+        "fd7a:115c:a1e0::5b39:8247/128"
+      ],
+      "Tags": [
+        "tag:container"
+      ],
+      "Addrs": null,
+      "CurAddr": "",
+      "Relay": "ams",
+      "PeerRelay": "",
+      "RxBytes": 0,
+      "TxBytes": 0,
+      "Created": "2026-07-27T09:56:02.863776458Z",
+      "LastWrite": "0001-01-01T00:00:00Z",
+      "LastSeen": "0001-01-01T00:00:00Z",
+      "LastHandshake": "0001-01-01T00:00:00Z",
+      "Online": true,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": false,
+      "PeerAPIURL": [
+        "http://100.127.130.70:59411",
+        "http://[fd7a:115c:a1e0::5b39:8247]:43511"
+      ],
+      "TaildropTarget": 9,
+      "NoFileSharingReason": "",
+      "sshHostKeys": [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCoZMPeYFDRo/bU3URWl0TkD6qKr5r+nYPBX5DIv4Nk8DB7F2U9K/rm/xBjpeELlyvgDRAtLA9gJYFE0tEO6e9t/N/XcG6DfPCQzAs0ey2alTXjcqGEQPZKcvOmtv2xFfMcVn8p/+y41SzxJfJ+2NeyYXX2GtViZtgZQsrnO8zrjP/vc41uUw2T0LQ2Vvh42vAQ39kFp1L+FaQwlVl8a/Sy/pxXZ29KiOByn925wUW1CnsdEfyWujRh3FBcvlYkEWhMnEXluA3UwAERYPTyYAPrqNW8dsvan0dtbvZ3VdJBJZq7XKjKUMYrpvvQh7ZX7xBK2/xoP2Mgb0puL4I3cgQuD+EMibjzUHX0ke7/AD4Oa8yNlGkV439RbhbNWLYNT6qxzUm0DwR+djx67Z0zZhcyzFRGaZ7QFXCm28MezhYB11HC77UPlnmSo1p/6wcxILyDtuFq7fA8H3muHZVXJpuZ6aZgy5FHFxtklnz89QDuTTHarx9g6pHI2HDcNBCooGc=",
+        "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPTgoeQyAtBR1R4eHFOnKCcn1/m3RRsZxn3TUJ8NYTCjmD1iXHC+rj3RJkDba9BAgkhKEijtCEojLNMruxjhTFA=",
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIorLC7Kl2TgYkLNWFw1veHduCuvEsei/73d2vqO+Uj5"
+      ],
+      "InNetworkMap": true,
+      "InMagicSock": true,
+      "InEngine": false
+    },
+    "nodekey:6878b9e9dfe2cfcd61fc81feea9727473784ed3b8a2189c933311407de5b0a2e": {
+      "ID": "nHapkWi45211CNTRL",
+      "PublicKey": "nodekey:6878b9e9dfe2cfcd61fc81feea9727473784ed3b8a2189c933311407de5b0a2e",
+      "HostName": "crypto-quant-homelab",
+      "DNSName": "crypto-quant-homelab.taildf9e93.ts.net.",
+      "OS": "linux",
+      "UserID": 6035293782264875,
+      "TailscaleIPs": [
+        "100.91.10.47",
+        "fd7a:115c:a1e0::de39:a2f"
+      ],
+      "AllowedIPs": [
+        "100.91.10.47/32",
+        "fd7a:115c:a1e0::de39:a2f/128"
+      ],
+      "Addrs": null,
+      "CurAddr": "",
+      "Relay": "ams",
+      "PeerRelay": "",
+      "RxBytes": 0,
+      "TxBytes": 0,
+      "Created": "2026-05-16T15:02:21.916064031Z",
+      "LastWrite": "0001-01-01T00:00:00Z",
+      "LastSeen": "2026-07-13T05:33:57.1Z",
+      "LastHandshake": "0001-01-01T00:00:00Z",
+      "Online": false,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": false,
+      "PeerAPIURL": [
+        "http://100.91.10.47:52624",
+        "http://[fd7a:115c:a1e0::de39:a2f]:52624"
+      ],
+      "TaildropTarget": 5,
+      "NoFileSharingReason": "",
+      "InNetworkMap": true,
+      "InMagicSock": true,
+      "InEngine": false,
+      "KeyExpiry": "2026-11-12T15:02:21Z"
+    },
+    "nodekey:72d619e2cd67f3e60d244fdd25870c674fff483c6f67a89ccebbc74804ccad35": {
+      "ID": "nYtyW9x63z11CNTRL",
+      "PublicKey": "nodekey:72d619e2cd67f3e60d244fdd25870c674fff483c6f67a89ccebbc74804ccad35",
+      "HostName": "tom's S23 Ultra",
+      "DNSName": "toms-s23-ultra.taildf9e93.ts.net.",
+      "OS": "android",
+      "UserID": 6035293782264875,
+      "TailscaleIPs": [
+        "100.76.173.54",
+        "fd7a:115c:a1e0::439:ad36"
+      ],
+      "AllowedIPs": [
+        "100.76.173.54/32",
+        "fd7a:115c:a1e0::439:ad36/128"
+      ],
+      "Addrs": null,
+      "CurAddr": "",
+      "Relay": "ams",
+      "PeerRelay": "",
+      "RxBytes": 0,
+      "TxBytes": 0,
+      "Created": "2026-04-25T05:10:58.181053135Z",
+      "LastWrite": "0001-01-01T00:00:00Z",
+      "LastSeen": "2026-09-08T19:16:15.1Z",
+      "LastHandshake": "0001-01-01T00:00:00Z",
+      "Online": false,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": false,
+      "PeerAPIURL": [
+        "http://100.76.173.54:1",
+        "http://[fd7a:115c:a1e0::439:ad36]:1"
+      ],
+      "TaildropTarget": 5,
+      "NoFileSharingReason": "",
+      "InNetworkMap": true,
+      "InMagicSock": true,
+      "InEngine": false,
+      "KeyExpiry": "2026-10-22T05:10:58Z"
+    },
+    "nodekey:a5655304be3ac02dd05f1f8ceef6bb1e8289446fdb085041e0af6e7b75504251": {
+      "ID": "nfrZhbHCJ221CNTRL",
+      "PublicKey": "nodekey:a5655304be3ac02dd05f1f8ceef6bb1e8289446fdb085041e0af6e7b75504251",
+      "HostName": "ct-dev-homelab",
+      "DNSName": "ct-dev-homelab.taildf9e93.ts.net.",
+      "OS": "linux",
+      "UserID": 7541667192237769,
+      "TailscaleIPs": [
+        "100.104.114.63",
+        "fd7a:115c:a1e0::1c39:7240"
+      ],
+      "AllowedIPs": [
+        "100.104.114.63/32",
+        "fd7a:115c:a1e0::1c39:7240/128"
+      ],
+      "Tags": [
+        "tag:control"
+      ],
+      "Addrs": null,
+      "CurAddr": "",
+      "Relay": "ams",
+      "PeerRelay": "",
+      "RxBytes": 0,
+      "TxBytes": 0,
+      "Created": "2026-07-27T09:58:28.18802235Z",
+      "LastWrite": "0001-01-01T00:00:00Z",
+      "LastSeen": "0001-01-01T00:00:00Z",
+      "LastHandshake": "0001-01-01T00:00:00Z",
+      "Online": true,
+      "ExitNode": false,
+      "ExitNodeOption": false,
+      "Active": false,
+      "PeerAPIURL": [
+        "http://100.104.114.63:62915",
+        "http://[fd7a:115c:a1e0::1c39:7240]:56809"
+      ],
+      "TaildropTarget": 9,
+      "NoFileSharingReason": "",
+      "sshHostKeys": [
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCvd+tClc2cY5D+7qL42A3EWZM9Zw4kfIj5TsplcqCb9tQsxLRJp1OaSVzpqSauprxnVZEKaeeMBdHajs8R8koq7q4hI7YukyTIH5NS/oIPCEaQMWzmJpjAkDsAqQ7+s42cEDxuzuTP+B9R+Y8C4bNhkw7yMp5UkFT30smTjcjqMWnXSkF8tT6FS8SdCp0DIIRxSIE0eCmeWWQ0xR1XMJmv24US+a1eKXBKa7edWUYlQC1IPYNyASzd8iqb0cReRZ6co0lNFl9TW7gSDBAOH6ejnLF95PiB9JdKq/LdPMz9oIGlKFZ5fzJYU5eiejRYSrf/rgH19d8ARdZsKhk4158IjwD/BaIjNIQi84Y6eseVEe5bWFmOW1u7PNGFKM1twvDgvY4zE1PvdUcjYWsncqMe56fc2sHVVaaCoqjywXc1TegsXxRdReKcHyBmjr4QF4rcGNT1K/M6rx8UYLV+aPkSWbyszGPvePPnAJ9mCkizYQA4OPj9NUVgVHtg4ibyk0U=",
+        "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKcvSivtMWaymJEKRaew4LQrPWAU2RJ1h1tJ3wE5PACZTz4ExPhtYoLdmgyE/aOckAa0t/8y/APYtvDa1kWrzvc=",
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtEx0XE8PYA5ER7YIZcYSL17LtDwxO8Ucd0nAiL0ph5"
+      ],
+      "InNetworkMap": true,
+      "InMagicSock": true,
+      "InEngine": false
+    }
+  },
+  "User": {
+    "6035293782264875": {
+      "ID": 6035293782264875,
+      "LoginName": "tom.amourette@gmail.com",
+      "DisplayName": "Tom Amourette",
+      "ProfilePicURL": "https://lh3.googleusercontent.com/a/ACg8ocKpOvWtzQabc8GNCIoamVfMf0UsuCAgbAJqrhrUcXA5Y_M=s96-c"
+    },
+    "7541667192237769": {
+      "ID": 7541667192237769,
+      "LoginName": "tagged-devices",
+      "DisplayName": "Tagged Devices"
+    }
+  },
+  "ClientVersion": null
+}

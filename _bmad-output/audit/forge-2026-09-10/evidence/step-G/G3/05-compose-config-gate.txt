@@ -1,0 +1,8 @@
+### GATE 4 CMD: cd stacks/networking-tailscale && docker compose config --services
+tailscale
+rc=0
+### GATE 4b: line count of --services output
+1
+### CMD: docker compose ps (project view, pre-up)
+NAME        IMAGE                         COMMAND                  SERVICE     CREATED       STATUS                PORTS
+tailscale   tailscale/tailscale:v1.96.5   "/bin/sh -c 'tailsca…"   tailscale   6 weeks ago   Up 7 days (healthy)   

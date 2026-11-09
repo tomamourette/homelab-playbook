@@ -1,0 +1,17 @@
+### CMD: cd /opt/homelab-apps && git fetch origin
+From github.com:tomamourette/homelab-apps
+   9922f21..7438e74  main                    -> origin/main
+ * [new branch]      feat/hermes-linear-webhook -> origin/feat/hermes-linear-webhook
+ * [new branch]      feature/context-stack-e3-graphiti -> origin/feature/context-stack-e3-graphiti
+ * [new branch]      fix/tailscale-authkey-argv -> origin/fix/tailscale-authkey-argv
+ * [new branch]      fix/tailscale-disarm-accept-routes -> origin/fix/tailscale-disarm-accept-routes
+ * [new branch]      ops/grafana-audit-fixes -> origin/ops/grafana-audit-fixes
+rc=0
+### CMD: git rev-parse origin/fix/tailscale-disarm-accept-routes
+714b7377217fcd8817e2bb4af38f640655b2f3f5
+### CMD: blob id + md5 of branch file (not yet checked out)
+1c7646675cee8fd085b451fe058e45332b910202
+5fe30efc915ad67a9f417c7886b73c18  -
+3092
+### CMD: git rev-parse origin/main (for reference)
+7438e74f42e824280382be8dad0a4f4242bdb652
